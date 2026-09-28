@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>{{targetFramework}}</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>{{namespace}}.Plugin</RootNamespace>
+    <Version>{{version}}</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="TrainworksReloaded.Base" Version="{{trainworksVersion}}" />
+  </ItemGroup>
+</Project>

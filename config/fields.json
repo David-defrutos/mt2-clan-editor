@@ -1,0 +1,20 @@
+{
+  "cards": [
+    { "path": "names.english", "label": "Nombre", "type": "text" },
+    { "path": "descriptions.english", "label": "Descripción", "type": "textarea" },
+    { "path": "cost", "label": "Ember", "type": "number" },
+    { "path": "rarity", "label": "Rareza", "type": "select", "options": ["common", "uncommon", "rare", "champion"] },
+    { "path": "card_type", "label": "Tipo", "type": "select", "options": ["monster", "spell", "room", "equipment", "blight", "junk"] },
+    { "path": "unlock_level", "label": "Nivel de desbloqueo", "type": "number", "optional": true },
+    { "path": "pools", "label": "Pools", "type": "string-list" }
+  ],
+  "characters": [
+    { "path": "names.english", "label": "Nombre", "type": "text" },
+    { "path": "attack_damage", "label": "Ataque", "type": "number" },
+    { "path": "health", "label": "Salud", "type": "number" },
+    { "path": "size", "label": "Tamaño", "type": "number" }
+  ],
+  "relics": [
+    { "path": "names.english", "label": "Nombre", "type": "text" }
+  ]
+}

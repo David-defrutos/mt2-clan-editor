@@ -1,0 +1,16 @@
+{
+  "categories": [
+    { "id": "card", "label": "Arte de carta", "patterns": ["card_art", "cardart"] },
+    { "id": "character", "label": "Arte de personaje", "patterns": ["character_art", "characterart", "unitart"] },
+    { "id": "selection", "label": "Selección de campeón", "patterns": ["selection", "portrait", "championicon", "icon_", "locked"] },
+    { "id": "clan", "label": "Clan y mapa", "patterns": ["clanassets", "clanlogo", "carddraft", "banner", "silhouette", "visited", "enabled", "disabled"] },
+    { "id": "relic", "label": "Reliquia e interfaz", "patterns": ["relic", "artifact", "hud"] },
+    { "id": "equipment", "label": "Equipo", "patterns": ["equipment", "enhancer"] },
+    { "id": "room", "label": "Sala", "patterns": ["room", "map"] },
+    { "id": "mechanic", "label": "Estado y habilidad", "patterns": ["status", "trigger", "ability", "effect"] }
+  ],
+  "fallback": { "id": "other", "label": "Otros" },
+  "extensions": [".png", ".jpg", ".jpeg", ".webp"],
+  "maxUploadBytes": 15000000
+}
+

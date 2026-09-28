@@ -1,0 +1,8 @@
+{
+  "draftPools": ["MegaPool", "UnitsAllBanner"],
+  "starterPool": "StarterCardsOnly",
+  "bannerPool": "UnitsAllBanner",
+  "rarities": ["common", "uncommon", "rare", "champion"],
+  "types": ["monster", "spell", "room", "equipment"],
+  "progressionMaxLevel": 10
+}

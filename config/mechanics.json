@@ -1,0 +1,8 @@
+{
+  "assignments": [
+    { "section": "cards", "path": "effects", "label": "Efecto", "sourceSection": "effects", "mode": "append-id" },
+    { "section": "cards", "path": "triggers", "label": "Trigger de carta", "sourceSection": "card_triggers", "mode": "append-id" },
+    { "section": "characters", "path": "triggers", "label": "Trigger de unidad", "sourceSection": "character_triggers", "mode": "append-id" },
+    { "section": "characters", "path": "ability", "label": "Habilidad", "sourceSection": "cards", "filter": "is_an_ability", "mode": "set-reference" }
+  ]
+}

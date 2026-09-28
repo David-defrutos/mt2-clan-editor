@@ -1,0 +1,11 @@
+{
+  "expectedChampions": 2,
+  "expectedPathsPerChampion": 3,
+  "expectedLevelsPerPath": 3,
+  "minimumStarterCards": 2,
+  "minEmber": 0,
+  "maxEmber": 10,
+  "maxNormalUnlockLevel": 10,
+  "technicalUnlockLevels": [99],
+  "draftPools": ["MegaPool", "UnitsAllBanner"]
+}

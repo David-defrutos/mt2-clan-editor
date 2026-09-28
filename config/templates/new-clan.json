@@ -1,0 +1,28 @@
+{
+  "schemaUrl": "https://raw.githubusercontent.com/Monster-Train-2-Modding-Group/Trainworks-Reloaded/refs/heads/main/schemas/base.deref.json",
+  "classPrefix": "Class",
+  "championCardPrefix": "Spawn",
+  "starterCardPrefix": "Starter",
+  "draftCardPrefix": "Card",
+  "upgradePrefix": "upg_",
+  "mainPool": "MegaPool",
+  "starterPool": "StarterCardsOnly",
+  "bannerPool": "UnitsAllBanner",
+  "defaultCardStyle": "pyreborne",
+  "defaultCardCost": 1,
+  "defaultAttack": 5,
+  "defaultHealth": 5,
+  "defaultSize": 1,
+  "placeholderArt": { "card": [972, 1176], "character": [400, 400], "icon": [128, 128] },
+  "defaultPathBonusDamage": [5, 10, 20],
+  "defaultPathBonusHealth": [5, 10, 20],
+  "rarityCycle": ["common", "common", "uncommon", "rare"],
+  "package": {
+    "namespace": "Local",
+    "version": "0.1.0",
+    "dependencies": ["BepInEx-BepInExPack-5.4.2100", "MT2-Trainworks_Reloaded-0.7.1"],
+    "targetFramework": "netstandard2.1",
+    "trainworksVersion": "0.7.1"
+  }
+}
+

@@ -1,0 +1,19 @@
+{
+  "global": [
+    { "id": "library", "label": "Biblioteca", "icon": "▦" },
+    { "id": "stats", "label": "Estadísticas", "icon": "▥" }
+  ],
+  "clan": [
+    { "id": "overview", "label": "Resumen", "icon": "◫" },
+    { "id": "champions", "label": "Campeones", "icon": "♜" },
+    { "id": "cards", "label": "Cartas", "icon": "▤" },
+    { "id": "units", "label": "Unidades", "icon": "♟" },
+    { "id": "objects", "label": "Todos los objetos", "icon": "▦" },
+    { "id": "progression", "label": "Progresión", "icon": "↗" },
+    { "id": "pools", "label": "Pools", "icon": "◈" },
+    { "id": "mechanics", "label": "Mecánicas", "icon": "⚙" },
+    { "id": "assets", "label": "Recursos visuales", "icon": "▧" },
+    { "id": "validation", "label": "Validación", "icon": "✓" },
+    { "id": "publish", "label": "Publicación", "icon": "↑" }
+  ]
+}
