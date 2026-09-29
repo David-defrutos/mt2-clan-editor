@@ -1,0 +1,9 @@
+{
+  "command": "dotnet",
+  "configuration": "Release",
+  "projectExtension": ".csproj",
+  "excludedDirectories": [".git", "bin", "obj", "node_modules"],
+  "maxSearchDepth": 4,
+  "timeoutMs": 180000,
+  "maxOutputBytes": 2000000
+}

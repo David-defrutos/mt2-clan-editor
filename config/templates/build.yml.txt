@@ -10,6 +10,16 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
+      - name: Authenticate GitHub Packages
+        env:
+          GH_AUTH_USER: ${{ secrets.GH_AUTH_USER }}
+          GH_AUTH_TOKEN: ${{ secrets.GH_AUTH_TOKEN }}
+        run: |
+          if [ -z "$GH_AUTH_USER" ] || [ -z "$GH_AUTH_TOKEN" ]; then
+            echo "::error::Configure GH_AUTH_USER and GH_AUTH_TOKEN (read:packages) as repository secrets."
+            exit 1
+          fi
+          dotnet nuget update source monster-train-packages --configfile src/nuget.config --username "$GH_AUTH_USER" --password "$GH_AUTH_TOKEN" --store-password-in-clear-text
       - run: dotnet build src/{{id}}.Plugin.csproj -c Release
       - uses: actions/upload-artifact@v4
         with:

@@ -54,6 +54,9 @@ test('genera un clan nuevo con dos campeones, seis sendas, dos iniciales y N car
     assert.ok((classData.champions as Record<string, unknown>[]).every(item => item.icon && item.locked_icon && item.portrait));
     assert.equal((await validateClan(clan)).filter(issue => issue.severity === 'error').length, 0);
     assert.ok((await fs.readFile(path.join(root, 'src', 'Plugin.cs'), 'utf8')).includes('json/cards.json'));
+    const workflow = await fs.readFile(path.join(root, '.github', 'workflows', 'build.yml'), 'utf8');
+    assert.ok(workflow.includes('GH_AUTH_TOKEN'));
+    assert.ok(workflow.includes('read:packages'));
     await assert.rejects(() => createClan({ destination: path.join(parent, 'MuyPequeno'), name: 'Otro clan', id: 'OtroClan', author: 'Pruebas', champions: ['A', 'B'], starters: ['C', 'D'], draftCount: 1 }), /unidades de estandarte/);
     await assert.rejects(() => createClan({ destination, name: 'Nuevo clan', id: 'NuevoClan', author: 'Pruebas', champions: ['A', 'B'], starters: ['C', 'D'], draftCount: 2 }), /ya existe/);
   } finally { await fs.rm(parent, { recursive: true, force: true }); }
