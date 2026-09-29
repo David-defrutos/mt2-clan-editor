@@ -15,7 +15,7 @@ Un clan importado conserva su organización y sus archivos. Un clan nuevo se cre
 1. Abrir cualquiera de los siete clanes; navegar y buscar todos sus objetos.
 2. Guardar sin cambios: ningún archivo cambia. Modificar un campo: solo cambian los archivos previstos; reabrir muestra el nuevo valor.
 3. Crear un clan con 2 campeones, 3 sendas de 3 niveles por campeón, 2 cartas iniciales, N cartas y pools configurables, con arte y mecánicas del catálogo.
-4. Validar y generar el proyecto; compilar la DLL con el workflow; confirmar que pertenece al commit enviado.
+4. Validar y generar el proyecto; compilar la DLL localmente con `dotnet` o mediante el workflow; comprobar el origen y el resultado de cada compilación.
 5. Comparar los siete clanes en la pantalla de estadísticas, con cifras que se puedan desglosar en sus objetos.
 
 ## 2. Conceptos y estados del proyecto
@@ -156,7 +156,7 @@ Reglas mínimas: JSON y configuración válidos; dos campeones y sendas completa
 
 ### 3.12 Publicación y DLL
 
-**Estado:** repositorio, rama, commit actual, cambios pendientes, workflow, último run asociado y artefacto. **Acciones:** `Configurar GitHub`, `Ver diferencias`, `Guardar`, `Validar`, `Crear commit`, `Enviar`, `Consultar build`, `Descargar DLL`, `Instalar DLL` (opcional). Antes de commit/push se eligen archivos y se muestra el mensaje. El programa no incluye cambios ajenos sin mostrarlos. Después del push busca el run por SHA; si el workflow no se inicia por filtros de rutas, ofrece ejecutarlo manualmente. Progreso y errores se leen del run concreto. La DLL descargada se verifica frente a nombre, run, commit y rutas JSON esperadas antes de considerarla lista.
+**Estado:** proyecto C#, SDK `dotnet`, última compilación local, ruta de la DLL, repositorio, rama, commit actual, cambios pendientes, workflow, último run asociado y artefacto. **Acciones:** `Compilar DLL local`, `Abrir carpeta de salida`, `Configurar GitHub`, `Ver diferencias`, `Guardar`, `Validar`, `Crear commit`, `Enviar`, `Consultar build`, `Descargar DLL`, `Instalar DLL` (opcional). `Compilar DLL local` ejecuta `dotnet build` en configuración Release sobre el proyecto C# del clan y muestra el log, los errores y la ruta de la DLL; no requiere Git ni GitHub. Si faltan SDK, fuente o acceso a paquetes NuGet, explica el requisito concreto. La configuración del SDK, proyecto, argumentos y ruta de salida reside en ficheros de configuración. La interfaz distingue una DLL local de una descargada de Actions y registra la fecha y el hash de la compilación local para evitar confundirla con una versión anterior. Antes de commit/push se eligen archivos y se muestra el mensaje. El programa no incluye cambios ajenos sin mostrarlos. Después del push busca el run por SHA; si el workflow no se inicia por filtros de rutas, ofrece ejecutarlo manualmente. Progreso y errores se leen del run concreto. La DLL descargada se verifica frente a nombre, run, commit y rutas JSON esperadas antes de considerarla lista.
 
 En un clan sin Git, la pantalla explica qué pasos faltan y permite configurar un repositorio nuevo. Los paquetes sin fuente quedan fuera de la primera versión. `Instalar DLL` solicita destino, verifica que el juego no esté usando el archivo, crea respaldo y deja constancia de versión y hash; nunca sobrescribe texturas/JSON con los del artefacto.
 
@@ -191,6 +191,7 @@ Pestañas `General`, `Biblioteca`, `Catálogos`, `Arte`, `GitHub`, `Avanzado`. M
 | `config/rules/progression.json` | Rango de niveles, elegibilidad para desbloqueo, excepciones técnicas y comprobaciones de drafts por nivel. |
 | `config/presets/*.json` | Plantillas de clanes y contenido inicial. |
 | `config/templates/**` | Salida JSON, manifiesto, C#, proyecto .NET y workflow. |
+| `config/build.json` | Detección del SDK, proyecto C#, configuración Release, argumentos de `dotnet build` y patrón de la DLL de salida. |
 | `config/migrations/*` | Cambios de versión del formato de proyecto/configuración. |
 | `<clan>/editor-project.json` | Preferencias y versión de reglas fijada para un clan creado con el editor. |
 | `<clan>/editor-publish.json` | Repositorio, rama, workflow y artefacto; sin credenciales. |
@@ -208,7 +209,7 @@ Las configuraciones se validan antes de abrir un proyecto. Si una versión nueva
 | 3. Creación y edición visual | Asistente, resumen, campeones, sendas, cartas, progresión, pools, formularios configurados y generación de un clan jugable. |
 | 4. Mecánicas y arte | Catálogos parametrizados, vínculos, inventario de recursos, vista previa y transformación por categoría. |
 | 5. Comparación y validación | Estadísticas de siete clanes, filtros, desglose por objeto, errores y diferencias. |
-| 6. GitHub y DLL | Commit/push revisado, seguimiento por SHA, workflow, descarga y verificación del artefacto. |
+| 6. Compilación y GitHub | Compilación local con `dotnet build`, log y DLL verificable; commit/push revisado, seguimiento por SHA, workflow, descarga y verificación del artefacto remoto. |
 | 7. Cierre | Prueba en juego de un clan nuevo, pruebas de modificación de los siete clanes en copias, documentación y comprobación en Windows, macOS y Linux. |
 
 ## 7. Pruebas de aceptación
@@ -221,7 +222,7 @@ Las configuraciones se validan antes de abrir un proyecto. Si una versión nueva
 
 **Arte:** sustituir en copia un arte de carta, un `character_art`, un retrato de selección y un icono de reliquia; comprobar sus referencias, tamaños, transparencia, respaldo y transform de personaje. Validar una ruta con mayúsculas distintas y un recurso compartido.
 
-**Publicación:** en un repositorio de prueba, enviar un cambio, esperar el run de ese SHA, comprobar éxito o error, descargar la DLL correcta y rechazar un artefacto de un commit anterior. Si el cambio solo afecta JSON, ensayar la ejecución manual del workflow.
+**Compilación y publicación:** sin GitHub, compilar localmente un clan generado y otro importado con fuentes, mostrar el log y comprobar que la DLL de salida corresponde a esa compilación; probar también el diagnóstico cuando falten SDK o credenciales de NuGet. En un repositorio de prueba, enviar un cambio, esperar el run de ese SHA, comprobar éxito o error, descargar la DLL correcta y rechazar un artefacto de un commit anterior. Si el cambio solo afecta JSON, ensayar la ejecución manual del workflow.
 
 **Juego:** el clan nuevo debe cargar, aparecer en la selección, ofrecer las dos cartas iniciales, presentar ambos campeones y sus sendas, mostrar estandarte y arte, y permitir jugar al menos un combate. Las modificaciones en copias de clanes existentes se prueban en un perfil aislado cuando afectan comportamiento visible.
 

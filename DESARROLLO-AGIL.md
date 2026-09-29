@@ -1,6 +1,6 @@
 # Plan de desarrollo ágil — Editor de clanes MT2
 
-Estado: plan de ejecución propuesto, sin implementación. Fecha: 28-09-2026. La especificación funcional vigente es [PLAN.md](PLAN.md); este documento organiza su desarrollo y sus entregas. [BORRADOR.md](BORRADOR.md) es histórico.
+Estado: roadmap vigente; el primer incremento ya está implementado y sus límites figuran en [README.md](README.md). La especificación funcional está en [PLAN.md](PLAN.md); [BORRADOR.md](BORRADOR.md) es histórico.
 
 ## 1. Forma de trabajo
 
@@ -41,7 +41,7 @@ Los clanes instalados son **fixtures de aceptación**. Las pruebas automáticas 
 | E5. Progresión y mecánicas | P0 | `unlock_level` siguiendo Yokai, simulación por nivel y un catálogo guiado reducido de efectos/triggers/habilidades, ampliable mediante configuración. |
 | E6. Recursos visuales | P0 | Inventario y sustitución por uso real de cartas, personajes, selección, reliquias, HUD y demás categorías presentes. |
 | E7. Estadísticas globales | P0 | Comparación simultánea de siete clanes, desglose por objeto y exportación. |
-| E8. Publicación y DLL | P0 | Push revisado, run identificado por SHA, DLL descargada y verificada. |
+| E8. Compilación y publicación de DLL | P0 | Compilación local con `dotnet`, DLL localizada y verificada; como alternativa, push revisado, run de Actions identificado por SHA y artefacto descargado. |
 | E9. Calidad multiplataforma | P0 | Misma salida funcional en Windows, macOS y Linux; rutas y mayúsculas verificadas. |
 
 `P0` significa necesario para la primera versión que cumple [PLAN.md](PLAN.md). Dentro de cada épica, se prioriza primero el camino completo más pequeño. Formularios específicos para **toda** la API de Trainworks no bloquean la primera versión: las secciones sin formulario guiado conservan edición JSON con validación y guardado sin pérdida.
@@ -59,6 +59,7 @@ Los clanes instalados son **fixtures de aceptación**. Las pruebas automáticas 
 | H07 | Como autor, sustituyo un recurso visual. | Muestra todos sus usos, aplica el perfil correcto y conserva el original. |
 | H08 | Como autor, comparo clanes. | Cada métrica abre exactamente los objetos que cuenta; habilidades/tokens no inflan el draft. |
 | H09 | Como autor, envío el clan a GitHub. | La DLL mostrada procede del run del SHA enviado, nunca de un run anterior. |
+| H10 | Como autor, compilo la DLL en mi equipo sin subir el clan. | Si hay proyecto C# y SDK compatible, el editor ejecuta `dotnet build` en Release, muestra el log y la ruta de la DLL; informa con precisión si faltan SDK, fuentes o acceso a paquetes. |
 
 ## 4. Plan de iteraciones
 
@@ -69,11 +70,11 @@ Las duraciones son orientativas y se ajustan tras la revisión de cada iteració
 | 0. Base técnica | 1 semana | Inventario de siete clanes, configuración versionada, fixtures, prototipo de parser y escritura sin cambios; elegir el pequeño catálogo guiado inicial. | Informe de diferencias por clan y decisión documentada sobre lectura/escritura de JSON y catálogos. |
 | 1. Biblioteca y lectura | 2 semanas | Aplicación local TypeScript, selector de carpeta, biblioteca, informe de importación, barra lateral y lectura de los siete. | Abrir los siete clanes y navegar por objetos sin modificar archivos. |
 | 2. Edición segura | 2 semanas | Formularios genéricos, ficha de carta/unidad, búsqueda, filtros, referencias, diferencias, copias y guardado. | Editar una carta en cada clan, guardar y reabrir; hash idéntico de todo lo no tocado. |
-| 3. Creación y estructura | 2 semanas | Asistente, identidad, dos campeones, seis sendas, cartas iniciales, pools variables, estilo y estandarte. | Generar un clan nuevo, validarlo, compilarlo y verlo en selección dentro del juego. |
+| 3. Creación y estructura | 2 semanas | Asistente, identidad, dos campeones, seis sendas, cartas iniciales, pools variables, estilo y estandarte; primera compilación local mediante `dotnet build`. | Generar un clan nuevo, validarlo, compilarlo localmente y verlo en selección dentro del juego. |
 | 4. Mecánicas y progresión | 2 semanas | Catálogo guiado reducido y ampliable por configuración, `unlock_level`, simulación de nivel y avisos de draft. | Añadir mecánicas del catálogo y comprobar el comportamiento con Yokai; preservar valores 99 importados. |
 | 5. Recursos visuales | 2 semanas | Inventario por referencias, perfiles de tamaño, vistas previas, reemplazo y compensación de `character_art`. | Cambiar en copias arte de carta, personaje, selección y reliquia sin afectar otros recursos. |
 | 6. Estadísticas y validación | 2 semanas | Comparación de siete clanes, métricas configuradas, desglose, exportación y validación completa. | Comparar los siete, abrir una cifra hasta sus cartas y detectar referencias/pools/arte incorrectos. |
-| 7. GitHub y cierre | 2 semanas | Commit/push revisado, Actions por SHA, DLL, documentación, regresión y comprobación multiplataforma. | Flujo completo en repositorio de prueba y versión candidata que supera la matriz de aceptación. |
+| 7. GitHub y cierre | 2 semanas | Integrar la compilación local en la pantalla de Publicación, conservar Actions como vía remota, comprobar DLL, documentación, regresión y funcionamiento multiplataforma. | Generar una DLL local sin GitHub y otra mediante Actions en un repositorio de prueba; versión candidata que supera la matriz de aceptación. |
 
 **Primer incremento útil:** al terminar la iteración 2, abrir y editar de forma segura los siete clanes. **Primer clan nuevo jugable:** al terminar la iteración 3. **Versión que cumple todo el plan:** tras la iteración 7 y sus pruebas. Las revisiones pueden reordenar historias dentro de las iteraciones sin omitir los criterios P0.
 
@@ -100,7 +101,7 @@ Para la **versión completa**, además se exige abrir y modificar los siete clan
 - **En cada cambio de UI:** recorrido por teclado de la pantalla afectada, estado vacío, error y datos reales de un clan grande como Free Company o Silk Song.
 - **En progresión:** comparar con Yokai niveles iniciales, nueve cartas en 2–10, reliquias con nivel, pools de estandarte y exclusión de cartas auxiliares; comprobar en juego la apariencia en el libro de registro.
 - **En arte:** comprobar dimensiones/transparencia por categoría y transform de personaje; no aplicar el perfil de carta a iconos/HUD.
-- **Antes de publicar:** prueba de run por SHA y rechazo de DLL vieja. No usar el perfil de juego activo como destino automático.
+- **Antes de publicar:** probar compilación local desde un clan generado y uno importado con fuentes, comprobar la DLL de salida y mostrar errores de restauración de paquetes. Para Actions, probar run por SHA y rechazo de DLL vieja. No usar el perfil de juego activo como destino automático.
 - **Por plataforma:** al menos una pasada de instalación/arranque, selector de carpeta, lectura, guardado y generación en Windows, macOS y Linux; si el juego no está disponible en una plataforma, la prueba en juego se realiza donde sí pueda ejecutarse y se documenta esa diferencia.
 
 ## 7. Gestión del alcance y decisiones
