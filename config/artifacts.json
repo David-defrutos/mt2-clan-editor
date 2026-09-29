@@ -1,0 +1,9 @@
+{
+  "buildInputs": [".cs", ".csproj", ".props", ".targets"],
+  "excludedDirectories": [".git", "bin", "obj", "node_modules"],
+  "requiredContent": ["json", "textures"],
+  "optionalContent": ["manifest.json", "README.md", "icon.png"],
+  "receiptDirectory": "build-results",
+  "packageDirectory": "packages",
+  "provenanceFile": "clan-editor-build.json"
+}

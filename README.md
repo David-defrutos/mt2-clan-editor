@@ -24,6 +24,7 @@ Abre `http://127.0.0.1:4318`. `npm run check` comprueba los tipos y `npm test` e
 - Comprueba sintaxis, IDs duplicados, estructura de campeones, cartas iniciales, algunos rangos, referencias locales entre objetos y recursos visuales. Las excepciones de referencias a clases y triggers externos están en `config/validation.json`, según los siete clanes de referencia. Los siete clanes se leen correctamente. La comprobación de mayúsculas detecta tres rutas de imagen que conviene corregir para Linux/Proton: `icon_Vizier` (Sandscourged), `LaceChampionIcon` (The Silk Song) y `FearstoneIcon` (Yokai).
 - En **Publicación → Compilación local**, detecta proyectos C# del clan, ejecuta `dotnet build` en Release sin GitHub y muestra el registro. Si genera una DLL nueva, indica su ruta y SHA-256, incluso cuando el proyecto define un `AssemblyName` distinto a su nombre de archivo. El comando, los límites y la búsqueda de proyectos están en `config/build.json`.
 - **Compilar con DLL instaladas** compila las fuentes C# en un proyecto aislado bajo `data/offline-builds/`, usando las referencias de `data/build-local.json`. Esta opción se ha probado con un clan recién generado y Trainworks 0.7.27, comprobando que todos los archivos del clan conservan su hash.
+- **Preparar carpeta del mod** reúne la última DLL compilada desde el editor, `json/`, `textures/` y los archivos opcionales definidos en `config/artifacts.json`. Guarda la salida en una carpeta nueva de `data/packages/` con un registro de hashes. Detecta cambios en fuentes, DLL y contenido; cambiar JSON o texturas permite preparar de nuevo sin recompilar. Para DLL locales también comprueba las referencias y su configuración. Los pasos de compilación externos al árbol del clan todavía requieren revisión manual.
 
 ## Probar un clan nuevo
 
@@ -31,6 +32,9 @@ Abre `http://127.0.0.1:4318`. `npm run check` comprueba los tipos y `npm test` e
 2. Elige una carpeta de destino nueva dentro de una carpeta que ya exista y completa identidad, campeones y cartas iniciales.
 3. Revisa **Cartas**, **Campeones**, **Recursos visuales** y **Validación**.
 4. En **Publicación**, selecciona `src/ID.Plugin.csproj` y pulsa **Compilar con DLL instaladas**. El resultado muestra la ruta de la DLL, SHA-256 y registro.
+5. Pulsa **Preparar carpeta del mod**. Copia la carpeta indicada a un perfil de pruebas de BepInEx que tenga las dependencias del clan. Comprueba la selección de campeones, iniciales y estandarte dentro del juego y revisa `LogOutput.log` si falla.
+
+La pantalla conserva la última compilación correcta aunque vuelvas a abrirla. **Actualizar comprobación** contrasta fuentes y contenido con la salida preparada. Cambios en C# o en el proyecto requieren recompilar; cambios solo en JSON o texturas requieren preparar de nuevo. La salida incluye los directorios configurados; añade a `config/artifacts.json` cualquier otro directorio de recursos que necesite un proyecto importado. El editor no instala la carpeta automáticamente.
 
 Para configurar esta opción en otro equipo, copia `config/build-local.example.json` a `data/build-local.json`, sustituye los valores por rutas absolutas a las DLL y escribe la versión instalada de Trainworks. Los nombres de referencias y el framework están en `config/offline-build.json`. Las rutas locales permanecen fuera de Git. Reinicia el editor o vuelve a entrar en Publicación después de cambiar la configuración.
 

@@ -15,6 +15,7 @@ import { prepareArt, saveArt, type ArtRequest } from './art.js';
 import { createClan } from './create.js';
 import { buildClan, buildStatus } from './build.js';
 import { buildOffline, offlineStatus } from './offline-build.js';
+import { artifactStatus, packageClan } from './artifacts.js';
 import { commitClan, downloadDll, publishStatus, pushClan } from './publish.js';
 
 const execFileAsync = promisify(execFile);
@@ -131,6 +132,12 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
       const input = await body(req);
       return send(res, 200, await downloadDll(item.root, Number(input.runId)));
     }
+  }
+  const packageMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/package$/);
+  if (packageMatch) {
+    const item = await getLibraryItem(packageMatch[1]);
+    if (req.method === 'GET') return send(res, 200, await artifactStatus(item.root));
+    if (req.method === 'POST') return send(res, 200, await packageClan(item.root));
   }
   const buildMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/build$/);
   if (buildMatch) {

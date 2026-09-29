@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import { configRoot, inside } from './paths.js';
+import { buildInputs, recordBuild } from './artifacts.js';
 
 const run = promisify(execFile);
 interface BuildRules {
@@ -76,6 +77,7 @@ export async function buildClan(root: string, relativeProject: string) {
   if (!available.includes(relativeProject)) throw new Error('Selecciona un proyecto C# encontrado dentro del clan.');
   const projectFile = path.resolve(root, relativeProject);
   if (!inside(root, projectFile)) throw new Error('El proyecto C# debe estar dentro del clan.');
+  const inputs = await buildInputs(root);
   const startedAt = Date.now();
   const args = ['build', projectFile, '-c', rule.configuration, '--nologo'];
   let log = '';
@@ -92,5 +94,7 @@ export async function buildClan(root: string, relativeProject: string) {
   if (exitCode === 0 && !dll) return { ok: false, project: relativeProject, exitCode, diagnostic: 'dotnet terminó sin errores, pero no se encontró una DLL nueva en la salida del proyecto.', log: log.slice(-12000) };
   if (!dll) return { ok: false, project: relativeProject, exitCode, diagnostic: diagnostic(log), log: log.slice(-12000) };
   const sha256 = createHash('sha256').update(await fs.readFile(dll)).digest('hex');
-  return { ok: true, project: relativeProject, exitCode, dll, sha256, builtAt: new Date().toISOString(), log: log.slice(-12000) };
+  const builtAt = new Date().toISOString();
+  await recordBuild(root, { project: relativeProject, mode: 'packages', dll, sha256, builtAt }, inputs);
+  return { ok: true, project: relativeProject, exitCode, dll, sha256, builtAt, log: log.slice(-12000) };
 }

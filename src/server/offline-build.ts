@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import { buildStatus } from './build.js';
+import { buildInputs, dependencyHashes, recordBuild } from './artifacts.js';
 import { configRoot, dataRoot, inside, keyForPath } from './paths.js';
 
 const run = promisify(execFile);
@@ -30,6 +31,8 @@ export async function buildOffline(root: string, relativeProject: string) {
   if (!status.projects.includes(relativeProject)) throw new Error('Selecciona un proyecto C# encontrado dentro del clan.');
   const { settings, local, configFile, missing } = await configuration();
   if (missing.length || !local) throw new Error(`Configura ${configFile}. Faltan DLL: ${missing.join(', ')}.`);
+  const inputs = await buildInputs(root);
+  const dependencies = await dependencyHashes([...Object.values(local.references), configFile, path.join(configRoot, 'offline-build.json')]);
   const buildRules = JSON.parse(await fs.readFile(path.join(configRoot, 'build.json'), 'utf8')) as { command: string; configuration: string; excludedDirectories: string[]; timeoutMs: number; maxOutputBytes: number };
   const sourceRoot = path.dirname(path.resolve(root, relativeProject));
   const sources: string[] = [];
@@ -65,5 +68,7 @@ export async function buildOffline(root: string, relativeProject: string) {
   const dll = path.join(buildRoot, 'bin', buildRules.configuration, settings.targetFramework, assemblyName + '.dll');
   if (exitCode !== 0 || !(await fs.stat(dll).catch(() => null))?.isFile()) return { ok: false, project: relativeProject, exitCode, diagnostic: 'Falló la compilación con DLL locales. Revisa las referencias y el registro.', log: log.slice(-12000) };
   const sha256 = createHash('sha256').update(await fs.readFile(dll)).digest('hex');
-  return { ok: true, project: relativeProject, exitCode, dll, sha256, builtAt: new Date().toISOString(), trainworksVersion: local.trainworksVersion, log: log.slice(-12000) };
+  const builtAt = new Date().toISOString();
+  await recordBuild(root, { project: relativeProject, mode: 'installed', dll, sha256, builtAt, trainworksVersion: local.trainworksVersion, dependencies }, inputs);
+  return { ok: true, project: relativeProject, exitCode, dll, sha256, builtAt, trainworksVersion: local.trainworksVersion, log: log.slice(-12000) };
 }
