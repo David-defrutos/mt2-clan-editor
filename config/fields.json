@@ -14,6 +14,13 @@
     { "path": "health", "label": "Salud", "type": "number" },
     { "path": "size", "label": "Tamaño", "type": "number" }
   ],
+  "upgrades": [
+    { "path": "titles.english", "label": "Nombre de mejora", "type": "text" },
+    { "path": "descriptions.english", "label": "Descripción", "type": "textarea" },
+    { "path": "bonus_damage", "label": "Bonificación de ataque", "type": "number", "optional": true },
+    { "path": "bonus_hp", "label": "Bonificación de salud", "type": "number", "optional": true },
+    { "path": "bonus_size", "label": "Bonificación de tamaño", "type": "number", "optional": true }
+  ],
   "relics": [
     { "path": "names.english", "label": "Nombre", "type": "text" }
   ]

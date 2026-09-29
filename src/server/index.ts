@@ -18,6 +18,7 @@ import { buildOffline, offlineStatus } from './offline-build.js';
 import { artifactStatus, packageClan } from './artifacts.js';
 import { prepareUnlocks, progressionStatus, saveUnlocks, type UnlockChange } from './progression.js';
 import { commitClan, downloadDll, publishStatus, pushClan } from './publish.js';
+import { championRules, describeChampions, combineChampion } from './champions.js';
 
 const execFileAsync = promisify(execFile);
 const port = Number(process.env.CLAN_EDITOR_PORT ?? 4318);
@@ -109,6 +110,18 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     const snapshot = await scanClan(item.root);
     snapshot.issues = await validateClan(snapshot);
     return send(res, 200, snapshot);
+  }
+  const championMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/champions(?:\/(preview))?$/);
+  if (championMatch) {
+    const item = await getLibraryItem(championMatch[1]);
+    const rules = await championRules();
+    const champions = describeChampions(await scanClan(item.root), rules);
+    if (req.method === 'GET' && !championMatch[2]) return send(res, 200, { champions, maxCombinedLevels: rules.maxCombinedLevels, maxSelectedPaths: rules.maxSelectedPaths });
+    if (req.method === 'POST' && championMatch[2]) {
+      const input = await body(req);
+      if (!Number.isInteger(input.champion) || Number(input.champion) < 0 || Number(input.champion) >= champions.length) throw new Error('Campeón inválido.');
+      return send(res, 200, combineChampion(champions[Number(input.champion)], input.levels, rules));
+    }
   }
   const inventoryMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/assets$/);
   if (req.method === 'GET' && inventoryMatch) {

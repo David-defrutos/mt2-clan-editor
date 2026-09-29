@@ -118,6 +118,14 @@ Decisiones que conviene cerrar en las primeras revisiones:
 
 ## 8. Estimación y seguimiento
 
+### Incremento de campeones y sendas · 30-09-2026
+
+- Objetivo entregado: comparar valores base y bonificaciones de cada nivel; explorar combinaciones y abrir las mejoras para editar campos guiados.
+- Criterios verificados: II sustituye a I; II + I suma una mejora de cada senda; los límites de combinación vienen de configuración; referencias externas, duplicadas o desconocidas no producen valores inventados; habilidades personalizadas generan avisos.
+- Evidencia: compilación del editor correcta, 25 pruebas superadas y resolución en lectura de 16 campeones y 144 mejoras entre los siete clanes y la demo.
+- Pendiente de aceptación: recorrido visual y por teclado de la pantalla en el navegador del usuario; no se ha verificado este cálculo mediante una partida. La herramienta de revisión del navegador está bloqueada por el error de ACL del entorno.
+- Próximo alcance de esta pantalla: previsualización de arte y edición guiada del árbol de referencias, con comprobación de cambios compartidos.
+
 Estimación **preliminar**, para una persona con experiencia en TypeScript y conocimiento del modding de MT2: **360–580 horas**, aproximadamente **9–15 semanas a jornada completa**. Incluye la compatibilidad obligatoria con siete clanes, edición conservadora, creación jugable, recursos visuales, estadísticas, progresión y GitHub. El catálogo guiado inicial será pequeño; se amplía mediante ficheros de configuración. No incluye Deva, producir ilustraciones ni programar mecánicas C# nuevas para cada clan. La incertidumbre mayor está en importar y guardar sin pérdida los formatos existentes y en la prueba de carga real del juego.
 
 La primera reestimación se hace al terminar la iteración 0, con el prototipo de parser y los siete fixtures; la segunda al terminar la iteración 2, cuando ya se conoce el coste real de edición conservadora. Cada revisión informa **objetivo conseguido, evidencia, horas consumidas, riesgos y siguiente prioridad**. El avance se mide por historias aceptadas y pruebas superadas, no por porcentaje de pantallas dibujadas.

@@ -18,3 +18,12 @@ input,select,textarea{background:#131a20;border:1px solid #43515a;color:#e9e8e3;
 .publish-files{max-height:220px;overflow:auto;background:#131a20;border-radius:6px;padding:10px;margin-bottom:18px;font:12px Consolas,Monaco,monospace;word-break:break-all}.publish-files div{padding:4px 0;border-bottom:1px solid #2b363e}.content-panel a{color:#d7a66f}.content-panel>label{margin:16px 0}.content-panel>label input{width:100%}
 .comparison .stat-value{border:0;background:transparent;color:#e6c18d;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:4px;padding:6px 10px}.comparison .stat-value:focus-visible{outline:2px solid #e6c18d;outline-offset:2px}
 .progression-editor{margin-top:20px}.progression-table{max-height:360px;overflow:auto;margin:16px 0}.progression-table input[type=checkbox]{width:auto;accent-color:#d6b27d}.progression-editor .head-actions{flex-wrap:wrap}
+/* Champion paths and numeric preview */
+.champion-links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+.champion-links button { max-width: 100%; overflow-wrap: anywhere; }
+.champion-path { border-top: 1px solid var(--border, #303442); margin-top: 18px; padding-top: 8px; }
+.champion-path label { display: grid; gap: 8px; margin-top: 12px; }
+.champion-path select { width: 100%; }
+.champion-path .table-panel { overflow-x: auto; }
+.champion-combination { border-top: 1px solid var(--border, #303442); margin-top: 20px; padding-top: 12px; }
+.champion-combination details { margin-top: 14px; overflow-wrap: anywhere; }

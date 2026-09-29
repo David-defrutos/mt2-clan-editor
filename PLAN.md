@@ -98,6 +98,8 @@ Antes de presentar el resultado como jugable, el generador debe superar una comp
 
 ### 3.5 Campeones y sendas
 
+**Incremento implementado (30-09-2026):** búsqueda de campeones y mejoras; tabla por senda con bonificaciones de ataque, salud y tamaño; selección y comparación de niveles entre dos sendas; apertura de carta, unidad, inicial, clase y mejoras en el inspector. El cálculo sustituye niveles anteriores de la misma senda. Reglas en `config/champions.json`; campos guiados de mejoras en `config/fields.json`. Se muestran avisos por habilidades no simuladas y valores desconocidos. Esta vista todavía no equivale a una simulación de combate ni completa los controles visuales y de reorganización descritos a continuación.
+
 **Listado:** exactamente dos campeones por plantilla. Cada tarjeta muestra arte de carta y personaje, carta inicial, ataque/salud base, tres sendas y nivel alcanzado por cada una. Para clanes importados se muestran los datos reales aunque sean incompletos.
 
 **Ficha del campeón:** pestañas `Base`, `Senda 1`, `Senda 2`, `Senda 3`, `Arte y selección`, `JSON`. En `Base`: carta y personaje vinculados, coste, ataque, salud, tamaño, carta inicial, efectos, triggers y habilidad. En cada senda: tres columnas I/II/III con estadísticas, mejoras, efectos, triggers, habilidades, descripción y vista de diferencias entre niveles. `Copiar nivel anterior`, `Añadir mecanismo`, `Elegir arte`, `Restablecer cambios` y `Guardar` son acciones por sección. Cambiar una referencia muestra los objetos afectados.

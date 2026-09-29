@@ -31,6 +31,12 @@ Abre `http://127.0.0.1:4318`. `npm run check` comprueba los tipos y `npm test` e
 
 ## Probar un clan nuevo
 
+En **Campeones**, busca por nombre, ID o mejora. Cada senda muestra sus bonificaciones de ataque, salud y tamaño por nivel; pulsa una mejora para editar su nombre, descripción y bonificaciones en **Objetos**. Los botones de carta, unidad, inicial y clase abren sus respectivos inspectores. Guarda el cambio y vuelve a **Campeones** para recalcular.
+
+Los selectores permiten comparar hasta tres niveles entre dos sendas. El nivel II sustituye al I: se suma solo la mejora seleccionada de cada senda a los valores base. **Restablecer** vuelve a los valores sin mejoras. La configuración está en `config/champions.json` y los campos editables en `config/fields.json`.
+
+La vista calcula bonificaciones numéricas explícitas; no simula combate, habilidades, triggers, modificaciones iniciales ni C# personalizado. Los avisos identifican esos campos y las referencias externas o no resueltas. Los valores desconocidos aparecen como `—`. Se ha verificado la resolución de las 126 mejoras de los siete clanes de referencia y las 18 de la demo, sin modificar sus archivos. La revisión visual automatizada de esta pantalla está pendiente.
+
 1. Inicia el editor y pulsa **Crear clan** en la biblioteca.
 2. Elige una carpeta de destino nueva dentro de una carpeta que ya exista y completa identidad, campeones y cartas iniciales.
 3. Revisa **Cartas**, **Campeones**, **Recursos visuales** y **Validación**.
