@@ -1,16 +1,17 @@
 using BepInEx;
 using TrainworksReloaded.Core;
+using TrainworksReloaded.Core.Extensions;
 using TrainworksReloaded.Core.Impl;
 
 namespace {{namespace}}.Plugin;
 
-[BepInPlugin(MyPluginInfo.PLUGIN_GUID, MyPluginInfo.PLUGIN_NAME, MyPluginInfo.PLUGIN_VERSION)]
+[BepInPlugin("{{namespace}}", {{nameLiteral}}, "{{version}}")]
 public class Plugin : BaseUnityPlugin
 {
     private void Awake()
     {
         var builder = Railhead.GetBuilder();
-        builder.Configure(MyPluginInfo.PLUGIN_GUID, config =>
+        builder.Configure("{{namespace}}", config =>
         {
             config.AddMergedJsonFile("json/clan.json", "json/cards.json");
         });

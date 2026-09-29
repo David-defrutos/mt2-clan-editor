@@ -54,6 +54,8 @@ test('genera un clan nuevo con dos campeones, seis sendas, dos iniciales y N car
     assert.ok((classData.champions as Record<string, unknown>[]).every(item => item.icon && item.locked_icon && item.portrait));
     assert.equal((await validateClan(clan)).filter(issue => issue.severity === 'error').length, 0);
     assert.ok((await fs.readFile(path.join(root, 'src', 'Plugin.cs'), 'utf8')).includes('json/cards.json'));
+    assert.ok((await fs.readFile(path.join(root, 'src', 'Plugin.cs'), 'utf8')).includes('using TrainworksReloaded.Core.Extensions;'));
+    assert.ok((await fs.readFile(path.join(root, 'src', 'Plugin.cs'), 'utf8')).includes('BepInPlugin("Local.NuevoClan"'));
     const workflow = await fs.readFile(path.join(root, '.github', 'workflows', 'build.yml'), 'utf8');
     assert.ok(workflow.includes('GH_AUTH_TOKEN'));
     assert.ok(workflow.includes('read:packages'));

@@ -8,7 +8,6 @@
     <Version>{{version}}</Version>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
     <PackageReference Include="TrainworksReloaded.Base" Version="{{trainworksVersion}}" />
   </ItemGroup>
 </Project>
