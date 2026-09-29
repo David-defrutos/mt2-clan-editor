@@ -36,7 +36,16 @@ export async function buildStatus(root: string) {
     return { projects: found, sdkVersion: '', configuration: rule.configuration, diagnostic: `No se pudo ejecutar ${rule.command}: ${(error as Error).message.slice(0, 300)}` };
   }
 }
-async function freshDll(projectFile: string, configuration: string, startedAt: number): Promise<string | null> {
+async function freshDll(projectFile: string, configuration: string, startedAt: number, rule: BuildRules): Promise<string | null> {
+  try {
+    const { stdout } = await run(rule.command, ['msbuild', projectFile, '-getProperty:TargetPath', `-property:Configuration=${configuration}`, '-nologo'],
+      { cwd: path.dirname(projectFile), timeout: rule.timeoutMs, maxBuffer: rule.maxOutputBytes, windowsHide: true });
+    const target = stdout.trim();
+    if (target.toLowerCase().endsWith('.dll')) {
+      const absolute = path.resolve(path.dirname(projectFile), target);
+      if ((await fs.stat(absolute)).mtimeMs >= startedAt - 2000) return absolute;
+    }
+  } catch { /* Older SDKs may not support property queries; try the conventional output. */ }
   const projectDirectory = path.dirname(projectFile);
   const output = path.join(projectDirectory, 'bin', configuration);
   const expected = path.basename(projectFile, '.csproj') + '.dll';
@@ -79,8 +88,8 @@ export async function buildClan(root: string, relativeProject: string) {
     exitCode = typeof failure.code === 'number' ? failure.code : 1;
     log = [failure.stdout, failure.stderr, failure.message].filter(Boolean).join('\n');
   }
-  const dll = exitCode === 0 ? await freshDll(projectFile, rule.configuration, startedAt) : null;
-  if (exitCode === 0 && !dll) return { ok: false, project: relativeProject, exitCode, diagnostic: 'dotnet terminó sin errores, pero no se encontró una DLL nueva con el nombre del proyecto.', log: log.slice(-12000) };
+  const dll = exitCode === 0 ? await freshDll(projectFile, rule.configuration, startedAt, rule) : null;
+  if (exitCode === 0 && !dll) return { ok: false, project: relativeProject, exitCode, diagnostic: 'dotnet terminó sin errores, pero no se encontró una DLL nueva en la salida del proyecto.', log: log.slice(-12000) };
   if (!dll) return { ok: false, project: relativeProject, exitCode, diagnostic: diagnostic(log), log: log.slice(-12000) };
   const sha256 = createHash('sha256').update(await fs.readFile(dll)).digest('hex');
   return { ok: true, project: relativeProject, exitCode, dll, sha256, builtAt: new Date().toISOString(), log: log.slice(-12000) };

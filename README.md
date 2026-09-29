@@ -22,7 +22,7 @@ Abre `http://127.0.0.1:4318`. `npm run check` comprueba los tipos y `npm test` e
 - Edita campos guiados, asigna definiciones ya existentes de efectos, triggers y habilidades, y permite editar el JSON completo de un objeto. Antes de guardar se muestra una vista previa. Cada cambio crea una copia de seguridad en `data/backups/` y rechaza archivos modificados fuera del editor.
 - Clasifica sprites por uso, informa dimensiones y referencias, y permite sustituir un PNG con vista previa y ajuste de tamaño. La imagen anterior queda respaldada.
 - Comprueba sintaxis, IDs duplicados, estructura de campeones, cartas iniciales, algunos rangos, referencias locales entre objetos y recursos visuales. Las excepciones de referencias a clases y triggers externos están en `config/validation.json`, según los siete clanes de referencia. Los siete clanes se leen correctamente. La comprobación de mayúsculas detecta tres rutas de imagen que conviene corregir para Linux/Proton: `icon_Vizier` (Sandscourged), `LaceChampionIcon` (The Silk Song) y `FearstoneIcon` (Yokai).
-- En **Publicación → Compilación local**, detecta proyectos C# del clan, ejecuta `dotnet build` en Release sin GitHub y muestra el registro. Si genera una DLL nueva, indica su ruta y SHA-256. El comando, los límites y la búsqueda de proyectos están en `config/build.json`.
+- En **Publicación → Compilación local**, detecta proyectos C# del clan, ejecuta `dotnet build` en Release sin GitHub y muestra el registro. Si genera una DLL nueva, indica su ruta y SHA-256, incluso cuando el proyecto define un `AssemblyName` distinto a su nombre de archivo. El comando, los límites y la búsqueda de proyectos están en `config/build.json`.
 
 ## Estado y límites de esta versión
 
