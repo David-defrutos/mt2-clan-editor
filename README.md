@@ -23,6 +23,18 @@ Abre `http://127.0.0.1:4318`. `npm run check` comprueba los tipos y `npm test` e
 - Clasifica sprites por uso, informa dimensiones y referencias, y permite sustituir un PNG con vista previa y ajuste de tamaño. La imagen anterior queda respaldada.
 - Comprueba sintaxis, IDs duplicados, estructura de campeones, cartas iniciales, algunos rangos, referencias locales entre objetos y recursos visuales. Las excepciones de referencias a clases y triggers externos están en `config/validation.json`, según los siete clanes de referencia. Los siete clanes se leen correctamente. La comprobación de mayúsculas detecta tres rutas de imagen que conviene corregir para Linux/Proton: `icon_Vizier` (Sandscourged), `LaceChampionIcon` (The Silk Song) y `FearstoneIcon` (Yokai).
 - En **Publicación → Compilación local**, detecta proyectos C# del clan, ejecuta `dotnet build` en Release sin GitHub y muestra el registro. Si genera una DLL nueva, indica su ruta y SHA-256, incluso cuando el proyecto define un `AssemblyName` distinto a su nombre de archivo. El comando, los límites y la búsqueda de proyectos están en `config/build.json`.
+- **Compilar con DLL instaladas** compila las fuentes C# en un proyecto aislado bajo `data/offline-builds/`, usando las referencias de `data/build-local.json`. Esta opción se ha probado con un clan recién generado y Trainworks 0.7.27, comprobando que todos los archivos del clan conservan su hash.
+
+## Probar un clan nuevo
+
+1. Inicia el editor y pulsa **Crear clan** en la biblioteca.
+2. Elige una carpeta de destino nueva dentro de una carpeta que ya exista y completa identidad, campeones y cartas iniciales.
+3. Revisa **Cartas**, **Campeones**, **Recursos visuales** y **Validación**.
+4. En **Publicación**, selecciona `src/ID.Plugin.csproj` y pulsa **Compilar con DLL instaladas**. El resultado muestra la ruta de la DLL, SHA-256 y registro.
+
+Para configurar esta opción en otro equipo, copia `config/build-local.example.json` a `data/build-local.json`, sustituye los valores por rutas absolutas a las DLL y escribe la versión instalada de Trainworks. Los nombres de referencias y el framework están en `config/offline-build.json`. Las rutas locales permanecen fuera de Git. Reinicia el editor o vuelve a entrar en Publicación después de cambiar la configuración.
+
+La opción con DLL instaladas está pensada para las fuentes de la plantilla generada: usa el framework configurado y no reproduce propiedades, generadores, recursos incrustados ni pasos personalizados del proyecto original. Para proyectos importados que necesiten esos pasos, usa **Compilar DLL local**, que ejecuta su `.csproj` completo. Una DLL compilada aún necesita los JSON y texturas del clan y la comprobación de carga en el juego.
 
 ## Estado y límites de esta versión
 

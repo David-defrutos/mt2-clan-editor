@@ -1,0 +1,6 @@
+{
+  "localConfigFile": "build-local.json",
+  "outputDirectory": "offline-builds",
+  "targetFramework": "netstandard2.1",
+  "requiredReferences": ["BepInEx", "TrainworksReloaded.Base", "TrainworksReloaded.Core", "UnityEngine", "UnityEngine.CoreModule", "Microsoft.Extensions.Configuration.Abstractions"]
+}

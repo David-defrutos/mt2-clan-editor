@@ -14,6 +14,7 @@ import { validateClan } from './validate.js';
 import { prepareArt, saveArt, type ArtRequest } from './art.js';
 import { createClan } from './create.js';
 import { buildClan, buildStatus } from './build.js';
+import { buildOffline, offlineStatus } from './offline-build.js';
 import { commitClan, downloadDll, publishStatus, pushClan } from './publish.js';
 
 const execFileAsync = promisify(execFile);
@@ -134,9 +135,10 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const buildMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/build$/);
   if (buildMatch) {
     const item = await getLibraryItem(buildMatch[1]);
-    if (req.method === 'GET') return send(res, 200, await buildStatus(item.root));
+    if (req.method === 'GET') return send(res, 200, { ...await buildStatus(item.root), offline: await offlineStatus() });
     if (req.method === 'POST') {
       const input = await body(req);
+      if (input.mode === 'installed') return send(res, 200, await buildOffline(item.root, required(input.project, 'project')));
       return send(res, 200, await buildClan(item.root, required(input.project, 'project')));
     }
   }

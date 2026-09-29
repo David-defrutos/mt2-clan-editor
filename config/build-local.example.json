@@ -1,0 +1,11 @@
+{
+  "trainworksVersion": "VERSION_INSTALADA",
+  "references": {
+    "BepInEx": "RUTA_ABSOLUTA/BepInEx.dll",
+    "TrainworksReloaded.Base": "RUTA_ABSOLUTA/TrainworksReloaded.Base.dll",
+    "TrainworksReloaded.Core": "RUTA_ABSOLUTA/TrainworksReloaded.Core.dll",
+    "UnityEngine": "RUTA_ABSOLUTA/UnityEngine.dll",
+    "UnityEngine.CoreModule": "RUTA_ABSOLUTA/UnityEngine.CoreModule.dll",
+    "Microsoft.Extensions.Configuration.Abstractions": "RUTA_ABSOLUTA/Microsoft.Extensions.Configuration.Abstractions.dll"
+  }
+}
