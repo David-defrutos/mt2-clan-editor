@@ -17,7 +17,7 @@ Abre `http://127.0.0.1:4318`. `npm run check` comprueba los tipos y `npm test` e
 ## Lo que ya hace
 
 - Abre y recorre los siete clanes de referencia (The Free Company, SuccClan, Sandscourged, The Silk Song, Pathogens, Equestrian y Yokai). Deva queda fuera de alcance por ahora.
-- Genera un proyecto nuevo con dos campeones, tres sendas de tres niveles para cada uno, dos cartas iniciales, N unidades de draft, dos pools declarados, marcadores visuales, manifiesto, fuente C# y workflow de compilación.
+- Genera un proyecto nuevo con dos campeones, tres sendas de tres niveles para cada uno, dos cartas iniciales, N unidades de draft (mínimo dos de estandarte), dos pools propios, circuito de estandarte, recursos visuales de clan y campeón, manifiesto, fuente C# y workflow de compilación. Las cantidades y los perfiles del proyecto nuevo salen de `config/templates/new-clan.json`.
 - Busca y filtra cartas, unidades, todos los objetos JSON, pools, mecánicas e imágenes; muestra progresión inspirada en Yokai y compara estadísticas globales.
 - Edita campos guiados, asigna definiciones ya existentes de efectos, triggers y habilidades, y permite editar el JSON completo de un objeto. Antes de guardar se muestra una vista previa. Cada cambio crea una copia de seguridad en `data/backups/` y rechaza archivos modificados fuera del editor.
 - Clasifica sprites por uso, informa dimensiones y referencias, y permite sustituir un PNG con vista previa y ajuste de tamaño. La imagen anterior queda respaldada.
@@ -25,7 +25,7 @@ Abre `http://127.0.0.1:4318`. `npm run check` comprueba los tipos y `npm test` e
 
 ## Estado y límites de esta versión
 
-La creación produce una **base editable**. Los gráficos de color son marcadores y las cartas de draft son unidades simples. El proyecto requiere revisión de equilibrio, iconos, recompensas y mecánicas en el juego antes de distribuirse. La compilación de la plantilla C# no se ha podido verificar en este entorno: GitHub Packages respondió `401` al restaurar `TrainworksReloaded.Base` 0.7.1. Se necesita acceso a ese paquete para comprobar y generar la DLL.
+La creación produce una **base editable**. Los gráficos de color son marcadores y las cartas de draft son unidades simples. La estructura generada ya incluye el estandarte y pasa pruebas de referencias internas, pero aún no está confirmada por una carga en el juego. El proyecto requiere revisión de equilibrio, iconos, recompensas y mecánicas antes de distribuirse. La compilación de la plantilla C# no se ha podido verificar en este entorno: GitHub Packages respondió `401` al restaurar `TrainworksReloaded.Base` 0.7.1. Se necesita acceso a ese paquete para comprobar y generar la DLL.
 
 La pantalla de publicación muestra Git, crea un commit limitado a la carpeta del clan, envía la rama a `origin` y consulta los runs de GitHub Actions asociados al SHA actual. Puede descargar el artefacto de un run exitoso del SHA actual y comprobar que incluye una DLL; no instala el archivo en el juego. La validación todavía no comprueba todas las referencias de Trainworks ni confirma el resultado dentro del juego. Los perfiles de dimensiones de arte y las reglas de edición están en `config/`; el editor conserva campos desconocidos de los clanes importados.
 

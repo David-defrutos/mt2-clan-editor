@@ -2,7 +2,9 @@
 
 Fuente revisada: copia local `D:\Juegos\MT2_mod\repos\otros\Trainworks-Reloaded.wiki`, commit `3aed27e`. Esta revisión compara la wiki y el Mod Template local con el editor en su versión inicial; no equivale a una prueba dentro del juego. La [guía de diseño](https://github.com/Monster-Train-2-Modding-Group/Trainworks-Reloaded/wiki/Custom-Clan-Design-Guide), [creación del clan](https://github.com/Monster-Train-2-Modding-Group/Trainworks-Reloaded/wiki/Custom-Clans), [campeones](https://github.com/Monster-Train-2-Modding-Group/Trainworks-Reloaded/wiki/Custom-Champions), [desarrollo](https://github.com/Monster-Train-2-Modding-Group/Trainworks-Reloaded/wiki/Developing-Your-Mod) y [configuración](https://github.com/Monster-Train-2-Modding-Group/Trainworks-Reloaded/wiki/Getting-Setup-for-Modding) son las fuentes principales.
 
-## Hallazgos que afectan a la primera versión jugable
+## Hallazgos de la primera versión que afectan al clan jugable
+
+La tabla describe el estado encontrado durante la revisión inicial. La siguiente fase corrigió en el generador las referencias de efectos, los ID de objetos visuales, los recursos de campeón y el circuito de estandarte. Hay una prueba automática que comprueba unicidad y resolución de referencias locales. Sigue pendiente confirmar aceptación por el esquema exacto de Trainworks y carga en el juego; la compilación de muestra se detuvo en NuGet `401`.
 
 | Prioridad | Hallazgo de la wiki y contraste con el editor | Trabajo necesario |
 |---|---|---|

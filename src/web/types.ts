@@ -37,6 +37,7 @@ export interface AssetInfo { id: string; file: string; image: string; category: 
 export interface NavItem { id: string; label: string; icon: string }
 export interface FieldRule { path: string; label: string; type: string; optional?: boolean; options?: string[] }
 export interface Config {
+  creation: { minimumDraftCards: number; defaultDraftCards: number; maximumDraftCards: number };
   navigation: { global: NavItem[]; clan: NavItem[] };
   fields: Record<string, FieldRule[]>;
   stats: { draftPools: string[]; starterPool: string; bannerPool: string; progressionMaxLevel: number };
