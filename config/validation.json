@@ -7,5 +7,12 @@
   "maxEmber": 10,
   "maxNormalUnlockLevel": 10,
   "technicalUnlockLevels": [99],
-  "draftPools": ["MegaPool", "UnitsAllBanner"]
+  "draftPools": ["MegaPool", "UnitsAllBanner"],
+  "externalReferencePaths": [
+    "effects.name", "status_effects.class_name", "effects.name.id",
+    "character_triggers.trigger.id", "relic_effects.param_trigger.id",
+    "traits.name.id", "effects.param_trigger.id", "status_effects.trigger_stage.id",
+    "relic_effects.name", "traits.name", "room_modifiers.name",
+    "traits.param_tracked_value.id", "huds.name"
+  ]
 }

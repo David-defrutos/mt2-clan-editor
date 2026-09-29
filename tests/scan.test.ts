@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { scanClan } from '../src/server/scan.ts';
 import { summarizeClan } from '../src/server/stats.ts';
+import { validateClan } from '../src/server/validate.ts';
 
 const names = [
   'David-FreeCompany', 'David-SuccClan_Custom', 'David-Sandscourged_Custom',
@@ -28,6 +29,7 @@ test('los siete clanes instalados se leen sin modificar archivos', async t => {
       const stats = await summarizeClan(clan);
       assert.equal(stats.champions, 2);
       assert.equal(stats.paths, 6);
+      assert.equal((await validateClan(clan)).filter(issue => issue.code === 'local-reference').length, 0);
       assert.equal((await fs.stat(sample)).mtimeMs, before);
     });
   }

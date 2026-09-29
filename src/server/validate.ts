@@ -8,6 +8,7 @@ interface Rules {
   expectedChampions: number; expectedPathsPerChampion: number; expectedLevelsPerPath: number;
   minimumStarterCards: number; minEmber: number; maxEmber: number;
   maxNormalUnlockLevel: number; technicalUnlockLevels: number[]; draftPools: string[];
+  externalReferencePaths: string[];
 }
 function array(value: unknown): unknown[] { return Array.isArray(value) ? value : []; }
 function refs(value: unknown): string[] { return array(value).filter((item): item is string => typeof item === 'string'); }
@@ -20,6 +21,26 @@ export async function validateClan(clan: ClanSnapshot): Promise<Issue[]> {
   const classEntry = clan.entries.find(entry => entry.section === 'classes');
   const champions = array(classEntry?.data.champions);
   const ids = new Map(clan.entries.map(entry => [`${entry.section}:${entry.id}`, entry]));
+  const localIds = new Set(clan.entries.map(entry => entry.id));
+  const externalPaths = new Set(rules.externalReferencePaths);
+  function checkReferences(entry: ClanSnapshot['entries'][number], value: unknown, fields: string[] = []): void {
+    const field = [entry.section, ...fields].join('.');
+    if (typeof value === 'string') {
+      if (value.startsWith('@') && !externalPaths.has(field) && !localIds.has(value.slice(1)) &&
+          !['classes.champions.card_data', 'classes.champions.starter_card'].includes(field)) {
+        add('error', 'local-reference', `${entry.id}: ${field} apunta a ${value}, que no existe en el clan.`, entry.file, entry.section, entry.id);
+      }
+    } else if (Array.isArray(value)) {
+      for (const item of value) checkReferences(entry, item, fields);
+    } else if (value && typeof value === 'object') {
+      const object = record(value);
+      for (const [key, item] of Object.entries(object)) {
+        if (key === 'id' && typeof object.mod_reference === 'string') continue;
+        checkReferences(entry, item, [...fields, key]);
+      }
+    }
+  }
+  for (const entry of clan.entries) checkReferences(entry, entry.data);
   if (classEntry && champions.length !== rules.expectedChampions) add('warning', 'champion-count', `Se esperaban ${rules.expectedChampions} campeones y hay ${champions.length}.`, classEntry.file, 'classes', classEntry.id);
   for (const candidate of champions) {
     const champion = record(candidate);

@@ -15,7 +15,8 @@ test('la validación señala referencias y arte rotos en una copia temporal', as
     await fs.writeFile(path.join(root, 'textures', 'other.png'), await sharp({ create: { width: 2, height: 2, channels: 4, background: '#ffffff' } }).png().toBuffer());
     const sample = {
       classes: [{ id: 'ClassTest', champions: [{ id: 'Hero', card_data: '@Missing', starter_card: '@Starter', upgrade_tree: [[]] }] }],
-      cards: [{ id: 'Starter', cost: 2, card_type: 'spell', unlock_level: 3, pools: ['StarterCardsOnly'] }],
+      cards: [{ id: 'Starter', cost: 2, card_type: 'spell', unlock_level: 3, pools: ['StarterCardsOnly'], effects: ['@MissingEffect'], card_art: '@MissingArt' }],
+      effects: [{ id: 'KnownEffect', name: '@CardEffectSpawnMonster' }],
       sprites: [{ id: 'MissingImage', path: 'textures/missing.png' }, { id: 'WrongCase', path: 'textures/Other.png' }]
     };
     await fs.writeFile(path.join(root, 'json', 'clan.json'), JSON.stringify(sample));
@@ -23,5 +24,9 @@ test('la validación señala referencias y arte rotos en una copia temporal', as
     for (const code of ['champion-count', 'path-count', 'path-levels', 'champion-reference', 'starter-locked', 'asset-missing', 'asset-case-mismatch']) {
       assert.ok(issues.some(issue => issue.code === code), `Falta ${code}`);
     }
+    const references = issues.filter(issue => issue.code === 'local-reference');
+    assert.equal(references.length, 2);
+    assert.ok(references.some(issue => issue.message.includes('@MissingEffect')));
+    assert.ok(references.some(issue => issue.message.includes('@MissingArt')));
   } finally { await fs.rm(root, { recursive: true, force: true }); }
 });
