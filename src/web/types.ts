@@ -40,7 +40,7 @@ export interface Config {
   creation: { minimumDraftCards: number; defaultDraftCards: number; maximumDraftCards: number };
   navigation: { global: NavItem[]; clan: NavItem[] };
   fields: Record<string, FieldRule[]>;
-  stats: { draftPools: string[]; starterPool: string; bannerPool: string; progressionMaxLevel: number };
+  stats: { draftPools: string[]; starterPool: string; bannerPool: string; progressionMaxLevel: number; metrics: { id: string; label: string }[] };
   mechanics: { assignments: { section: string; path: string; label: string; sourceSection: string; filter?: string; mode: 'append-id' | 'set-reference' }[] };
 }
 
@@ -52,3 +52,4 @@ export interface ClanStats {
   health: { min: number; median: number; max: number } | null; sprites: number; textureFiles: number;
   effects: number; triggers: number; pools: number; errors: number; error?: string;
 }
+export interface StatsItem { name: string; file: string; section?: string; id?: string; value?: number }

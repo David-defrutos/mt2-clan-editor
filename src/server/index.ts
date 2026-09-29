@@ -7,7 +7,7 @@ import { promisify } from 'node:util';
 import { addLibraryPath, getLibraryItem, loadLibrary, removeLibraryItem } from './library.js';
 import { configRoot, inside, projectRoot } from './paths.js';
 import { scanClan } from './scan.js';
-import { loadStatsRules, summarizeClan } from './stats.js';
+import { loadStatsRules, statsDetails, summarizeClan } from './stats.js';
 import { prepareEdit, saveEdit, prepareObjectEdit, saveObjectEdit, type EditRequest, type ObjectEditRequest } from './edit.js';
 import { inventoryAssets } from './assets.js';
 import { validateClan } from './validate.js';
@@ -152,10 +152,17 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   if (req.method === 'GET' && pathname === '/api/stats') {
     const items = await loadLibrary();
     const results = await Promise.all(items.map(async item => {
-      try { return await summarizeClan(await scanClan(item.root)); }
+      try { const clan = await scanClan(item.root); clan.issues = await validateClan(clan); return await summarizeClan(clan); }
       catch (error) { return { key: item.key, root: item.root, name: path.basename(item.root), error: (error as Error).message }; }
     }));
     return send(res, 200, { rules: await loadStatsRules(), clans: results });
+  }
+  const statsMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/stats$/);
+  if (req.method === 'GET' && statsMatch) {
+    const item = await getLibraryItem(statsMatch[1]);
+    const clan = await scanClan(item.root);
+    clan.issues = await validateClan(clan);
+    return send(res, 200, await statsDetails(clan, required(url.searchParams.get('metric'), 'metric')));
   }
   const assetMatch = pathname.match(/^\/api\/assets\/([a-f0-9]+)$/);
   if (req.method === 'GET' && assetMatch) {

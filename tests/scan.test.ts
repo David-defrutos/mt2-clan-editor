@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { scanClan } from '../src/server/scan.ts';
-import { summarizeClan } from '../src/server/stats.ts';
+import { statsDetails, summarizeClan } from '../src/server/stats.ts';
 import { validateClan } from '../src/server/validate.ts';
 
 const names = [
@@ -29,6 +29,9 @@ test('los siete clanes instalados se leen sin modificar archivos', async t => {
       const stats = await summarizeClan(clan);
       assert.equal(stats.champions, 2);
       assert.equal(stats.paths, 6);
+      const details = await statsDetails(clan, 'draft');
+      assert.equal(details.items.length, stats.draft);
+      assert.ok(details.items.every(item => clan.entries.some(entry => entry.section === item.section && entry.id === item.id && entry.file === item.file)));
       assert.equal((await validateClan(clan)).filter(issue => issue.code === 'local-reference').length, 0);
       assert.equal((await fs.stat(sample)).mtimeMs, before);
     });

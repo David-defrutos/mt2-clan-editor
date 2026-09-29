@@ -22,7 +22,7 @@ export function displayName(data: JsonRecord): string {
   return label(data.names) ?? label(data.titles) ?? label(data.name) ?? String(data.id ?? 'Sin ID');
 }
 
-async function filesUnder(root: string, extension: string): Promise<string[]> {
+export async function filesUnder(root: string, extension: string): Promise<string[]> {
   const result: string[] = [];
   async function visit(dir: string): Promise<void> {
     for (const item of await fs.readdir(dir, { withFileTypes: true })) {

@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { api, post } from './api';
-import type { AssetInfo, ClanSnapshot, ClanStats, Config, Entry, FieldRule, Issue, LibraryItem } from './types';
+import { StatsView } from './stats-view';
+import type { AssetInfo, ClanSnapshot, ClanStats, Config, Entry, FieldRule, Issue, LibraryItem, StatsItem } from './types';
 import './style.css';
 
 type Page = 'library' | 'create' | 'stats' | 'overview' | 'champions' | 'cards' | 'units' | 'objects' | 'progression' | 'pools' | 'mechanics' | 'assets' | 'validation' | 'publish';
@@ -52,6 +53,15 @@ function App() {
     catch (error) { setStatus({ kind: 'error', text: (error as Error).message }); }
     finally { setBusy(false); }
   }
+  async function inspectStat(key: string, item: StatsItem) {
+    setBusy(true); setStatus(null);
+    try {
+      const next = await api<ClanSnapshot>('/clans/' + key);
+      if (!next.entries.some(entry => entry.file === item.file && entry.section === item.section && entry.id === item.id)) throw new Error('El objeto ha cambiado o ya no existe. Actualiza las estadísticas.');
+      setClan(next); setSelected({ file: item.file, section: item.section!, id: item.id! }); setPage('objects');
+    } catch (error) { setStatus({ kind: 'error', text: (error as Error).message }); }
+    finally { setBusy(false); }
+  }
   async function addFolder(input: string) {
     if (!input.trim()) return;
     setBusy(true); setStatus(null);
@@ -99,14 +109,14 @@ function App() {
         {status && <div className={'notice ' + status.kind}><span>{status.text}</span><button onClick={() => setStatus(null)}>×</button></div>}
         {page === 'library' && <LibraryView items={library} onOpen={openClan} onRemove={remove} pathInput={pathInput} setPathInput={setPathInput} onAdd={addFolder} onBrowse={browse} busy={busy} onStats={() => navigate('stats')} onCreate={() => navigate('create')} />}
         {page === 'create' && config && <CreateView onCreate={create} onCancel={() => navigate('library')} busy={busy} creation={config.creation} />}
-        {page === 'stats' && <StatsView stats={stats} maxLevel={config?.stats.progressionMaxLevel ?? 10} onOpen={openClan} />}
+        {page === 'stats' && <StatsView stats={stats} metrics={config?.stats.metrics ?? []} maxLevel={config?.stats.progressionMaxLevel ?? 10} onOpen={openClan} onInspect={inspectStat} />}
         {clan && page === 'overview' && <Overview clan={clan} onGo={navigate} />}
         {clan && page === 'champions' && <Champions clan={clan} onOpen={openEntry} selected={selectedEntry} onClose={() => setSelected(null)} />}
         {clan && page === 'cards' && <><div className="page-head"><div><div className="eyebrow">CONTENIDO</div><h1>Cartas</h1><p>{cardList.length} de {cards.length} cartas. Selecciona una para ver sus datos y editar campos guiados.</p></div></div>
           <div className="filters"><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar nombre o ID…" aria-label="Buscar cartas" /><select value={rarity} onChange={e => setRarity(e.target.value)}><option value="all">Todas las rarezas</option>{['common','uncommon','rare','champion'].map(x => <option key={x}>{x}</option>)}</select><select value={kind} onChange={e => setKind(e.target.value)}><option value="all">Todos los tipos</option>{['monster','spell','equipment','room','blight'].map(x => <option key={x}>{x}</option>)}</select><select value={pool} onChange={e => setPool(e.target.value)}><option value="all">Todos los pools</option>{allPools.map(x => <option key={x}>{x}</option>)}</select><button className="ghost" onClick={() => { setQuery(''); setRarity('all'); setKind('all'); setPool('all'); }}>Limpiar</button></div>
           <div className={'split ' + (selectedEntry ? 'with-inspector' : '')}><div className="panel table-panel"><table><thead><tr><th>Carta</th><th>Tipo</th><th>Rareza</th><th>Ember</th><th>Desbloqueo</th><th>Pool</th></tr></thead><tbody>{cardList.map(entry => <tr key={entry.file+entry.id} onClick={() => openEntry(entry)} className={selectedEntry?.id === entry.id ? 'selected-row' : ''}><td><strong>{entry.name}</strong><small>{entry.id}</small></td><td>{text(entry.data.card_type)}</td><td><span className={'rarity '+String(entry.data.rarity ?? '')}>{text(entry.data.rarity)}</span></td><td>{text(entry.data.cost)}</td><td>{entry.data.unlock_level === undefined ? 'Inicio' : `Nivel ${entry.data.unlock_level}`}</td><td className="muted">{strings(entry.data.pools).join(', ') || '—'}</td></tr>)}</tbody></table>{cardList.length === 0 && <div className="empty-inline">Ninguna carta coincide con los filtros.</div>}</div>{selectedEntry && <Inspector entry={selectedEntry} clan={clan} rules={config?.fields[selectedEntry.section] ?? []} assignments={config?.mechanics.assignments ?? []} onClose={() => setSelected(null)} onSaved={() => refreshClan(clan.key)} setStatus={setStatus} />}</div></>}
         {clan && page === 'units' && <Units clan={clan} rules={config?.fields.characters ?? []} assignments={config?.mechanics.assignments ?? []} onSaved={() => refreshClan(clan.key)} setStatus={setStatus} />}
-        {clan && page === 'objects' && <ObjectExplorer clan={clan} fields={config?.fields ?? {}} assignments={config?.mechanics.assignments ?? []} onSaved={() => refreshClan(clan.key)} setStatus={setStatus} />}
+        {clan && page === 'objects' && <ObjectExplorer key={clan.key} clan={clan} initialSelected={selected} fields={config?.fields ?? {}} assignments={config?.mechanics.assignments ?? []} onSaved={() => refreshClan(clan.key)} setStatus={setStatus} />}
         {clan && page === 'progression' && <Progression clan={clan} cards={cards} level={level} setLevel={setLevel} draftPools={config?.stats.draftPools ?? []} bannerPool={config?.stats.bannerPool ?? ''} maxLevel={config?.stats.progressionMaxLevel ?? 10} onOpen={entry => { navigate('cards'); openEntry(entry); }} />}
         {clan && page === 'pools' && <Pools clan={clan} cards={cards} onOpen={entry => { navigate('cards'); openEntry(entry); }} />}
         {clan && page === 'mechanics' && <Mechanics clan={clan} onOpen={openEntry} selected={selectedEntry} onClose={() => setSelected(null)} onSaved={() => refreshClan(clan.key)} setStatus={setStatus} />}
@@ -170,10 +180,10 @@ function Units({ clan, rules, assignments, onSaved, setStatus }: { clan: ClanSna
   return <><div className="page-head"><div><div className="eyebrow">PERSONAJES</div><h1>Unidades</h1><p>{units.length} personajes. Edita ataque, salud, tamaño y datos avanzados en el inspector.</p></div></div><div className="filters"><input value={query} onChange={e => setQuery(e.target.value)} placeholder="Buscar unidad…" /></div><div className={'split ' + (selected ? 'with-inspector' : '')}><div className="panel table-panel"><table><thead><tr><th>Unidad</th><th>Ataque</th><th>Salud</th><th>Tamaño</th><th>Archivo</th></tr></thead><tbody>{filtered.map(entry => <tr key={entry.file+entry.id} onClick={() => setSelectedId(entry.id)} className={selectedId === entry.id ? 'selected-row' : ''}><td><strong>{entry.name}</strong><small>{entry.id}</small></td><td>{text(entry.data.attack_damage)}</td><td>{text(entry.data.health)}</td><td>{text(entry.data.size)}</td><td className="muted">{entry.file}</td></tr>)}</tbody></table></div>{selected && <Inspector entry={selected} clan={clan} rules={rules} assignments={assignments} onClose={() => setSelectedId('')} onSaved={onSaved} setStatus={setStatus} />}</div></>;
 }
 
-function ObjectExplorer({ clan, fields, assignments, onSaved, setStatus }: { clan: ClanSnapshot; fields: Record<string, FieldRule[]>; assignments: Assignment[]; onSaved: () => void; setStatus: (s: Status) => void }) {
-  const [section, setSection] = useState('all');
+function ObjectExplorer({ clan, fields, assignments, onSaved, setStatus, initialSelected }: { clan: ClanSnapshot; fields: Record<string, FieldRule[]>; assignments: Assignment[]; onSaved: () => void; setStatus: (s: Status) => void; initialSelected?: { file: string; section: string; id: string } | null }) {
+  const [section, setSection] = useState(initialSelected?.section ?? 'all');
   const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState<{ file: string; section: string; id: string } | null>(null);
+  const [selected, setSelected] = useState<{ file: string; section: string; id: string } | null>(initialSelected ?? null);
   const sections = Object.entries(clan.sections).sort((a, b) => a[0].localeCompare(b[0]));
   const filtered = clan.entries.filter(entry => (section === 'all' || entry.section === section) && (entry.name + ' ' + entry.id + ' ' + entry.file).toLocaleLowerCase().includes(query.toLocaleLowerCase()));
   const active = selected && clan.entries.find(entry => entry.file === selected.file && entry.section === selected.section && entry.id === selected.id);
@@ -408,23 +418,6 @@ function PackagePanel({ clan, changedAt }: { clan: ClanSnapshot; changedAt?: str
     finally { setBusy(false); }
   }
   return <div className="panel content-panel"><h2>Preparar el mod para probarlo</h2><p>Reúne la DLL, los JSON y las texturas en una carpeta nueva. Guarda los hashes para comprobar si la salida sigue al día.</p>{error && <div className="notice error">{error}</div>}{state?.build ? <><p>Última DLL: {state.build.dll}</p>{!state.build.fresh && <p className="notice error">Necesita recompilar: {state.build.changed.join(', ')}</p>}</> : <p>Compila primero desde el editor para registrar la DLL.</p>}{state?.package && <><p>Carpeta preparada: {state.package.destination}</p><p className={state.package.fresh ? 'success-block' : 'notice error'}>{state.package.fresh ? 'La salida coincide con los archivos actuales.' : `Salida desactualizada: ${state.package.changed.join(', ')}`}</p></>}<div className="head-actions"><button className="secondary" disabled={busy} onClick={refresh}>Actualizar comprobación</button><button className="primary" disabled={busy || !state?.build?.fresh} onClick={prepare}>{busy ? 'Comprobando…' : 'Preparar carpeta del mod'}</button></div><p>Después puedes copiar esa carpeta a un perfil de pruebas de BepInEx. La carga en el juego debe verificarse en ese perfil.</p></div>;
-}
-
-function StatsView({ stats, maxLevel, onOpen }: { stats: ClanStats[]; maxLevel: number; onOpen: (key: string) => void }) {
-  const rows: [string, (s: ClanStats) => React.ReactNode][] = [
-    ['JSON', s => s.files], ['Cartas totales', s => s.cards], ['Cartas de draft', s => s.draft],
-    ['Comunes', s => s.rarity?.common ?? 0], ['Infrecuentes', s => s.rarity?.uncommon ?? 0], ['Raras', s => s.rarity?.rare ?? 0],
-    ['Campeones', s => s.champions], ['Sendas', s => s.paths], ['Cartas iniciales', s => s.starter], ['Estandarte', s => s.banner],
-    ['Personajes', s => s.characters], ['Habilidades', s => s.abilities], ['Reliquias', s => s.relics],
-    ['Efectos', s => s.effects], ['Triggers', s => s.triggers], ['Pools declarados', s => s.pools],
-    ['Sprites', s => s.sprites], ['PNG', s => s.textureFiles], ['Errores', s => s.errors],
-    ['Ataque mínimo', s => s.attack?.min ?? '—'], ['Ataque mediano', s => s.attack?.median ?? '—'], ['Ataque máximo', s => s.attack?.max ?? '—'],
-    ['Salud mínima', s => s.health?.min ?? '—'], ['Salud mediana', s => s.health?.median ?? '—'], ['Salud máxima', s => s.health?.max ?? '—'],
-    ...Array.from(new Set([...Array.from({ length: maxLevel + 1 }, (_, level) => String(level)), ...stats.flatMap(s => Object.keys(s.unlocks))])).sort((a,b) => Number(a)-Number(b)).map((level): [string, (s: ClanStats) => React.ReactNode] => [`Desbloqueo nivel ${level}`, s => s.unlocks[level] ?? 0]),
-    ...Array.from(new Set(stats.flatMap(s => Object.keys(s.costs)))).sort((a,b) => Number(a)-Number(b)).map((cost): [string, (s: ClanStats) => React.ReactNode] => [`Ember ${cost}`, s => s.costs[cost] ?? 0])
-  ];
-  return <><div className="page-head"><div><div className="eyebrow">VISTA GLOBAL</div><h1>Comparar clanes</h1><p>Las cartas de habilidad y auxiliares se separan de las cartas obtenibles en draft.</p></div><button className="secondary" onClick={() => { const csv = ['Métrica,'+stats.map(s=>`"${s.name.replaceAll('"','""')}"`).join(','),...rows.map(([name,fn])=>`"${name}",`+stats.map(s=>fn(s)).join(','))].join('\n'); const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'})); a.download='clanes-estadisticas.csv'; a.click(); URL.revokeObjectURL(a.href); }}>Exportar CSV</button></div>{stats.length === 0 ? <div className="empty-state">Añade clanes a la biblioteca para compararlos.</div> : <div className="panel comparison"><table><thead><tr><th>Métrica</th>{stats.map(s => <th key={s.key}><button onClick={() => onOpen(s.key)}>{s.name} ↗</button></th>)}</tr></thead><tbody>{rows.map(([name,fn]) => <tr key={name}><th>{name}</th>{stats.map(s => <td key={s.key}>{s.error ? '—' : fn(s)}</td>)}</tr>)}</tbody></table></div>}
-  </>;
 }
 
 createRoot(document.getElementById('root')!).render(<App />);
