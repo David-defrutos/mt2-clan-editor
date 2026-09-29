@@ -88,6 +88,8 @@ Cuatro pasos con `Atrás`, `Siguiente`, `Crear proyecto` y `Cancelar`:
 
 Crear escribe archivos en la carpeta elegida y abre `Resumen`. No exige conectar GitHub para diseñar localmente.
 
+Antes de presentar el resultado como jugable, el generador debe superar una comprobación de conformidad con el esquema y el Mod Template: referencias `@` a objetos propios, sprites y objetos de juego distintos, recursos de ambos campeones y circuito completo de estandarte (nodo de mapa, recompensa, pool, unidades y subtipo). El detalle y las fuentes figuran en [REVISION-WIKI-TRAINWORKS.md](REVISION-WIKI-TRAINWORKS.md). Las proporciones de cartas de la guía de diseño son un preset configurable, no una restricción para N cartas.
+
 ### 3.4 Resumen del clan
 
 **Cabecera:** nombre, ID, versión, imagen de clan, ruta y estado. **Tarjetas:** 2 campeones, sendas completas/incompletas, cartas por rareza y tipo, iniciales, cartas disponibles al inicio y pendientes por nivel, pools, recursos visuales asignados/faltantes, errores y último build. **Lista «Pendiente»** enlazada a los objetos afectados.

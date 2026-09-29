@@ -60,6 +60,7 @@ Los clanes instalados son **fixtures de aceptación**. Las pruebas automáticas 
 | H08 | Como autor, comparo clanes. | Cada métrica abre exactamente los objetos que cuenta; habilidades/tokens no inflan el draft. |
 | H09 | Como autor, envío el clan a GitHub. | La DLL mostrada procede del run del SHA enviado, nunca de un run anterior. |
 | H10 | Como autor, compilo la DLL en mi equipo sin subir el clan. | Si hay proyecto C# y SDK compatible, el editor ejecuta `dotnet build` en Release, muestra el log y la ruta de la DLL; informa con precisión si faltan SDK, fuentes o acceso a paquetes. |
+| H11 | Como autor, genero un clan que Trainworks carga realmente. | El JSON generado respeta el esquema y el Mod Template; incluye selección de campeones y el circuito completo de estandarte. Se compila y se prueba en un perfil aislado con el log de BepInEx. Véase [revisión de la wiki](REVISION-WIKI-TRAINWORKS.md). |
 
 ## 4. Plan de iteraciones
 
@@ -70,7 +71,7 @@ Las duraciones son orientativas y se ajustan tras la revisión de cada iteració
 | 0. Base técnica | 1 semana | Inventario de siete clanes, configuración versionada, fixtures, prototipo de parser y escritura sin cambios; elegir el pequeño catálogo guiado inicial. | Informe de diferencias por clan y decisión documentada sobre lectura/escritura de JSON y catálogos. |
 | 1. Biblioteca y lectura | 2 semanas | Aplicación local TypeScript, selector de carpeta, biblioteca, informe de importación, barra lateral y lectura de los siete. | Abrir los siete clanes y navegar por objetos sin modificar archivos. |
 | 2. Edición segura | 2 semanas | Formularios genéricos, ficha de carta/unidad, búsqueda, filtros, referencias, diferencias, copias y guardado. | Editar una carta en cada clan, guardar y reabrir; hash idéntico de todo lo no tocado. |
-| 3. Creación y estructura | 2 semanas | Asistente, identidad, dos campeones, seis sendas, cartas iniciales, pools variables, estilo y estandarte; primera compilación local mediante `dotnet build`. | Generar un clan nuevo, validarlo, compilarlo localmente y verlo en selección dentro del juego. |
+| 3. Creación y estructura | 2 semanas | Asistente, identidad, dos campeones, seis sendas, cartas iniciales, pools variables, estilo y circuito completo de estandarte; conformidad con esquema/Mod Template y primera compilación local. | Generar un clan nuevo, validarlo, compilarlo localmente y verlo en selección y en el mapa dentro del juego. |
 | 4. Mecánicas y progresión | 2 semanas | Catálogo guiado reducido y ampliable por configuración, `unlock_level`, simulación de nivel y avisos de draft. | Añadir mecánicas del catálogo y comprobar el comportamiento con Yokai; preservar valores 99 importados. |
 | 5. Recursos visuales | 2 semanas | Inventario por referencias, perfiles de tamaño, vistas previas, reemplazo y compensación de `character_art`. | Cambiar en copias arte de carta, personaje, selección y reliquia sin afectar otros recursos. |
 | 6. Estadísticas y validación | 2 semanas | Comparación de siete clanes, métricas configuradas, desglose, exportación y validación completa. | Comparar los siete, abrir una cifra hasta sus cartas y detectar referencias/pools/arte incorrectos. |
