@@ -40,7 +40,7 @@ export interface Config {
   creation: { minimumDraftCards: number; defaultDraftCards: number; maximumDraftCards: number };
   navigation: { global: NavItem[]; clan: NavItem[] };
   fields: Record<string, FieldRule[]>;
-  stats: { draftPools: string[]; starterPool: string; bannerPool: string; progressionMaxLevel: number; metrics: { id: string; label: string }[] };
+  stats: { draftPools: string[]; starterPool: string; bannerPool: string; progressionMaxLevel: number; technicalUnlockLevels: number[]; metrics: { id: string; label: string }[] };
   mechanics: { assignments: { section: string; path: string; label: string; sourceSection: string; filter?: string; mode: 'append-id' | 'set-reference' }[] };
 }
 

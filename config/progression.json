@@ -1,0 +1,5 @@
+{
+  "levelField": "unlock_level",
+  "defaultLevel": 2,
+  "maxBatchSize": 200
+}

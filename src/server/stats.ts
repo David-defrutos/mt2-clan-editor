@@ -14,7 +14,7 @@ function strings(value: unknown): string[] { return Array.isArray(value) ? value
 
 function isAbility(card: Entry): boolean { return card.data.is_an_ability === true; }
 
-function isDraft(card: Entry, rules: Rules): boolean {
+export function isDraft(card: Entry, rules: Rules): boolean {
   return !isAbility(card) && card.data.rarity !== 'champion' && !rules.technicalUnlockLevels.includes(Number(card.data.unlock_level ?? 0)) && strings(card.data.pools).some(pool => rules.draftPools.includes(pool));
 }
 

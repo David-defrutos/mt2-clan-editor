@@ -16,6 +16,7 @@ import { createClan } from './create.js';
 import { buildClan, buildStatus } from './build.js';
 import { buildOffline, offlineStatus } from './offline-build.js';
 import { artifactStatus, packageClan } from './artifacts.js';
+import { prepareUnlocks, progressionStatus, saveUnlocks, type UnlockChange } from './progression.js';
 import { commitClan, downloadDll, publishStatus, pushClan } from './publish.js';
 
 const execFileAsync = promisify(execFile);
@@ -131,6 +132,20 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     if (req.method === 'POST' && publishMatch[2] === 'download') {
       const input = await body(req);
       return send(res, 200, await downloadDll(item.root, Number(input.runId)));
+    }
+  }
+  const progressionMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/progression(?:\/(preview|save))?$/);
+  if (progressionMatch) {
+    const item = await getLibraryItem(progressionMatch[1]);
+    if (req.method === 'GET' && !progressionMatch[2]) return send(res, 200, await progressionStatus(item.root));
+    if (req.method === 'POST') {
+      const input = await body(req);
+      if (!Array.isArray(input.changes)) throw new Error('Se necesita una lista de cambios.');
+      if (progressionMatch[2] === 'save') return send(res, 200, await saveUnlocks(item.root, input.changes as UnlockChange[]));
+      if (progressionMatch[2] === 'preview') {
+        const preview = await prepareUnlocks(item.root, input.changes as UnlockChange[]);
+        return send(res, 200, { changes: preview.changes, files: preview.files.map(file => file.file) });
+      }
     }
   }
   const packageMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/package$/);
