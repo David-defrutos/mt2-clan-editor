@@ -1,0 +1,6 @@
+{
+  "assignments": [
+    { "section": "cards", "path": "card_art", "label": "Arte de carta", "sourceSection": "game_objects", "sourceType": "card_art", "spritePath": "extensions.card_art.sprite" },
+    { "section": "characters", "path": "character_art", "label": "Arte de personaje", "sourceSection": "game_objects", "sourceType": "character_art", "spritePath": "extensions.character_art.sprite" }
+  ]
+}

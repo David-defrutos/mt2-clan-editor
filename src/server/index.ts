@@ -14,6 +14,7 @@ import { validateClan } from './validate.js';
 import { prepareArt, saveArt, type ArtRequest } from './art.js';
 import { createClan } from './create.js';
 import { discoverMods, importDiscovered } from './discovery.js';
+import { visualCatalog, prepareVisualAssignment, saveVisualAssignment, type VisualRequest } from './visual-assignments.js';
 import { prepareContent, saveContent, type ContentRequest } from './content.js';
 import { buildClan, buildStatus } from './build.js';
 import { buildOffline, offlineStatus } from './offline-build.js';
@@ -131,6 +132,16 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     return send(res, 200, snapshot);
   }
   const contentMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/content\/(preview|save)$/);
+  const visualMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/visual-assignments(?:\/(preview|save))?$/);
+  if (visualMatch) {
+    const item = await getLibraryItem(visualMatch[1]);
+    if (req.method === 'GET' && !visualMatch[2]) return send(res, 200, await visualCatalog(await scanClan(item.root), required(url.searchParams.get('section'), 'section')));
+    if (req.method === 'POST' && visualMatch[2]) {
+      const input = await body(req);
+      const request: VisualRequest = { root: item.root, section: required(input.section, 'section'), file: required(input.file, 'file'), id: required(input.id, 'id'), field: required(input.field, 'field'), targetId: required(input.targetId, 'targetId'), expectedHash: required(input.expectedHash, 'expectedHash') };
+      return send(res, 200, visualMatch[2] === 'save' ? await saveVisualAssignment(request) : await prepareVisualAssignment(request));
+    }
+  }
   if (contentMatch && req.method === 'POST') {
     const item = await getLibraryItem(contentMatch[1]);
     const input = await body(req);

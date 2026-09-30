@@ -86,7 +86,11 @@ En Biblioteca, **Buscar clanes** revisa las rutas de `config/library-discovery.j
 
 La vista de personaje escribe `extensions.character_art.transform.offset`. Lee `offset_position` histórico con aviso; al editar uno de sus desplazamientos migra el vector completo, conservando X/Y/Z y creando respaldo. Una transformación mal anidada genera avisos. Comprueba que el juego usa la versión de Trainworks correspondiente antes de probar estos ajustes.
 
-### Crear y duplicar contenido
+### Asignar arte del catálogo
+
+El inspector de **Cartas** y **Unidades** incluye **Asignar arte existente**: busca por nombre o ID, selecciona una imagen del tipo correspondiente, revisa sus dimensiones y usuarios compartidos, pulsa **Previsualizar asignación** y guarda con respaldo. Las reglas están en `config/visual-assignments.json`. La asignación modifica solo la referencia; seleccionar el mismo recurso conserva la representación original, incluidas referencias estructuradas. El PNG y las transformaciones no se modifican. Los IDs duplicados se excluyen del catálogo y se rechazan al guardar. Para usar un archivo nuevo, sustituye la imagen desde Recursos visuales; crear recursos visuales independientes sigue en el backlog.
+
+### Crear y duplicar contenido nuevo
 
 En **Cartas** puedes crear una carta de unidad o un hechizo. En **Unidades** puedes crear un personaje independiente. Selecciona una fila y pulsa **Duplicar selección** para copiar un objeto existente. Introduce un ID nuevo y un nombre, pulsa **Previsualizar** y revisa los objetos, avisos y JSON antes de guardar.
 

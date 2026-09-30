@@ -1,6 +1,7 @@
 {
   "cards": [
     { "path": "names.english", "label": "Nombre", "type": "text" },
+    { "path": "card_art", "label": "Referencia de arte de carta", "type": "text" },
     { "path": "descriptions.english", "label": "Descripción", "type": "textarea" },
     { "path": "cost", "label": "Ember", "type": "number" },
     { "path": "rarity", "label": "Rareza", "type": "select", "options": ["common", "uncommon", "rare", "champion"] },
@@ -10,6 +11,7 @@
   ],
   "characters": [
     { "path": "names.english", "label": "Nombre", "type": "text" },
+    { "path": "character_art", "label": "Referencia de arte de personaje", "type": "text" },
     { "path": "attack_damage", "label": "Ataque", "type": "number" },
     { "path": "health", "label": "Salud", "type": "number" },
     { "path": "size", "label": "Tamaño", "type": "number" }

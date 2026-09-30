@@ -7,6 +7,7 @@ import { ChampionsView } from './champions-view';
 import { CharacterPreview } from './character-preview';
 import { ContentCreator } from './content-creator';
 import { DiscoveryView } from './discovery-view';
+import { VisualPicker } from './visual-picker';
 import type { AssetInfo, ClanSnapshot, ClanStats, Config, Entry, FieldRule, Issue, LibraryItem, StatsItem } from './types';
 import './style.css';
 
@@ -213,6 +214,7 @@ function Inspector({ entry, clan, rules, assignments, onClose, onSaved, setStatu
   }
   return <aside className="panel inspector"><div className="inspector-head"><div><div className="eyebrow">{entry.section}</div><h2>{entry.name}</h2><small>{entry.id}</small></div><button className="close" onClick={onClose}>×</button></div><div className="file-ref">{entry.file}</div>
     {rules.length > 0 && <div className="edit-box"><h3>Editar campo</h3><label>Campo<select value={field} onChange={e => setField(e.target.value)}>{rules.map(r => <option key={r.path} value={r.path}>{r.label}</option>)}</select></label><label>{rule?.label}{rule?.type === 'textarea' ? <textarea value={value} onChange={e => setValue(e.target.value)} /> : rule?.type === 'select' ? <select value={value} onChange={e => setValue(e.target.value)}><option value="">—</option>{rule.options?.map(x => <option key={x}>{x}</option>)}</select> : <input type={rule?.type === 'number' ? 'number' : 'text'} value={value} onChange={e => setValue(e.target.value)} placeholder={rule?.optional ? 'Sin campo explícito' : ''} />}</label>{rule?.type === 'string-list' && <small>Separa los valores con comas.</small>}<button className="secondary full" disabled={working} onClick={() => act(false)}>Previsualizar cambio</button>{preview && <div className="preview"><div>Antes: <b>{JSON.stringify(preview.before) ?? 'sin campo'}</b></div><div>Después: <b>{JSON.stringify(preview.after) ?? 'sin campo'}</b></div><button className="primary full" disabled={!preview.changed || working} onClick={() => act(true)}>Guardar este campo</button></div>}</div>}
+    <VisualPicker entry={entry} clan={clan} onSaved={onSaved} />
     <MechanismPicker entry={entry} clan={clan} assignments={assignments} onSaved={onSaved} setStatus={setStatus} />
     <AdvancedEditor entry={entry} clan={clan} onSaved={onSaved} setStatus={setStatus} />
   </aside>;

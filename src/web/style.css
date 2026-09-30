@@ -60,6 +60,11 @@ input,select,textarea{background:#131a20;border:1px solid #43515a;color:#e9e8e3;
 .help-tooltip:hover .help-text, .help-tooltip:focus-within .help-text, .help-tooltip.is-open .help-text { display: block; }
 .help-tooltip.is-dismissed .help-text { display: none; }
 .content-creator { margin-bottom: 18px; }
+.visual-picker { border-top: 1px solid #48555e; margin-top: 20px; padding-top: 12px; }
+.visual-picker fieldset { min-width: 0; border: 0; padding: 0; }
+.visual-picker small { overflow-wrap: anywhere; }
+.visual-assignment-image { margin: 12px 0; padding: 12px; background: #121c24; text-align: center; }
+.visual-assignment-image img { max-width: 100%; max-height: 220px; object-fit: contain; }
 .discovery-panel { margin: 20px 0; }
 .discovered-mod { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-top: 1px solid #48555e; padding: 16px 0; }
 .discovered-mod > div { min-width: 0; overflow-wrap: anywhere; }

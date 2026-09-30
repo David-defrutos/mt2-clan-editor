@@ -118,6 +118,13 @@ Decisiones que conviene cerrar en las primeras revisiones:
 
 ## 8. Estimación y seguimiento
 
+### Asignación visual desde catálogo · 30-09-2026
+
+- Inspector de cartas/unidades: búsqueda y selección de arte por tipo, imagen, dimensiones y lista de usuarios; vista previa y guardado con respaldo.
+- Configuración en `config/visual-assignments.json`; IDs de recursos locales únicos y tipo correcto. Seleccionar el recurso ya asignado no reescribe una referencia estructurada.
+- Pruebas verifican conservación byte a byte del JSON salvo la referencia, PNG, comentarios, campos desconocidos, respaldo y bloqueo de hashes antiguos, IDs duplicados y tipos incorrectos.
+- Continúa pendiente crear arte independiente para una copia y asignar recursos de otros contextos mediante formularios específicos.
+
 ### Biblioteca ampliada y transformaciones · 30-09-2026
 
 - Deva vuelve a entrar en alcance. Se incorporan Steward, Disciple y versiones originales de FreeCompany, Sandscourged, Silk Song y Yokai; Sweetkin se detecta adicionalmente.

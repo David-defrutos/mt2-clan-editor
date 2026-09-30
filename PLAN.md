@@ -238,6 +238,8 @@ Las configuraciones se validan antes de abrir un proyecto. Si una versión nueva
 
 ## 8. Decisiones pendientes antes de implementar
 
+**Asignación visual implementada (30-09-2026):** el inspector de Cartas y Unidades permite buscar recursos locales del tipo correspondiente, seleccionar arte existente, mostrar imagen y dimensiones, revisar todos sus usos, previsualizar y guardar con respaldo. Configuración en `config/visual-assignments.json`. Conserva PNG y transformaciones; selección del arte actual sin escritura. Excluye IDs duplicados y rechaza tipo incorrecto. Crear recursos independientes y otros contextos visuales permanecen en el backlog.
+
 **Incremento de creación de contenido (30-09-2026):** Cartas permite crear unidad/hechizo y duplicar selección; Unidades permite crear personaje independiente y duplicarlo. Formulario con ID, nombre, tipo, Previsualizar, Guardar y Cancelar. La vista previa enumera objetos y referencias compartidas. Se añaden JSON independientes y arte marcador desde `config/templates/content.json`; no se sobrescriben originales. Duplicar una unidad estándar copia efecto de invocación y personajes, conservando arte y otras mecánicas compartidos con aviso. Copias de campeones no se añaden al árbol automáticamente. Los adaptadores de invocación personalizada/pools, recursos independientes de una copia y asignación guiada de unidades a efectos quedan en el backlog.
 
 
