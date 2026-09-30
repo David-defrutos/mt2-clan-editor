@@ -20,7 +20,7 @@ import { prepareUnlocks, progressionStatus, saveUnlocks, type UnlockChange } fro
 import { commitClan, downloadDll, publishStatus, pushClan } from './publish.js';
 import { championRules, describeChampions, combineChampion } from './champions.js';
 import { prepareChampionTree, saveChampionTree, type TreeRequest } from './champion-tree.js';
-import { characterModels, prepareCharacterTransform, saveCharacterTransform, type CharacterRequest } from './character-preview.js';
+import { characterBackground, characterModels, prepareCharacterTransform, saveCharacterTransform, type CharacterRequest } from './character-preview.js';
 
 const execFileAsync = promisify(execFile);
 const port = Number(process.env.CLAN_EDITOR_PORT ?? 4318);
@@ -77,6 +77,13 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   }
 
   if (req.method === 'GET' && pathname === '/api/health') return send(res, 200, { ok: true });
+  if (req.method === 'GET' && pathname === '/api/character-background') {
+    const file = await characterBackground();
+    if (!file) return send(res, 404, { error: 'No hay una captura de fondo configurada.' });
+    res.writeHead(200, { 'Content-Type': 'image/png', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
+    res.end(await fs.readFile(file));
+    return;
+  }
   if (req.method === 'GET' && pathname === '/api/config') {
     const [navigation, fields, stats, assets, mechanics, creation] = await Promise.all(['navigation.json', 'fields.json', 'stats.json', 'assets.json', 'mechanics.json', 'templates/new-clan.json'].map(file => fs.readFile(path.join(configRoot, file), 'utf8').then(JSON.parse)));
     return send(res, 200, { navigation, fields, stats, assets, mechanics, creation: { minimumDraftCards: creation.banner.unitCount, defaultDraftCards: creation.defaultDraftCards, maximumDraftCards: creation.maxDraftCards } });

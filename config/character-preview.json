@@ -4,6 +4,13 @@
   "defaultPivot": { "x": 0.5, "y": 0.5 },
   "groundHeightMultiplier": 0.647,
   "viewport": { "width": 1000, "height": 650, "originX": 500, "floorY": 520, "pixelsPerUnit": 70 },
+  "background": {
+    "file": "data/preview/train-floor.png",
+    "label": "Sala de MT2 · izquierda del Shield Steward",
+    "viewport": { "width": 1632, "height": 413, "originX": 230, "originY": 270, "floorY": 350, "pixelsPerUnit": 72, "pixelsPerUnitY": 62 },
+    "calibration": "Aproximación a partir de las capturas aportadas de Carrier. No reproduce cámara, shaders, animaciones ni profundidad de MT2.",
+    "reference": { "scaleX": 0.956284, "scaleY": 0.9555, "positionY": 0.95 }
+  },
   "controls": [
     { "id": "scaleX", "path": "transform.scale.x", "label": "Escala horizontal", "default": 1, "min": -20, "max": 20, "step": 0.01 },
     { "id": "scaleY", "path": "transform.scale.y", "label": "Escala vertical", "default": 1, "min": -20, "max": 20, "step": 0.01 },

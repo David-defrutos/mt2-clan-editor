@@ -55,6 +55,10 @@ La opción con DLL instaladas está pensada para las fuentes de la plantilla gen
 
 ### Vista de personaje
 
+El selector **Fondo** permite alternar la cuadrícula con una captura del juego. En este equipo está configurada la sala aportada, con el personaje a la izquierda del Shield Steward. La captura original está en `data/preview/train-floor.png` (archivo local); copia un PNG de 1632 × 413 allí para utilizar el mismo encuadre en otro equipo. Sus dimensiones, origen, suelo y proyección X/Y están en `config/character-preview.json`. El zoom mueve conjuntamente fondo y personaje. Cambiar de fondo no modifica ningún ajuste del clan.
+
+Este encuadre es una aproximación calibrada con la captura previa de Carrier, usando como referencia escala X 0.956284, escala Y 0.9555 y altura 0.95. Se dibujan los valores actuales del JSON: si has cambiado la escala, verás el tamaño correspondiente. La captura no reproduce shaders, animaciones, oclusiones ni perspectiva 3D; la apariencia exacta debe comprobarse en MT2. El perfil de combate no calibra la selección de campeones.
+
 Abre **Vista de personaje** en la barra lateral. Elige un `character_art`, filtrando por nombre, sprite o uso (combate/selección). Arrastra la imagen para moverla y el tirador de su esquina para redimensionarla; también puedes usar deslizadores y valores numéricos de escala, altura y desplazamiento. **Mantener proporciones** conserva la relación de escalas. El zoom y la cuadrícula solo afectan a la vista.
 
 Pulsa **Previsualizar guardado** para comprobar los campos y objetos afectados; **Guardar ajustes con respaldo** modifica únicamente las transformaciones elegidas. Conserva el PNG, animaciones, profundidad Z, otros objetos y campos desconocidos. Si varios personajes usan el mismo objeto, todos recibirán el ajuste. **Restablecer cambios** recupera los valores cargados. Las reglas, límites, pivote y tamaño de la guía están en `config/character-preview.json`.

@@ -3,12 +3,13 @@ import path from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import * as jsonc from 'jsonc-parser';
 import { inventoryAssets } from './assets.js';
-import { configRoot, dataRoot, inside, keyForPath } from './paths.js';
+import { configRoot, dataRoot, inside, keyForPath, projectRoot } from './paths.js';
 import { scanClan } from './scan.js';
 import type { ClanSnapshot, Entry } from './types.js';
 
 interface Control { id: string; path: string; label: string; default: number; min: number; max: number; step: number }
-interface Rules { extensionPath: string; defaultPixelsPerUnit: number; defaultPivot: { x: number; y: number }; groundHeightMultiplier: number; viewport: { width: number; height: number; originX: number; floorY: number; pixelsPerUnit: number }; controls: Control[] }
+interface Viewport { width: number; height: number; originX: number; originY?: number; floorY: number; pixelsPerUnit: number; pixelsPerUnitY?: number }
+interface Rules { extensionPath: string; defaultPixelsPerUnit: number; defaultPivot: { x: number; y: number }; groundHeightMultiplier: number; viewport: Viewport; background?: { file: string; label: string; viewport: Viewport; calibration: string; reference?: Record<string, number>; available?: boolean }; controls: Control[] }
 export interface CharacterRequest { root: string; file: string; id: string; expectedHash: string; changes: Record<string, number> }
 const hash = (s: string) => createHash('sha256').update(s).digest('hex');
 const at = (object: unknown, field: string): unknown => field.split('.').reduce<unknown>((v, k) => v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>)[k] : undefined, object);
@@ -18,6 +19,13 @@ const refId = (v: unknown): string | undefined => {
   return typeof v === 'string' && v.startsWith('@') ? v.slice(1) : undefined;
 };
 export async function characterRules(): Promise<Rules> { return JSON.parse(await fs.readFile(path.join(configRoot, 'character-preview.json'), 'utf8')); }
+export async function characterBackground(): Promise<string | undefined> {
+  const rules = await characterRules();
+  if (!rules.background) return;
+  const absolute = path.resolve(projectRoot, rules.background.file);
+  if (!inside(dataRoot, absolute) || path.extname(absolute).toLowerCase() !== '.png') throw new Error('El fondo debe ser un PNG dentro de data/.');
+  return (await fs.stat(absolute).catch(() => null))?.isFile() ? absolute : undefined;
+}
 function references(v: unknown, id: string): boolean {
   if (refId(v) === id) return true;
   if (Array.isArray(v)) return v.some(x => references(x, id));
@@ -25,6 +33,7 @@ function references(v: unknown, id: string): boolean {
 }
 export async function characterModels(clan: ClanSnapshot) {
   const rules = await characterRules();
+  if (rules.background) rules.background.available = Boolean(await characterBackground());
   const assets = await inventoryAssets(clan);
   const arts = clan.entries.filter(e => e.section === 'game_objects' && e.data.type === 'character_art');
   const items = arts.map(entry => {

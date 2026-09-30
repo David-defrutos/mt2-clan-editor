@@ -118,6 +118,12 @@ Decisiones que conviene cerrar en las primeras revisiones:
 
 ## 8. Estimación y seguimiento
 
+### Incremento de fondo del juego · 30-09-2026
+
+- Entregado: captura local como fondo predeterminado, sprite situado en el hueco izquierdo del Shield Steward, cambio a cuadrícula y zoom conjunto. Encadre/proyección configurados y separados de las transformaciones del clan.
+- Calibración aproximada: comparación de Carrier con la captura aportada; se consideran márgenes transparentes, pivote y escalas diferentes en X/Y para la proyección de referencia. El perfil no reproduce shaders ni cámara 3D y requiere validación visual en el juego.
+- Verificación: pruebas del encuadre (cuernos, capa y hueco respecto al Steward) y movimiento por eje. La captura se conserva como dato local; la revisión interactiva del navegador sigue pendiente por el error de ACL.
+
 ### Incremento de vista de personaje · 30-09-2026
 
 - Entregado: lienzo con sprite y guía de suelo, filtros por uso/nombre/sprite, arrastre de posición, tirador de escala, proporciones vinculadas, controles numéricos, zoom y cuadrícula. Vista previa y guardado de transformaciones con respaldo y control de hash.
