@@ -9,7 +9,7 @@ import type { ClanSnapshot, Entry } from './types.js';
 
 interface Control { id: string; path: string; label: string; default: number; min: number; max: number; step: number }
 interface Viewport { width: number; height: number; originX: number; originY?: number; floorY: number; pixelsPerUnit: number; pixelsPerUnitY?: number }
-interface Rules { extensionPath: string; defaultPixelsPerUnit: number; defaultPivot: { x: number; y: number }; groundHeightMultiplier: number; viewport: Viewport; background?: { file: string; label: string; viewport: Viewport; calibration: string; reference?: Record<string, number>; available?: boolean }; controls: Control[] }
+interface Rules { extensionPath: string; defaultPixelsPerUnit: number; defaultPivot: { x: number; y: number }; groundHeightMultiplier: number; viewport: Viewport; background?: { file: string; label: string; viewport: Viewport; calibration: string; reference?: Record<string, number>; available?: boolean; projectionOverrides?: { classId: string; artId: string; scaleX?: number; scaleY?: number; offsetY?: number; note: string }[] }; controls: Control[] }
 export interface CharacterRequest { root: string; file: string; id: string; expectedHash: string; changes: Record<string, number> }
 const hash = (s: string) => createHash('sha256').update(s).digest('hex');
 const at = (object: unknown, field: string): unknown => field.split('.').reduce<unknown>((v, k) => v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>)[k] : undefined, object);
@@ -56,7 +56,8 @@ export async function characterModels(clan: ClanSnapshot) {
     if (sprite?.data.pixels_per_unit === undefined) warnings.push(`Se asumen ${rules.defaultPixelsPerUnit} píxeles por unidad. Los mods históricos pueden usar otro valor.`);
     const uses = clan.entries.filter(e => e !== entry && references(e.data, entry.id));
     const context = uses.some(e => e.section === 'characters') ? 'battle' : uses.some(e => e.section === 'classes') ? 'selection' : 'other';
-    return { entry, sprite, image: asset?.image, width, height, ppu, pivot: { x: number(at(sprite?.data, 'pivot.x'), rules.defaultPivot.x), y: number(at(sprite?.data, 'pivot.y'), rules.defaultPivot.y) }, values, automaticY, warnings, uses, context, usable: Boolean(sprite && width && height && ppu > 0 && asset && ['ok', 'case-mismatch'].includes(asset.status)) };
+    const projection = rules.background?.projectionOverrides?.find(p => p.classId === clan.classId && p.artId === entry.id);
+    return { entry, sprite, image: asset?.image, width, height, ppu, pivot: { x: number(at(sprite?.data, 'pivot.x'), rules.defaultPivot.x), y: number(at(sprite?.data, 'pivot.y'), rules.defaultPivot.y) }, values, automaticY, warnings, uses, context, projection, usable: Boolean(sprite && width && height && ppu > 0 && asset && ['ok', 'case-mismatch'].includes(asset.status)) };
   });
   return { rules, items };
 }

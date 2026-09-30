@@ -118,6 +118,13 @@ Decisiones que conviene cerrar en las primeras revisiones:
 
 ## 8. Estimación y seguimiento
 
+### Corrección de tamaño en fondo del juego · 30-09-2026
+
+- Recalibración con tres capturas: Virodemonologist, Carrier e Incubus Butcher. Comparación de contornos coloreados, excluyendo iconos de estado, y normalización por la altura del Shield Steward en cada captura.
+- Corrección general: proyección vertical de 62 a 72 px/unidad y origen Y de 270 a 300; se mantiene la posición horizontal. Viro y Butcher concuerdan en la proyección común.
+- Carrier presenta proporción vertical distinta: ajuste empírico de vista configurable por clase/arte, con aviso visible. No se alteran las transformaciones del clan; pendiente de confirmar la excepción con otra captura y la versión cargada por el juego.
+- Pruebas de referencia verifican ancho y alturas de los tres ejemplos, además de las regresiones de guardado.
+
 ### Incremento de fondo del juego · 30-09-2026
 
 - Entregado: captura local como fondo predeterminado, sprite situado en el hueco izquierdo del Shield Steward, cambio a cuadrícula y zoom conjunto. Encadre/proyección configurados y separados de las transformaciones del clan.
