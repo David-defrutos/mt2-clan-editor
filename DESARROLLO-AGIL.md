@@ -118,13 +118,20 @@ Decisiones que conviene cerrar en las primeras revisiones:
 
 ## 8. Estimación y seguimiento
 
+### Incremento de edición del árbol · 30-09-2026
+
+- Entregado: asignación de mejoras existentes a los niveles de cada senda, filtro por nombre/ID/archivo, vista previa, cancelar/restablecer y guardado con respaldo.
+- Verificado: cambio de una referencia conserva el resto del archivo byte por byte, incluyendo BOM, CRLF, comentarios, campos desconocidos, otro campeón y referencias externas. Seleccionar la misma mejora conserva su referencia estructurada sin escribir. Se rechazan hashes antiguos, posiciones inválidas y IDs duplicados.
+- Evidencia: 28 pruebas superadas y compilación correcta. Las escrituras de prueba se realizan en carpetas temporales.
+- Pendiente: aceptación visual y por teclado; prueba en el juego de un árbol modificado. Los árboles incompletos se siguen reparando en el editor avanzado; crear y clonar mejoras queda en el backlog.
+
 ### Incremento de campeones y sendas · 30-09-2026
 
 - Objetivo entregado: comparar valores base y bonificaciones de cada nivel; explorar combinaciones y abrir las mejoras para editar campos guiados.
 - Criterios verificados: II sustituye a I; II + I suma una mejora de cada senda; los límites de combinación vienen de configuración; referencias externas, duplicadas o desconocidas no producen valores inventados; habilidades personalizadas generan avisos.
 - Evidencia: compilación del editor correcta, 25 pruebas superadas y resolución en lectura de 16 campeones y 144 mejoras entre los siete clanes y la demo.
 - Pendiente de aceptación: recorrido visual y por teclado de la pantalla en el navegador del usuario; no se ha verificado este cálculo mediante una partida. La herramienta de revisión del navegador está bloqueada por el error de ACL del entorno.
-- Próximo alcance de esta pantalla: previsualización de arte y edición guiada del árbol de referencias, con comprobación de cambios compartidos.
+- Próximo alcance de esta pantalla: previsualización de arte y creación/clonado de mejoras; la edición guiada del árbol se ha entregado en el incremento posterior.
 
 Estimación **preliminar**, para una persona con experiencia en TypeScript y conocimiento del modding de MT2: **360–580 horas**, aproximadamente **9–15 semanas a jornada completa**. Incluye la compatibilidad obligatoria con siete clanes, edición conservadora, creación jugable, recursos visuales, estadísticas, progresión y GitHub. El catálogo guiado inicial será pequeño; se amplía mediante ficheros de configuración. No incluye Deva, producir ilustraciones ni programar mecánicas C# nuevas para cada clan. La incertidumbre mayor está en importar y guardar sin pérdida los formatos existentes y en la prueba de carga real del juego.
 

@@ -98,6 +98,8 @@ Antes de presentar el resultado como jugable, el generador debe superar una comp
 
 ### 3.5 Campeones y sendas
 
+**Edición del árbol implementada (30-09-2026):** selección de mejoras locales por nivel, filtro del catálogo, restablecer y cancelar, vista previa de referencias, avisos de uso compartido y repetición, guardado localizado con copia de seguridad y comprobación de cambios en disco. Se conservan los campos desconocidos y las referencias externas no seleccionadas. El máximo de cambios por operación se configura en `config/champions.json`. Añadir o eliminar sendas/niveles y clonar mejoras todavía requiere el editor avanzado.
+
 **Incremento implementado (30-09-2026):** búsqueda de campeones y mejoras; tabla por senda con bonificaciones de ataque, salud y tamaño; selección y comparación de niveles entre dos sendas; apertura de carta, unidad, inicial, clase y mejoras en el inspector. El cálculo sustituye niveles anteriores de la misma senda. Reglas en `config/champions.json`; campos guiados de mejoras en `config/fields.json`. Se muestran avisos por habilidades no simuladas y valores desconocidos. Esta vista todavía no equivale a una simulación de combate ni completa los controles visuales y de reorganización descritos a continuación.
 
 **Listado:** exactamente dos campeones por plantilla. Cada tarjeta muestra arte de carta y personaje, carta inicial, ataque/salud base, tres sendas y nivel alcanzado por cada una. Para clanes importados se muestran los datos reales aunque sean incompletos.

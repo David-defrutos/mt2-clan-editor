@@ -35,6 +35,8 @@ En **Campeones**, busca por nombre, ID o mejora. Cada senda muestra sus bonifica
 
 Los selectores permiten comparar hasta tres niveles entre dos sendas. El nivel II sustituye al I: se suma solo la mejora seleccionada de cada senda a los valores base. **Restablecer** vuelve a los valores sin mejoras. La configuración está en `config/champions.json` y los campos editables en `config/fields.json`.
 
+**Editar árbol de sendas** permite asignar mejoras locales existentes a los niveles del árbol. Filtra el catálogo por nombre, ID o archivo, cambia los selectores y pulsa **Previsualizar cambios** antes de **Guardar árbol de sendas**. La vista muestra las referencias anterior y nueva y avisa de mejoras compartidas o repetidas. El guardado crea una copia de seguridad, comprueba el hash actual del archivo y conserva comentarios, formato, otros campeones y referencias sin modificar. Las referencias externas se conservan mientras no se sustituyan explícitamente. El selector excluye IDs duplicados; añadir sendas o niveles ausentes sigue disponible mediante el editor avanzado de la clase.
+
 La vista calcula bonificaciones numéricas explícitas; no simula combate, habilidades, triggers, modificaciones iniciales ni C# personalizado. Los avisos identifican esos campos y las referencias externas o no resueltas. Los valores desconocidos aparecen como `—`. Se ha verificado la resolución de las 126 mejoras de los siete clanes de referencia y las 18 de la demo, sin modificar sus archivos. La revisión visual automatizada de esta pantalla está pendiente.
 
 1. Inicia el editor y pulsa **Crear clan** en la biblioteca.

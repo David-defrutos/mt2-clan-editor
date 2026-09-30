@@ -1,6 +1,7 @@
 {
   "maxCombinedLevels": 3,
   "maxSelectedPaths": 2,
+  "maxTreeChanges": 9,
   "fields": {
     "champions": "champions", "card": "card_data", "starter": "starter_card",
     "tree": "upgrade_tree", "effects": "effects", "character": "param_character"

@@ -4,7 +4,7 @@ import { configRoot } from './paths.js';
 import type { ClanSnapshot, Entry, JsonRecord } from './types.js';
 
 export interface ChampionRules {
-  maxCombinedLevels: number; maxSelectedPaths: number;
+  maxCombinedLevels: number; maxSelectedPaths: number; maxTreeChanges: number;
   fields: { champions: string; card: string; starter: string; tree: string; effects: string; character: string };
   spawnEffects: string[];
   stats: { label: string; base: string; bonus: string }[];
@@ -53,10 +53,10 @@ export function describeChampions(clan: ClanSnapshot, rules: ChampionRules) {
           if (extra.length) notices.push(`Campos no simulados: ${extra.join(', ')}.`);
           if (bonuses.some(s => s.value === null)) notices.push('Bonificación numérica inválida.');
         }
-        return { level: levelIndex + 1, entry, bonuses, warnings: notices };
+        return { level: levelIndex + 1, reference: ref, entry, bonuses, warnings: notices };
       })
     }));
-    return { id: String(data.id ?? `${owner.id}[${index}]`), name: character?.name ?? card?.name ?? String(data.id ?? 'Campeón'), owner, card, starter, character, base, paths, warnings };
+    return { id: String(data.id ?? `${owner.id}[${index}]`), championIndex: index, name: character?.name ?? card?.name ?? String(data.id ?? 'Campeón'), owner, card, starter, character, base, paths, warnings };
   }));
 }
 

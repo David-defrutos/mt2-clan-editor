@@ -27,3 +27,9 @@ input,select,textarea{background:#131a20;border:1px solid #43515a;color:#e9e8e3;
 .champion-path .table-panel { overflow-x: auto; }
 .champion-combination { border-top: 1px solid var(--border, #303442); margin-top: 20px; padding-top: 12px; }
 .champion-combination details { margin-top: 14px; overflow-wrap: anywhere; }
+.champion-tree-editor { margin: 16px 0; padding: 16px; border: 1px solid #34414a; border-radius: 8px; }
+.champion-tree-editor fieldset { min-width: 0; border: 0; padding: 0; }
+.champion-tree-editor label { display: grid; gap: 8px; margin: 12px 0; }
+.champion-tree-editor input, .champion-tree-editor select { width: 100%; }
+.champion-tree-editor .head-actions { flex-wrap: wrap; margin-top: 16px; }
+.champion-tree-editor .tree-preview { margin-top: 16px; overflow-wrap: anywhere; }

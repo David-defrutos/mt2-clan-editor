@@ -19,6 +19,7 @@ import { artifactStatus, packageClan } from './artifacts.js';
 import { prepareUnlocks, progressionStatus, saveUnlocks, type UnlockChange } from './progression.js';
 import { commitClan, downloadDll, publishStatus, pushClan } from './publish.js';
 import { championRules, describeChampions, combineChampion } from './champions.js';
+import { prepareChampionTree, saveChampionTree, type TreeRequest } from './champion-tree.js';
 
 const execFileAsync = promisify(execFile);
 const port = Number(process.env.CLAN_EDITOR_PORT ?? 4318);
@@ -111,12 +112,25 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     snapshot.issues = await validateClan(snapshot);
     return send(res, 200, snapshot);
   }
+  const treeMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/champions\/tree\/(preview|save)$/);
+  if (treeMatch && req.method === 'POST') {
+    const item = await getLibraryItem(treeMatch[1]);
+    const input = await body(req);
+    const request: TreeRequest = { root: item.root, file: required(input.file, 'file'), classId: required(input.classId, 'classId'), championIndex: Number(input.championIndex), expectedHash: required(input.expectedHash, 'expectedHash'), changes: input.changes as TreeRequest['changes'] };
+    if (treeMatch[2] === 'save') return send(res, 200, await saveChampionTree(request));
+    const preview = await prepareChampionTree(request);
+    return send(res, 200, { changed: preview.changed, file: preview.file, champion: preview.champion, changes: preview.changes, warnings: preview.warnings });
+  }
   const championMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/champions(?:\/(preview))?$/);
   if (championMatch) {
     const item = await getLibraryItem(championMatch[1]);
     const rules = await championRules();
-    const champions = describeChampions(await scanClan(item.root), rules);
-    if (req.method === 'GET' && !championMatch[2]) return send(res, 200, { champions, maxCombinedLevels: rules.maxCombinedLevels, maxSelectedPaths: rules.maxSelectedPaths });
+    const snapshot = await scanClan(item.root);
+    const champions = describeChampions(snapshot, rules);
+    if (req.method === 'GET' && !championMatch[2]) {
+      const upgrades = snapshot.entries.filter(e => e.section === 'upgrades');
+      return send(res, 200, { champions, upgrades, maxCombinedLevels: rules.maxCombinedLevels, maxSelectedPaths: rules.maxSelectedPaths });
+    }
     if (req.method === 'POST' && championMatch[2]) {
       const input = await body(req);
       if (!Number.isInteger(input.champion) || Number(input.champion) < 0 || Number(input.champion) >= champions.length) throw new Error('Campeón inválido.');
