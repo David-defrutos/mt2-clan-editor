@@ -14,12 +14,18 @@
       { "classId": "ClassPathogens", "artId": "CarrierCharacterArt", "scaleY": 0.855, "offsetY": -10, "note": "Calibración empírica de Carrier con la captura aportada: proporción vertical y desplazamiento del sprite. Solo afecta a esta vista de combate; pendiente de verificar con una nueva captura del juego." }
     ]
   },
+  "controlGroups": [
+    { "id": "size", "label": "Tamaño", "description": "Ajusta cuánto ocupa el personaje. Mantén las proporciones para evitar deformarlo.", "proportions": true },
+    { "id": "vertical", "label": "Movimiento vertical · Y", "description": "Sube o baja el personaje. Normalmente ajustarás estos controles junto con el tamaño." },
+    { "id": "horizontal", "label": "Movimiento horizontal · X", "description": "Ajustes opcionales para moverlo a izquierda o derecha. Generalmente puedes conservar sus valores.", "collapsed": true }
+  ],
+  "proportionsHelp": "Al cambiar una escala, la otra se ajusta para conservar la proporción actual de anchura y altura. Desactívalo para modificarlas por separado.",
   "controls": [
-    { "id": "scaleX", "path": "transform.scale.x", "label": "Escala horizontal", "default": 1, "min": -20, "max": 20, "step": 0.01 },
-    { "id": "scaleY", "path": "transform.scale.y", "label": "Escala vertical", "default": 1, "min": -20, "max": 20, "step": 0.01 },
-    { "id": "positionX", "path": "transform.position.x", "label": "Posición horizontal", "default": 0, "min": -30, "max": 30, "step": 0.01 },
-    { "id": "positionY", "path": "transform.position.y", "label": "Altura", "default": 0, "min": -30, "max": 30, "step": 0.01 },
-    { "id": "offsetX", "path": "transform.offset_position.x", "label": "Desplazamiento adicional X", "default": 0, "min": -30, "max": 30, "step": 0.01 },
-    { "id": "offsetY", "path": "transform.offset_position.y", "label": "Desplazamiento adicional Y", "default": 0, "min": -30, "max": 30, "step": 0.01 }
+    { "id": "scaleX", "group": "size", "path": "transform.scale.x", "label": "Escala horizontal", "help": "Cambia la anchura del personaje, sin mover su pivote. Con Mantener proporciones activado también cambia la altura. No cambia la posición horizontal.", "default": 1, "min": -20, "max": 20, "step": 0.01 },
+    { "id": "scaleY", "group": "size", "path": "transform.scale.y", "label": "Escala vertical", "help": "Cambia la altura del dibujo, sin mover su pivote. Con Mantener proporciones activado también cambia la anchura. Si la altura de posición es automática, Trainworks puede recalcularla al cambiar el tamaño.", "default": 1, "min": -20, "max": 20, "step": 0.01 },
+    { "id": "positionX", "group": "horizontal", "path": "transform.position.x", "label": "Posición horizontal", "help": "Posición base del pivote en X. Un valor mayor lo mueve a la derecha; uno menor, a la izquierda. Generalmente se conserva. No controla cómo el juego distribuye las unidades en el suelo.", "default": 0, "min": -30, "max": 30, "step": 0.01 },
+    { "id": "positionY", "group": "vertical", "path": "transform.position.y", "label": "Altura", "help": "Posición base del pivote en Y: aumenta para subir y disminuye para bajar. Cuando no está definida, Trainworks calcula una altura automática. Al guardar este control se establece una altura explícita.", "default": 0, "min": -30, "max": 30, "step": 0.01 },
+    { "id": "offsetX", "group": "horizontal", "path": "transform.offset_position.x", "label": "Desplazamiento adicional X", "help": "Corrección que se suma a la posición horizontal base. Positivo desplaza a la derecha; negativo, a la izquierda. Déjalo en 0 si no necesitas una corrección adicional.", "default": 0, "min": -30, "max": 30, "step": 0.01 },
+    { "id": "offsetY", "group": "vertical", "path": "transform.offset_position.y", "label": "Desplazamiento adicional Y", "help": "Corrección que se añade después de la altura base o automática. Positivo sube; negativo baja. Ejemplo: altura 0,95 y desplazamiento +0,20 dan 1,15. Permite conservar la altura automática y añadir una corrección.", "default": 0, "min": -30, "max": 30, "step": 0.01 }
   ]
 }

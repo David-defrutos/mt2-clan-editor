@@ -238,6 +238,8 @@ Las configuraciones se validan antes de abrir un proyecto. Si una versión nueva
 
 ## 8. Decisiones pendientes antes de implementar
 
+**Requisito confirmado para el cierre:** traducir la interfaz completa y añadir un selector de idiomas. Se realizará al completar y estabilizar las funcionalidades, antes de considerar terminada la versión final. La lista de idiomas se concretará en esa fase; este requisito incluye tooltips y mensajes, no solo los títulos de las pantallas.
+
 1. **Catálogo inicial de mecánicas:** durante el inventario de la iteración 0, elegir un conjunto pequeño de efectos y triggers frecuentes. El resto seguirá disponible como JSON con validación estructural; ampliar el catálogo consistirá en añadir definiciones de parámetros a ficheros de configuración.
 2. **Idiomas de contenido:** decidir si el editor exige inglés como mínimo y qué otros idiomas ofrecerá inicialmente.
 3. **Instalación local de DLL:** decidir si se incluye en la primera entrega o tras estabilizar generación y GitHub.
@@ -245,3 +247,12 @@ Las configuraciones se validan antes de abrir un proyecto. Si una versión nueva
 5. **Referencia de progresión:** el comportamiento deseado es el de Yokai. La iteración de progresión comprobará en juego cómo se presentan las cartas bloqueadas en el libro de registro y reproducirá ese patrón; no se necesita diseñar un sistema distinto antes de esa prueba.
 
 Estas decisiones no impiden desarrollar el lector conservador, los formularios base, el gestor de recursos ni las estadísticas.
+
+## 9. Traducción y selector de idiomas
+
+- Centralizar los textos de navegación, formularios, botones, filtros, grupos, tooltips, estados vacíos, validaciones, confirmaciones y notificaciones en catálogos de idioma versionados bajo `config/locales/`.
+- Usar claves estables y parámetros para nombres, números y rutas. Los textos configurados de grupos y controles también se traducen. Los errores del servidor tendrán códigos/argumentos traducibles para evitar respuestas mezcladas entre idiomas.
+- Añadir un selector de idioma visible y persistir la preferencia entre sesiones. El cambio debe conservar el clan abierto, selección y modificaciones pendientes.
+- Definir un idioma de respaldo para claves ausentes y adaptar números y plurales. Los valores JSON escritos deben conservar su formato de datos, independientemente del idioma de la interfaz.
+- La elección del idioma de interfaz no debe reescribir automáticamente nombres o descripciones del contenido del clan; su edición por idioma se gestiona por separado.
+- Aceptación: selector funcional, catálogos completos, ayudas y errores traducidos, ausencia de cadenas de interfaz sin catalogar y revisión de desbordamientos de texto y accesibilidad en los idiomas acordados.

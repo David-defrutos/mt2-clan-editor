@@ -118,6 +118,12 @@ Decisiones que conviene cerrar en las primeras revisiones:
 
 ## 8. Estimación y seguimiento
 
+### Ayudas de los controles y requisito de traducción · 30-09-2026
+
+- Vista de personaje: grupos de tamaño, movimiento vertical y movimiento horizontal, explicaciones y tooltips. El bloque horizontal queda plegado inicialmente. Grupos y textos proceden de configuración.
+- Se incorpora como requisito obligatorio de cierre la traducción completa y un selector de idiomas. La fase final cubrirá catálogos, textos configurados, ayudas, mensajes de error, persistencia de preferencia y regresión visual. Las traducciones completas se realizarán cuando se estabilice el alcance funcional.
+- Los IDs actuales de controles y grupos se mantienen estables para su futura vinculación con claves de traducción. La interfaz todavía está en español; el selector se entrega en la fase final.
+
 ### Corrección de tamaño en fondo del juego · 30-09-2026
 
 - Recalibración con tres capturas: Virodemonologist, Carrier e Incubus Butcher. Comparación de contornos coloreados, excluyendo iconos de estado, y normalización por la altura del Shield Steward en cada captura.

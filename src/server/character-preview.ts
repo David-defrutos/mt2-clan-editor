@@ -7,7 +7,7 @@ import { configRoot, dataRoot, inside, keyForPath, projectRoot } from './paths.j
 import { scanClan } from './scan.js';
 import type { ClanSnapshot, Entry } from './types.js';
 
-interface Control { id: string; path: string; label: string; default: number; min: number; max: number; step: number }
+interface Control { id: string; group: string; path: string; label: string; help: string; default: number; min: number; max: number; step: number }
 interface Viewport { width: number; height: number; originX: number; originY?: number; floorY: number; pixelsPerUnit: number; pixelsPerUnitY?: number }
 interface Rules { extensionPath: string; defaultPixelsPerUnit: number; defaultPivot: { x: number; y: number }; groundHeightMultiplier: number; viewport: Viewport; background?: { file: string; label: string; viewport: Viewport; calibration: string; reference?: Record<string, number>; available?: boolean; projectionOverrides?: { classId: string; artId: string; scaleX?: number; scaleY?: number; offsetY?: number; note: string }[] }; controls: Control[] }
 export interface CharacterRequest { root: string; file: string; id: string; expectedHash: string; changes: Record<string, number> }
