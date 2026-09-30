@@ -11,6 +11,23 @@ interface Control { id: string; group: string; path: string; label: string; help
 interface Viewport { width: number; height: number; originX: number; originY?: number; floorY: number; pixelsPerUnit: number; pixelsPerUnitY?: number }
 interface Rules { extensionPath: string; defaultPixelsPerUnit: number; defaultPivot: { x: number; y: number }; groundHeightMultiplier: number; viewport: Viewport; background?: { file: string; label: string; viewport: Viewport; calibration: string; reference?: Record<string, number>; available?: boolean; projectionOverrides?: { classId: string; artId: string; scaleX?: number; scaleY?: number; offsetY?: number; note: string }[] }; controls: Control[] }
 export interface CharacterRequest { root: string; file: string; id: string; expectedHash: string; changes: Record<string, number> }
+interface Rules { offsetCompatibility: { currentPath: string; legacyPath: string }; misplacedTransformPaths: string[] }
+function controlValue(extension: unknown, control: Control, rules: Rules): unknown {
+  if (!control.id.startsWith('offset')) return at(extension, control.path);
+  const axis = control.id.slice(-1).toLowerCase();
+  const current = at(extension, rules.offsetCompatibility.currentPath);
+  return at(extension, (current === undefined ? rules.offsetCompatibility.legacyPath : rules.offsetCompatibility.currentPath) + '.' + axis);
+}
+export function characterTransformWarnings(data: Entry['data'], rules: Rules): string[] {
+  const warnings: string[] = [];
+  const extension = at(data, rules.extensionPath);
+  for (const field of rules.misplacedTransformPaths) if (at(data, field) !== undefined) warnings.push(`La transformación en ${field} está fuera de ${rules.extensionPath}. El juego puede ignorarla; corrige la estructura en el editor JSON.`);
+  const current = at(extension, rules.offsetCompatibility.currentPath);
+  const legacy = at(extension, rules.offsetCompatibility.legacyPath);
+  if (legacy !== undefined && current === undefined) warnings.push('Se lee offset_position por compatibilidad histórica. La versión actual indicada por Brandon utiliza offset: al editar un desplazamiento se migrará el vector completo conservando X, Y y Z. Comprueba la versión de Trainworks usada por el juego.');
+  if (legacy !== undefined && current !== undefined) warnings.push('Hay offset y offset_position simultáneamente. La vista usa offset. Resuelve la ambigüedad en el editor JSON antes de editar desplazamientos.');
+  return warnings;
+}
 const hash = (s: string) => createHash('sha256').update(s).digest('hex');
 const at = (object: unknown, field: string): unknown => field.split('.').reduce<unknown>((v, k) => v && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>)[k] : undefined, object);
 const number = (v: unknown, fallback: number) => typeof v === 'number' && Number.isFinite(v) ? v : fallback;
@@ -44,10 +61,10 @@ export async function characterModels(clan: ClanSnapshot) {
     const asset = sprite ? assets.find(a => a.id === sprite.id && a.file === sprite.file) : undefined;
     const ppu = number(sprite?.data.pixels_per_unit, rules.defaultPixelsPerUnit);
     const width = asset?.width ?? 0; const height = asset?.height ?? 0;
-    const values = Object.fromEntries(rules.controls.map(c => [c.id, number(at(extension, c.path), c.default)]));
+    const values = Object.fromEntries(rules.controls.map(c => [c.id, number(controlValue(extension, c, rules), c.default)]));
     const automaticY = at(extension, 'transform.position.y') === undefined;
     if (automaticY) values.positionY = height / Math.max(ppu, 1) / 2 * rules.groundHeightMultiplier * values.scaleY;
-    const warnings: string[] = [];
+    const warnings: string[] = characterTransformWarnings(entry.data, rules);
     if (!sprite || !asset || !['ok', 'case-mismatch'].includes(asset.status) || ppu <= 0) warnings.push('Sprite local sin imagen válida o píxeles por unidad inválidos.');
     if (asset?.status === 'case-mismatch') warnings.push('La ruta de imagen tiene diferencias de mayúsculas; corrígela para Linux.');
     if (at(extension, 'animations')) warnings.push('Se muestra el sprite base; no se reproducen las animaciones.');
@@ -78,16 +95,27 @@ export async function prepareCharacterTransform(request: CharacterRequest) {
   let source = bom ? original.slice(1) : original;
   const indent = source.match(/\n(\s+)"/)?.[1] ?? '  ';
   const changes: { label: string; path: string; before: unknown; after: number }[] = [];
+  const extension = at(entry.data, rules.extensionPath);
+  const currentOffset = at(extension, rules.offsetCompatibility.currentPath);
+  const legacyOffset = at(extension, rules.offsetCompatibility.legacyPath);
+  const migrating = legacyOffset !== undefined && Object.keys(request.changes).some(id => id.startsWith('offset'));
+  if (migrating && currentOffset !== undefined) throw new Error('Hay offset y offset_position simultáneamente. Resuelve la ambigüedad en el editor JSON.');
+  if (migrating) {
+    if (!legacyOffset || typeof legacyOffset !== 'object' || Array.isArray(legacyOffset)) throw new Error('offset_position debe ser un vector válido para migrarlo.');
+    const formattingOptions = { insertSpaces: !indent.includes('\t'), tabSize: indent.includes('\t') ? 1 : indent.length, eol: original.includes('\r\n') ? '\r\n' : '\n' };
+    source = jsonc.applyEdits(source, jsonc.modify(source, ['game_objects', entry.index, ...rules.extensionPath.split('.'), ...rules.offsetCompatibility.currentPath.split('.')], legacyOffset, { formattingOptions }));
+    source = jsonc.applyEdits(source, jsonc.modify(source, ['game_objects', entry.index, ...rules.extensionPath.split('.'), ...rules.offsetCompatibility.legacyPath.split('.')], undefined, { formattingOptions }));
+  }
   for (const [id, value] of Object.entries(request.changes)) {
     const control = rules.controls.find(c => c.id === id);
     if (!control) throw new Error('Ajuste no permitido.');
     if (typeof value !== 'number' || !Number.isFinite(value) || value < control.min || value > control.max) throw new Error(`${control.label}: valor fuera de rango (${control.min}–${control.max}).`);
     const field = rules.extensionPath + '.' + control.path;
-    const before = at(entry.data, field);
-    if (before === value) continue;
+    const before = controlValue(extension, control, rules);
+    if (before === value && !(migrating && id.startsWith('offset'))) continue;
     const edits = jsonc.modify(source, ['game_objects', entry.index, ...field.split('.')], value, { formattingOptions: { insertSpaces: !indent.includes('\t'), tabSize: indent.includes('\t') ? 1 : indent.length, eol: original.includes('\r\n') ? '\r\n' : '\n' } });
     source = jsonc.applyEdits(source, edits);
-    changes.push({ label: control.label, path: field, before, after: value });
+    changes.push({ label: control.label + (migrating && id.startsWith('offset') ? ' · migra offset_position → offset (vector completo)' : ''), path: field, before, after: value });
   }
   const errors: jsonc.ParseError[] = [];
   jsonc.parse(source, errors, { allowTrailingComma: true, disallowComments: false });

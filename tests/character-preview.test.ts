@@ -71,3 +71,37 @@ test('añade transformaciones ausentes y rechaza campos ajenos, valores inválid
     assert.equal(selection.automaticY, false); assert.equal(selection.values.positionY, 2.3);
   } finally { await fs.rm(root, { recursive: true, force: true }); }
 });
+
+test('lee offset actual y migra offset_position conservando Z y el resto de transformaciones', async () => {
+  const { root, file, request } = await fixture();
+  try {
+    const preview = await prepareCharacterTransform({ ...request, changes: { offsetY: 0.4 } });
+    assert.ok(preview.changes[0].label.includes('vector completo'));
+    await saveCharacterTransform({ ...request, changes: { offsetY: 0.4 } });
+    const clan = await scanClan(root);
+    const extension = (clan.entries.find(e => e.id === 'Battle')!.data.extensions as any).character_art;
+    assert.deepEqual(extension.transform.offset, { x: 0.1, y: 0.4, z: 0.3 });
+    assert.equal(extension.transform.offset_position, undefined);
+    assert.deepEqual(extension.transform.position, { x: 0, y: 1, z: 0.2 });
+    assert.equal(extension.animations.length, 1);
+    const item = (await characterModels(clan)).items.find(i => i.entry.id === 'Battle')!;
+    assert.equal(item.values.offsetY, 0.4); assert.equal(item.values.offsetX, 0.1);
+    assert.equal(item.warnings.some(w => w.includes('compatibilidad histórica')), false);
+    assert.ok((await fs.readFile(file, 'utf8')).includes('// preservar campos y comentarios'));
+  } finally { await fs.rm(root, { recursive: true, force: true }); }
+});
+
+test('avisa de transformaciones mal anidadas y bloquea offset ambiguo', async () => {
+  const { root, file } = await fixture();
+  try {
+    const document = JSON.parse((await fs.readFile(file, 'utf8')).replace(/^\uFEFF/, '').replace('// preservar campos y comentarios', '').replace(/,\s*}/g, '}'));
+    document.game_objects[0].extensions.transform = { scale: { x: 9, y: 9 } };
+    document.game_objects[0].extensions.character_art.transform.offset = { y: 0.7 };
+    await fs.writeFile(file, JSON.stringify(document));
+    const clan = await scanClan(root); const model = await characterModels(clan);
+    const item = model.items.find(i => i.entry.id === 'Battle')!;
+    assert.equal(item.values.scaleX, 1); assert.equal(item.values.offsetY, 0.7); assert.equal(item.values.offsetX, 0);
+    assert.ok(item.warnings.some(w => w.includes('fuera de extensions.character_art')));
+    await assert.rejects(() => prepareCharacterTransform({ root, file: item.entry.file, id: 'Battle', expectedHash: item.entry.hash, changes: { offsetY: 0.8 } }), /simultáneamente/);
+  } finally { await fs.rm(root, { recursive: true, force: true }); }
+});

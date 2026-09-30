@@ -56,7 +56,9 @@ export async function prepareEdit(request: EditRequest): Promise<Preview> {
   }
 
   const snapshot = await scanClan(request.root);
-  const entry = snapshot.entries.find(item => item.section === request.section && item.id === request.id && item.file === request.file);
+  const matches = snapshot.entries.filter(item => item.section === request.section && item.id === request.id && item.file === request.file);
+  if (matches.length > 1) throw new Error('El ID está duplicado en este archivo. Corrige la identidad antes de editar.');
+  const entry = matches[0];
   if (!entry) throw new Error('El objeto ya no está en ese archivo. Actualiza el clan antes de guardar.');
   const absolute = path.resolve(request.root, request.file);
   if (!inside(request.root, absolute)) throw new Error('La ruta sale de la carpeta del clan.');
@@ -107,7 +109,9 @@ export async function prepareObjectEdit(request: ObjectEditRequest): Promise<Pre
   if (errors.length || !proposed || typeof proposed !== 'object' || Array.isArray(proposed)) throw new Error('El objeto debe ser un JSON válido.');
   if ((proposed as Record<string, unknown>).id !== request.id) throw new Error('El ID no se puede cambiar desde la edición avanzada porque puede tener referencias.');
   const snapshot = await scanClan(request.root);
-  const entry = snapshot.entries.find(item => item.section === request.section && item.id === request.id && item.file === request.file);
+  const matches = snapshot.entries.filter(item => item.section === request.section && item.id === request.id && item.file === request.file);
+  if (matches.length > 1) throw new Error('El ID está duplicado en este archivo. Corrige la identidad antes de editar.');
+  const entry = matches[0];
   if (!entry) throw new Error('El objeto ya no está en ese archivo. Actualiza el clan.');
   const absolute = path.resolve(request.root, request.file);
   if (!inside(request.root, absolute)) throw new Error('La ruta sale de la carpeta del clan.');

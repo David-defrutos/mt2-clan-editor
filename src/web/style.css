@@ -59,3 +59,11 @@ input,select,textarea{background:#131a20;border:1px solid #43515a;color:#e9e8e3;
 .help-text { display: none; position: absolute; z-index: 20; right: 0; top: 30px; width: min(280px, 70vw); padding: 12px; border: 1px solid #8fa5b2; border-radius: 6px; background: #0e1921; color: #e6edf1; font-size: .82rem; line-height: 1.5; box-shadow: 0 6px 22px #0009; font-weight: normal; }
 .help-tooltip:hover .help-text, .help-tooltip:focus-within .help-text, .help-tooltip.is-open .help-text { display: block; }
 .help-tooltip.is-dismissed .help-text { display: none; }
+.content-creator { margin-bottom: 18px; }
+.discovery-panel { margin: 20px 0; }
+.discovered-mod { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-top: 1px solid #48555e; padding: 16px 0; }
+.discovered-mod > div { min-width: 0; overflow-wrap: anywhere; }
+.discovered-mod small { display: block; color: #aab7bf; }
+.discovered-mod button { flex-shrink: 0; }
+.content-creator fieldset { min-width: 0; padding: 0; border: 0; }
+.content-preview { margin: 18px 0; padding-top: 12px; border-top: 1px solid #48555e; overflow-wrap: anywhere; }

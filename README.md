@@ -16,7 +16,7 @@ Abre `http://127.0.0.1:4318`. `npm run check` comprueba los tipos y `npm test` e
 
 ## Lo que ya hace
 
-- Abre y recorre los siete clanes de referencia (The Free Company, SuccClan, Sandscourged, The Silk Song, Pathogens, Equestrian y Yokai). Deva queda fuera de alcance por ahora.
+- Abre y recorre los siete clanes de referencia (The Free Company, SuccClan, Sandscourged, The Silk Song, Pathogens, Equestrian y Yokai). Deva y los clanes originales instalados se incorporan mediante búsqueda e importación, incluidas copias de archivos `.old` desactivados. Véase REVISION-CLANES-INSTALADOS.md.
 - Genera un proyecto nuevo con dos campeones, tres sendas de tres niveles para cada uno, dos cartas iniciales, N unidades de draft (mínimo dos de estandarte), dos pools propios, circuito de estandarte, recursos visuales de clan y campeón, manifiesto, fuente C# y workflow de compilación. Las cantidades y los perfiles del proyecto nuevo salen de `config/templates/new-clan.json`.
 - Busca y filtra cartas, unidades, todos los objetos JSON, pools, mecánicas e imágenes; muestra progresión inspirada en Yokai y compara estadísticas globales.
 - En **Estadísticas**, cada cifra abre su desglose con búsqueda por nombre, ID o archivo. Los resultados con objeto definido se abren en **Todos los objetos** con su inspector. Las medianas muestran la muestra de unidades y promedian los dos valores centrales cuando hay un número par de valores. Las métricas y niveles técnicos excluidos del draft están en `config/stats.json`; las habilidades y cartas de nivel 99 no inflan las cifras de draft. El recuento de errores usa la misma validación que la ficha del clan.
@@ -80,3 +80,16 @@ Nunca se editan los siete mods por ejecutar las pruebas. Las pruebas de escritur
 
 
 
+## Descubrir clanes instalados y versiones desactivadas
+
+En Biblioteca, **Buscar clanes** revisa las rutas de `config/library-discovery.json`. También puedes introducir la carpeta de plugins de otro perfil. **Añadir carpeta** registra un clan activo; **Importar copia** abre los datos `.old` en una copia de trabajo independiente sin reactivar la instalación. Los archivos `.old` son datos válidos desactivados por Thunderstore. Los complementos sin clase propia se muestran con el filtro correspondiente. La revisión ampliada está en [REVISION-CLANES-INSTALADOS.md](REVISION-CLANES-INSTALADOS.md).
+
+La vista de personaje escribe `extensions.character_art.transform.offset`. Lee `offset_position` histórico con aviso; al editar uno de sus desplazamientos migra el vector completo, conservando X/Y/Z y creando respaldo. Una transformación mal anidada genera avisos. Comprueba que el juego usa la versión de Trainworks correspondiente antes de probar estos ajustes.
+
+### Crear y duplicar contenido
+
+En **Cartas** puedes crear una carta de unidad o un hechizo. En **Unidades** puedes crear un personaje independiente. Selecciona una fila y pulsa **Duplicar selección** para copiar un objeto existente. Introduce un ID nuevo y un nombre, pulsa **Previsualizar** y revisa los objetos, avisos y JSON antes de guardar.
+
+Cada creación añade un archivo `json/editor-ID.json` sin reescribir los originales. Los nuevos objetos usan `config/templates/content.json`; las cartas de unidad incluyen personaje, efecto de invocación y arte marcador. Los hechizos empiezan sin efectos. Después del guardado revisa los campos guiados, las mecánicas, los pools, los desbloqueos y las imágenes.
+
+Al duplicar una carta de unidad se copian los personajes y efectos de invocación estándar, incluso si están definidos en otro archivo. El arte y las demás mecánicas permanecen compartidos y se avisa antes del guardado. Una unidad independiente no recibe automáticamente una carta. Las invocaciones por pool o personalizadas requieren un adaptador y se bloquean cuando no puede asegurarse la copia del personaje. Una copia de campeón no se conecta automáticamente al árbol de campeón.

@@ -6,6 +6,21 @@ import path from 'node:path';
 import { scanClan } from '../src/server/scan.ts';
 import { prepareEdit, saveEdit, prepareObjectEdit, saveObjectEdit } from '../src/server/edit.ts';
 
+test('bloquea edición guiada y avanzada si el ID está repetido dentro del archivo', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mt2-duplicate-edit-'));
+  try {
+    await fs.mkdir(path.join(root, 'json'));
+    const file = path.join(root, 'json/content.json');
+    const original = JSON.stringify({ classes: [{ id: 'ClassTest' }], cards: [{ id: 'Duplicated', cost: 1 }, { id: 'Duplicated', cost: 2 }] });
+    await fs.writeFile(file, original);
+    const entry = (await scanClan(root)).entries.find(entry => entry.section === 'cards')!;
+    const request = { root, file: entry.file, section: entry.section, id: entry.id, expectedHash: entry.hash };
+    await assert.rejects(() => prepareEdit({ ...request, field: 'cost', value: 3 }), /duplicado/);
+    await assert.rejects(() => prepareObjectEdit({ ...request, json: '{"id":"Duplicated","cost":3}' }), /duplicado/);
+    assert.equal(await fs.readFile(file, 'utf8'), original);
+  } finally { await fs.rm(root, { recursive: true, force: true }); }
+});
+
 test('cambio puntual conserva BOM, CRLF, campos ajenos y crea respaldo', async () => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mt2-clan-editor-test-'));
   try {

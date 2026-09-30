@@ -1,0 +1,6 @@
+{
+  "roots": ["${APPDATA}/Thunderstore Mod Manager/DataFolder/MonsterTrain2/profiles/Default/BepInEx/plugins"],
+  "disabledSuffixes": [".old"],
+  "maxFiles": 20000,
+  "maxBytes": 500000000
+}

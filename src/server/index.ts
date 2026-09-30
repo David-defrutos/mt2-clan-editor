@@ -13,6 +13,8 @@ import { inventoryAssets } from './assets.js';
 import { validateClan } from './validate.js';
 import { prepareArt, saveArt, type ArtRequest } from './art.js';
 import { createClan } from './create.js';
+import { discoverMods, importDiscovered } from './discovery.js';
+import { prepareContent, saveContent, type ContentRequest } from './content.js';
 import { buildClan, buildStatus } from './build.js';
 import { buildOffline, offlineStatus } from './offline-build.js';
 import { artifactStatus, packageClan } from './artifacts.js';
@@ -89,6 +91,14 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     return send(res, 200, { navigation, fields, stats, assets, mechanics, creation: { minimumDraftCards: creation.banner.unitCount, defaultDraftCards: creation.defaultDraftCards, maximumDraftCards: creation.maxDraftCards } });
   }
   if (req.method === 'GET' && pathname === '/api/library') return send(res, 200, await loadLibrary());
+  if (req.method === 'POST' && pathname === '/api/library/discover') {
+    const input = await body(req);
+    return send(res, 200, await discoverMods(typeof input.path === 'string' && input.path.trim() ? input.path.trim() : undefined));
+  }
+  if (req.method === 'POST' && pathname === '/api/library/import') {
+    const input = await body(req);
+    return send(res, 200, await importDiscovered(required(input.path, 'path')));
+  }
   if (req.method === 'POST' && pathname === '/api/library') {
     const input = await body(req);
     const item = await addLibraryPath(required(input.path, 'path'));
@@ -119,6 +129,21 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     const snapshot = await scanClan(item.root);
     snapshot.issues = await validateClan(snapshot);
     return send(res, 200, snapshot);
+  }
+  const contentMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/content\/(preview|save)$/);
+  if (contentMatch && req.method === 'POST') {
+    const item = await getLibraryItem(contentMatch[1]);
+    const input = await body(req);
+    if (input.section !== 'cards' && input.section !== 'characters') throw new Error('Sección no permitida.');
+    let source: ContentRequest['source'];
+    if (input.source) {
+      const candidate = input.source as Record<string, unknown>;
+      source = { id: required(candidate.id, 'source.id'), file: required(candidate.file, 'source.file') };
+    }
+    const request: ContentRequest = { root: item.root, section: input.section, id: required(input.id, 'id'), name: required(input.name, 'name'), kind: input.kind as ContentRequest['kind'], source, expectedToken: typeof input.expectedToken === 'string' ? input.expectedToken : undefined };
+    if (contentMatch[2] === 'save') return send(res, 200, await saveContent(request));
+    const preview = await prepareContent(request);
+    return send(res, 200, { file: preview.file, token: preview.token, objects: preview.objects, warnings: preview.warnings, document: preview.document, images: preview.images.map(image => image.file) });
   }
   const characterMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/character-art(?:\/(preview|save))?$/);
   if (characterMatch) {

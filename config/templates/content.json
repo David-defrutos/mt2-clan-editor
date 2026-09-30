@@ -1,0 +1,8 @@
+{
+  "idPattern": "^[A-Za-z][A-Za-z0-9_]{2,79}$",
+  "schemaUrl": "https://raw.githubusercontent.com/Monster-Train-2-Modding-Group/Trainworks-Reloaded/refs/heads/main/schemas/base.deref.json",
+  "card": { "cost": 1, "rarity": "common", "pools": ["MegaPool"], "targets_room": true, "targetless": false },
+  "character": { "attack_damage": 5, "health": 10, "size": 1 },
+  "spawnEffect": { "name": "CardEffectSpawnMonster", "target_mode": "room" },
+  "images": { "card": { "width": 400, "height": 500, "color": "#57546f" }, "character": { "width": 400, "height": 500, "color": "#557062" } }
+}

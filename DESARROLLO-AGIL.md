@@ -18,7 +18,7 @@ Esta cadencia toma las ideas de incremento, revisión y definición de terminado
 
 ## 2. Objetivo de producto y estrategia
 
-**Objetivo:** poder crear un clan nuevo jugable y abrir, modificar y guardar los siete clanes de referencia sin pérdida de datos, con navegación, filtros, estadísticas, arte, progresión como Yokai y seguimiento de la DLL en GitHub. Deva queda fuera de la primera versión.
+**Objetivo:** poder crear un clan nuevo jugable y abrir, modificar y guardar los siete clanes de referencia sin pérdida de datos, con navegación, filtros, estadísticas, arte, progresión como Yokai y seguimiento de la DLL en GitHub. Deva se incorpora a la primera versión por la ampliación solicitada el 30-09-2026.
 
 Orden de entrega según riesgo:
 
@@ -118,6 +118,23 @@ Decisiones que conviene cerrar en las primeras revisiones:
 
 ## 8. Estimación y seguimiento
 
+### Biblioteca ampliada y transformaciones · 30-09-2026
+
+- Deva vuelve a entrar en alcance. Se incorporan Steward, Disciple y versiones originales de FreeCompany, Sandscourged, Silk Song y Yokai; Sweetkin se detecta adicionalmente.
+- Búsqueda por definiciones `classes`, importación de archivos `.old` en copias de trabajo y listado separado de complementos sin clase. Configuración en `config/library-discovery.json`.
+- Avisos de estructura incorrecta de `transform`; escritura de `offset` y lectura histórica de `offset_position`, migración explícita al editar desplazamientos conservando X/Y/Z. La versión local antigua de Trainworks y la corrección anunciada requieren verificar el runtime instalado.
+- Silk Song conserva sus duplicados con diagnóstico. Se bloquea edición cuando el ID no es único en un archivo.
+- Compilación correcta y 43 pruebas superadas. Detalles y límites en `REVISION-CLANES-INSTALADOS.md`.
+
+### Creación y duplicación de contenido · 30-09-2026
+
+- Botones Crear carta, Crear unidad y Duplicar selección; formulario con ID, nombre, tipo, vista previa y guardado explícito.
+- Plantilla configurable para cartas de unidad, hechizos y personajes independientes. Archivo JSON nuevo y PNG marcadores propios; guardado exclusivo, comprobación de cambios en disco y retirada de archivos nuevos si falla la operación.
+- Copia de invocaciones estándar y sus personajes, incluida segunda unidad y referencias estructuradas; conservación de campos desconocidos y traducciones existentes. Arte y mecánicas adicionales compartidos con aviso. Pools de personajes e invocaciones personalizadas requieren adaptadores.
+- Pruebas en carpetas temporales: conservación exacta de originales, independencia de estadísticas, PNG válidos, colisiones, rutas, referencias externas y vistas previas obsoletas.
+- Los cambios de desarrollo permanecen locales. No subir a GitHub sin autorización explícita; tampoco en horario de Madrid de lunes a jueves 08:00–19:00 ni viernes 08:00–15:00.
+
+
 ### Ayudas de los controles y requisito de traducción · 30-09-2026
 
 - Vista de personaje: grupos de tamaño, movimiento vertical y movimiento horizontal, explicaciones y tooltips. El bloque horizontal queda plegado inicialmente. Grupos y textos proceden de configuración.
@@ -159,6 +176,6 @@ Decisiones que conviene cerrar en las primeras revisiones:
 - Pendiente de aceptación: recorrido visual y por teclado de la pantalla en el navegador del usuario; no se ha verificado este cálculo mediante una partida. La herramienta de revisión del navegador está bloqueada por el error de ACL del entorno.
 - Próximo alcance de esta pantalla: previsualización de arte y creación/clonado de mejoras; la edición guiada del árbol se ha entregado en el incremento posterior.
 
-Estimación **preliminar**, para una persona con experiencia en TypeScript y conocimiento del modding de MT2: **360–580 horas**, aproximadamente **9–15 semanas a jornada completa**. Incluye la compatibilidad obligatoria con siete clanes, edición conservadora, creación jugable, recursos visuales, estadísticas, progresión y GitHub. El catálogo guiado inicial será pequeño; se amplía mediante ficheros de configuración. No incluye Deva, producir ilustraciones ni programar mecánicas C# nuevas para cada clan. La incertidumbre mayor está en importar y guardar sin pérdida los formatos existentes y en la prueba de carga real del juego.
+Estimación **preliminar**, para una persona con experiencia en TypeScript y conocimiento del modding de MT2: **360–580 horas**, aproximadamente **9–15 semanas a jornada completa**. Incluye la compatibilidad obligatoria con siete clanes, edición conservadora, creación jugable, recursos visuales, estadísticas, progresión y GitHub. El catálogo guiado inicial será pequeño; se amplía mediante ficheros de configuración. La estimación original no incluía Deva; su incorporación amplía los fixtures de compatibilidad. No incluye producir ilustraciones ni programar mecánicas C# nuevas para cada clan. La incertidumbre mayor está en importar y guardar sin pérdida los formatos existentes y en la prueba de carga real del juego.
 
 La primera reestimación se hace al terminar la iteración 0, con el prototipo de parser y los siete fixtures; la segunda al terminar la iteración 2, cuando ya se conoce el coste real de edición conservadora. Cada revisión informa **objetivo conseguido, evidencia, horas consumidas, riesgos y siguiente prioridad**. El avance se mide por historias aceptadas y pruebas superadas, no por porcentaje de pantallas dibujadas.

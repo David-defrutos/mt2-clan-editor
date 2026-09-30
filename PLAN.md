@@ -4,7 +4,7 @@ Estado: especificación funcional; el primer incremento está implementado y sus
 
 ## 1. Objetivo y límites
 
-Aplicación local y multiplataforma (Windows, macOS y Linux), escrita en TypeScript, para **crear, abrir, comparar y modificar** clanes de Monster Train 2 basados en Trainworks Reloaded. La primera versión debe abrir las siete carpetas de referencia: The Free Company, SuccClan, Sandscourged, The Silk Song, Pathogens, Equestrian y Yokai. Deva queda fuera del alcance inicial por decisión del usuario. Un clan nuevo debe poder generarse, compilarse y cargarse en el juego.
+Aplicación local y multiplataforma (Windows, macOS y Linux), escrita en TypeScript, para **crear, abrir, comparar y modificar** clanes de Monster Train 2 basados en Trainworks Reloaded. La primera versión debe abrir las siete carpetas de referencia: The Free Company, SuccClan, Sandscourged, The Silk Song, Pathogens, Equestrian y Yokai. Deva se incorpora al alcance junto con Steward, Disciple y las versiones originales instaladas, según la ampliación solicitada el 30-09-2026. Un clan nuevo debe poder generarse, compilarse y cargarse en el juego.
 
 El editor trabaja con archivos. No utiliza una base de datos como fuente de verdad. Reglas del juego, campos y formularios, catálogos de mecánicas, importación, perfiles de arte, métricas, navegación y plantillas se definen en **ficheros de configuración versionados**. El código TypeScript implementa operaciones genéricas: leer, presentar formularios, resolver referencias, validar, transformar imágenes y guardar. Las credenciales se guardan mediante el sistema operativo o la herramienta de autenticación, nunca en el proyecto.
 
@@ -237,6 +237,9 @@ Las configuraciones se validan antes de abrir un proyecto. Si una versión nueva
 **Juego:** el clan nuevo debe cargar, aparecer en la selección, ofrecer las dos cartas iniciales, presentar ambos campeones y sus sendas, mostrar estandarte y arte, y permitir jugar al menos un combate. Las modificaciones en copias de clanes existentes se prueban en un perfil aislado cuando afectan comportamiento visible.
 
 ## 8. Decisiones pendientes antes de implementar
+
+**Incremento de creación de contenido (30-09-2026):** Cartas permite crear unidad/hechizo y duplicar selección; Unidades permite crear personaje independiente y duplicarlo. Formulario con ID, nombre, tipo, Previsualizar, Guardar y Cancelar. La vista previa enumera objetos y referencias compartidas. Se añaden JSON independientes y arte marcador desde `config/templates/content.json`; no se sobrescriben originales. Duplicar una unidad estándar copia efecto de invocación y personajes, conservando arte y otras mecánicas compartidos con aviso. Copias de campeones no se añaden al árbol automáticamente. Los adaptadores de invocación personalizada/pools, recursos independientes de una copia y asignación guiada de unidades a efectos quedan en el backlog.
+
 
 **Requisito confirmado para el cierre:** traducir la interfaz completa y añadir un selector de idiomas. Se realizará al completar y estabilizar las funcionalidades, antes de considerar terminada la versión final. La lista de idiomas se concretará en esa fase; este requisito incluye tooltips y mensajes, no solo los títulos de las pantallas.
 

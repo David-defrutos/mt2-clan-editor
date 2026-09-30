@@ -3,6 +3,7 @@ import path from 'node:path';
 import { inventoryAssets } from './assets.js';
 import { configRoot } from './paths.js';
 import type { ClanSnapshot, Issue, JsonRecord } from './types.js';
+import { characterRules, characterTransformWarnings } from './character-preview.js';
 
 interface Rules {
   expectedChampions: number; expectedPathsPerChampion: number; expectedLevelsPerPath: number;
@@ -17,7 +18,11 @@ function record(value: unknown): JsonRecord { return value && typeof value === '
 export async function validateClan(clan: ClanSnapshot): Promise<Issue[]> {
   const rules = JSON.parse(await fs.readFile(path.join(configRoot, 'validation.json'), 'utf8')) as Rules;
   const issues = [...clan.issues];
+  const transformRules = await characterRules();
   const add = (severity: Issue['severity'], code: string, message: string, file?: string, section?: string, id?: string) => issues.push({ severity, code, message, file, section, id });
+  for (const entry of clan.entries.filter(entry => entry.section === 'game_objects' && entry.data.type === 'character_art')) {
+    for (const message of characterTransformWarnings(entry.data, transformRules)) add('warning', 'character-transform', `${entry.id}: ${message}`, entry.file, entry.section, entry.id);
+  }
   const classEntry = clan.entries.find(entry => entry.section === 'classes');
   const champions = array(classEntry?.data.champions);
   const ids = new Map(clan.entries.map(entry => [`${entry.section}:${entry.id}`, entry]));

@@ -1,5 +1,7 @@
 {
   "extensionPath": "extensions.character_art",
+  "offsetCompatibility": { "currentPath": "transform.offset", "legacyPath": "transform.offset_position" },
+  "misplacedTransformPaths": ["transform", "extensions.transform"],
   "defaultPixelsPerUnit": 100,
   "defaultPivot": { "x": 0.5, "y": 0.5 },
   "groundHeightMultiplier": 0.647,
@@ -25,7 +27,7 @@
     { "id": "scaleY", "group": "size", "path": "transform.scale.y", "label": "Escala vertical", "help": "Cambia la altura del dibujo, sin mover su pivote. Con Mantener proporciones activado también cambia la anchura. Si la altura de posición es automática, Trainworks puede recalcularla al cambiar el tamaño.", "default": 1, "min": -20, "max": 20, "step": 0.01 },
     { "id": "positionX", "group": "horizontal", "path": "transform.position.x", "label": "Posición horizontal", "help": "Posición base del pivote en X. Un valor mayor lo mueve a la derecha; uno menor, a la izquierda. Generalmente se conserva. No controla cómo el juego distribuye las unidades en el suelo.", "default": 0, "min": -30, "max": 30, "step": 0.01 },
     { "id": "positionY", "group": "vertical", "path": "transform.position.y", "label": "Altura", "help": "Posición base del pivote en Y: aumenta para subir y disminuye para bajar. Cuando no está definida, Trainworks calcula una altura automática. Al guardar este control se establece una altura explícita.", "default": 0, "min": -30, "max": 30, "step": 0.01 },
-    { "id": "offsetX", "group": "horizontal", "path": "transform.offset_position.x", "label": "Desplazamiento adicional X", "help": "Corrección que se suma a la posición horizontal base. Positivo desplaza a la derecha; negativo, a la izquierda. Déjalo en 0 si no necesitas una corrección adicional.", "default": 0, "min": -30, "max": 30, "step": 0.01 },
-    { "id": "offsetY", "group": "vertical", "path": "transform.offset_position.y", "label": "Desplazamiento adicional Y", "help": "Corrección que se añade después de la altura base o automática. Positivo sube; negativo baja. Ejemplo: altura 0,95 y desplazamiento +0,20 dan 1,15. Permite conservar la altura automática y añadir una corrección.", "default": 0, "min": -30, "max": 30, "step": 0.01 }
+    { "id": "offsetX", "group": "horizontal", "path": "transform.offset.x", "label": "Desplazamiento adicional X", "help": "Corrección que se suma a la posición horizontal base. Positivo desplaza a la derecha; negativo, a la izquierda. Déjalo en 0 si no necesitas una corrección adicional.", "default": 0, "min": -30, "max": 30, "step": 0.01 },
+    { "id": "offsetY", "group": "vertical", "path": "transform.offset.y", "label": "Desplazamiento adicional Y", "help": "Corrección que se añade después de la altura base o automática. Positivo sube; negativo baja. Ejemplo: altura 0,95 y desplazamiento +0,20 dan 1,15. Permite conservar la altura automática y añadir una corrección.", "default": 0, "min": -30, "max": 30, "step": 0.01 }
   ]
 }
