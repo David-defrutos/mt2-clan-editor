@@ -20,6 +20,7 @@ import { prepareUnlocks, progressionStatus, saveUnlocks, type UnlockChange } fro
 import { commitClan, downloadDll, publishStatus, pushClan } from './publish.js';
 import { championRules, describeChampions, combineChampion } from './champions.js';
 import { prepareChampionTree, saveChampionTree, type TreeRequest } from './champion-tree.js';
+import { characterModels, prepareCharacterTransform, saveCharacterTransform, type CharacterRequest } from './character-preview.js';
 
 const execFileAsync = promisify(execFile);
 const port = Number(process.env.CLAN_EDITOR_PORT ?? 4318);
@@ -111,6 +112,18 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     const snapshot = await scanClan(item.root);
     snapshot.issues = await validateClan(snapshot);
     return send(res, 200, snapshot);
+  }
+  const characterMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/character-art(?:\/(preview|save))?$/);
+  if (characterMatch) {
+    const item = await getLibraryItem(characterMatch[1]);
+    if (req.method === 'GET' && !characterMatch[2]) return send(res, 200, await characterModels(await scanClan(item.root)));
+    if (req.method === 'POST' && characterMatch[2]) {
+      const input = await body(req);
+      const request: CharacterRequest = { root: item.root, file: required(input.file, 'file'), id: required(input.id, 'id'), expectedHash: required(input.expectedHash, 'expectedHash'), changes: input.changes as CharacterRequest['changes'] };
+      if (characterMatch[2] === 'save') return send(res, 200, await saveCharacterTransform(request));
+      const preview = await prepareCharacterTransform(request);
+      return send(res, 200, { changed: preview.changed, changes: preview.changes, uses: preview.uses });
+    }
   }
   const treeMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/champions\/tree\/(preview|save)$/);
   if (treeMatch && req.method === 'POST') {

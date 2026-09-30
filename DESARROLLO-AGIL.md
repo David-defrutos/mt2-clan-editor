@@ -118,6 +118,13 @@ Decisiones que conviene cerrar en las primeras revisiones:
 
 ## 8. Estimación y seguimiento
 
+### Incremento de vista de personaje · 30-09-2026
+
+- Entregado: lienzo con sprite y guía de suelo, filtros por uso/nombre/sprite, arrastre de posición, tirador de escala, proporciones vinculadas, controles numéricos, zoom y cuadrícula. Vista previa y guardado de transformaciones con respaldo y control de hash.
+- Evidencia: 31 pruebas superadas; lectura de 166 character art con imagen válida en los siete clanes y la demo. Pruebas de guardado en carpetas temporales conservan PNG, Z, animaciones, otro objeto de selección, comentarios y formato.
+- Fuente de geometría: código local de `SpritePipeline.cs` y `GameObjectCharacterArtFinalizer.cs`; PPU 100, pivote 0.5/0.5 y factor de altura automática 0.647 configurables. El lienzo es una referencia 2D y no valida la cámara ni los shaders del juego.
+- Pendiente de aceptación: interacción visual/teclado y contraste con capturas del juego; el navegador automatizado falla por `apply deny-read ACLs`. Animaciones, Spine y calibración de cámara permanecen en el backlog.
+
 ### Incremento de edición del árbol · 30-09-2026
 
 - Entregado: asignación de mejoras existentes a los niveles de cada senda, filtro por nombre/ID/archivo, vista previa, cancelar/restablecer y guardado con respaldo.

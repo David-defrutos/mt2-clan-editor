@@ -4,10 +4,11 @@ import { api, post } from './api';
 import { StatsView } from './stats-view';
 import { ProgressionEditor } from './progression-editor';
 import { ChampionsView } from './champions-view';
+import { CharacterPreview } from './character-preview';
 import type { AssetInfo, ClanSnapshot, ClanStats, Config, Entry, FieldRule, Issue, LibraryItem, StatsItem } from './types';
 import './style.css';
 
-type Page = 'library' | 'create' | 'stats' | 'overview' | 'champions' | 'cards' | 'units' | 'objects' | 'progression' | 'pools' | 'mechanics' | 'assets' | 'validation' | 'publish';
+type Page = 'library' | 'create' | 'stats' | 'overview' | 'champions' | 'cards' | 'units' | 'objects' | 'progression' | 'pools' | 'mechanics' | 'assets' | 'character-art' | 'validation' | 'publish';
 type Status = { kind: 'error' | 'success' | 'info'; text: string } | null;
 
 function valueAt(data: Record<string, unknown>, path: string): unknown {
@@ -123,6 +124,7 @@ function App() {
         {clan && page === 'pools' && <Pools clan={clan} cards={cards} onOpen={entry => { navigate('cards'); openEntry(entry); }} />}
         {clan && page === 'mechanics' && <Mechanics clan={clan} onOpen={openEntry} selected={selectedEntry} onClose={() => setSelected(null)} onSaved={() => refreshClan(clan.key)} setStatus={setStatus} />}
         {clan && page === 'assets' && <Assets clan={clan} />}
+        {clan && page === 'character-art' && <CharacterPreview key={clan.key} clan={clan} onSaved={() => refreshClan(clan.key)} onOpen={entry => { navigate('objects'); openEntry(entry); }} />}
         {clan && page === 'validation' && <Validation clan={clan} />}
         {clan && page === 'publish' && <Publish clan={clan} />}
       </div>

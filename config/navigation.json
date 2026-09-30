@@ -13,6 +13,7 @@
     { "id": "pools", "label": "Pools", "icon": "◈" },
     { "id": "mechanics", "label": "Mecánicas", "icon": "⚙" },
     { "id": "assets", "label": "Recursos visuales", "icon": "▧" },
+    { "id": "character-art", "label": "Vista de personaje", "icon": "♟" },
     { "id": "validation", "label": "Validación", "icon": "✓" },
     { "id": "publish", "label": "Publicación", "icon": "↑" }
   ]

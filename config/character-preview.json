@@ -1,0 +1,15 @@
+{
+  "extensionPath": "extensions.character_art",
+  "defaultPixelsPerUnit": 100,
+  "defaultPivot": { "x": 0.5, "y": 0.5 },
+  "groundHeightMultiplier": 0.647,
+  "viewport": { "width": 1000, "height": 650, "originX": 500, "floorY": 520, "pixelsPerUnit": 70 },
+  "controls": [
+    { "id": "scaleX", "path": "transform.scale.x", "label": "Escala horizontal", "default": 1, "min": -20, "max": 20, "step": 0.01 },
+    { "id": "scaleY", "path": "transform.scale.y", "label": "Escala vertical", "default": 1, "min": -20, "max": 20, "step": 0.01 },
+    { "id": "positionX", "path": "transform.position.x", "label": "Posición horizontal", "default": 0, "min": -30, "max": 30, "step": 0.01 },
+    { "id": "positionY", "path": "transform.position.y", "label": "Altura", "default": 0, "min": -30, "max": 30, "step": 0.01 },
+    { "id": "offsetX", "path": "transform.offset_position.x", "label": "Desplazamiento adicional X", "default": 0, "min": -30, "max": 30, "step": 0.01 },
+    { "id": "offsetY", "path": "transform.offset_position.y", "label": "Desplazamiento adicional Y", "default": 0, "min": -30, "max": 30, "step": 0.01 }
+  ]
+}

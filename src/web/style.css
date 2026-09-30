@@ -33,3 +33,16 @@ input,select,textarea{background:#131a20;border:1px solid #43515a;color:#e9e8e3;
 .champion-tree-editor input, .champion-tree-editor select { width: 100%; }
 .champion-tree-editor .head-actions { flex-wrap: wrap; margin-top: 16px; }
 .champion-tree-editor .tree-preview { margin-top: 16px; overflow-wrap: anywhere; }
+.character-preview-layout { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 18px; align-items: start; }
+.character-stage, .character-controls { padding: 20px; min-width: 0; }
+.character-stage .head-actions, .character-controls .head-actions { flex-wrap: wrap; margin: 16px 0; }
+.character-canvas { display: block; width: 100%; aspect-ratio: 1000 / 650; border: 1px solid #43545f; border-radius: 10px; touch-action: none; user-select: none; }
+.character-controls fieldset { min-width: 0; border: 0; padding: 0; }
+.character-controls label { display: grid; gap: 8px; margin: 16px 0; }
+.character-controls label:has(input[type=checkbox]), .character-stage label { display: flex; align-items: center; gap: 8px; }
+.character-control { display: grid; grid-template-columns: minmax(0, 1fr) 95px; gap: 10px; align-items: center; }
+.character-control input { min-width: 0; width: 100%; }
+.character-stage input[type=checkbox], .character-controls input[type=checkbox] { width: auto; }
+.character-controls .full { margin-bottom: 8px; overflow-wrap: anywhere; }
+.character-save-preview { margin-top: 20px; padding-top: 12px; border-top: 1px solid #43545f; }
+@media(max-width:1200px) { .character-preview-layout { grid-template-columns: 1fr; } }
