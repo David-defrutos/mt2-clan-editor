@@ -3,6 +3,13 @@
   "schemaUrl": "https://raw.githubusercontent.com/Monster-Train-2-Modding-Group/Trainworks-Reloaded/refs/heads/main/schemas/base.deref.json",
   "card": { "cost": 1, "rarity": "common", "pools": ["MegaPool"], "targets_room": true, "targetless": false },
   "character": { "attack_damage": 5, "health": 10, "size": 1 },
+  "upgrade": { "bonus_damage": 0, "bonus_hp": 0, "bonus_size": 0, "descriptions": { "english": "" } },
+  "pool": {},
+  "rewards": {
+    "draft": { "label": "Selección de cartas", "extension": "draft", "poolField": "draft_pool", "data": { "type": "draft", "extensions": [{ "draft": { "draft_options_count": 2, "rarity_floor": "common" } }] } },
+    "card_pool": { "label": "Cartas de un pool", "extension": "card_pool", "poolField": "card_pool", "data": { "type": "card_pool", "extensions": [{ "card_pool": {} }] } }
+  },
+  "poolCopy": { "maxReferences": 500 },
   "spawnEffect": { "name": "CardEffectSpawnMonster", "target_mode": "room" },
   "images": { "card": { "width": 400, "height": 500, "color": "#57546f" }, "character": { "width": 400, "height": 500, "color": "#557062" } }
 }

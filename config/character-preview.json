@@ -1,6 +1,7 @@
 {
   "extensionPath": "extensions.character_art",
   "offsetCompatibility": { "currentPath": "transform.offset", "legacyPath": "transform.offset_position" },
+  "frameAnimation": { "quadWidthUnits": 1, "quadHeightUnits": 1, "idleAnimation": "idle" },
   "misplacedTransformPaths": ["transform", "extensions.transform"],
   "defaultPixelsPerUnit": 100,
   "defaultPivot": { "x": 0.5, "y": 0.5 },

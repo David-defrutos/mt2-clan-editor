@@ -5,9 +5,9 @@ import { configRoot, inside } from './paths.js';
 import type { ClanSnapshot, Entry } from './types.js';
 
 interface Category { id: string; label: string; patterns: string[] }
-interface Rules { categories: Category[]; fallback: { id: string; label: string }; extensions: string[]; maxUploadBytes: number }
+interface Rules { inventorySections: string[]; atlasCategory: { id: string; label: string }; categories: Category[]; fallback: { id: string; label: string }; extensions: string[]; maxUploadBytes: number }
 export interface AssetInfo {
-  id: string; file: string; image: string; category: string; categoryLabel: string;
+  id: string; section: string; file: string; image: string; category: string; categoryLabel: string;
   width?: number; height?: number; format?: string; bytes?: number;
   status: 'ok' | 'missing' | 'case-mismatch' | 'invalid-path'; uses: { section: string; id: string; file: string }[];
 }
@@ -30,14 +30,14 @@ function categoryFor(sprite: Entry, uses: Entry[], rules: Rules): { id: string; 
 
 export async function inventoryAssets(clan: ClanSnapshot): Promise<AssetInfo[]> {
   const rules = await loadAssetRules();
-  const sprites = clan.entries.filter(entry => entry.section === 'sprites');
+    const sprites = clan.entries.filter(entry => rules.inventorySections.includes(entry.section));
   return Promise.all(sprites.map(async sprite => {
     const rawPath = sprite.data.path;
     const image = typeof rawPath === 'string' ? rawPath.replaceAll('\\', '/') : '';
     const target = '@' + sprite.id;
-    const uses = clan.entries.filter(entry => entry !== sprite && references(entry.data, target));
-    const category = categoryFor(sprite, uses, rules);
-    const result: AssetInfo = { id: sprite.id, file: sprite.file, image, category: category.id, categoryLabel: category.label, status: 'missing', uses: uses.map(entry => ({ section: entry.section, id: entry.id, file: entry.file })) };
+    const uses = sprite.section === 'atlas_icons' ? [] : clan.entries.filter(entry => entry !== sprite && references(entry.data, target));
+    const category = sprite.section === 'atlas_icons' ? rules.atlasCategory : categoryFor(sprite, uses, rules);
+    const result: AssetInfo = { id: sprite.id, section: sprite.section, file: sprite.file, image, category: category.id, categoryLabel: category.label, status: 'missing', uses: uses.map(entry => ({ section: entry.section, id: entry.id, file: entry.file })) };
     const absolute = path.resolve(clan.root, image);
     if (!image || !inside(clan.root, absolute) || !rules.extensions.includes(path.extname(absolute).toLowerCase())) { result.status = 'invalid-path'; return result; }
     let directory = clan.root;

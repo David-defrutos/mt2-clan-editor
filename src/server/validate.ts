@@ -73,6 +73,6 @@ export async function validateClan(clan: ClanSnapshot): Promise<Issue[]> {
     if (card.data.card_type === 'monster' && typeof card.data.effects !== 'object') add('info', 'monster-effect', 'Carta de unidad sin efectos declarados.', card.file, 'cards', card.id);
   }
   const assets = await inventoryAssets(clan);
-  for (const asset of assets) if (asset.status !== 'ok') add(asset.status === 'case-mismatch' ? 'warning' : 'error', 'asset-' + asset.status, `${asset.id}: ${asset.image || 'sin ruta'} (${asset.status}).`, asset.file, 'sprites', asset.id);
+  for (const asset of assets) if (asset.status !== 'ok') add(asset.status === 'case-mismatch' ? 'warning' : 'error', 'asset-' + asset.status, `${asset.id}: ${asset.image || 'sin ruta'} (${asset.status}).`, asset.file, asset.section, asset.id);
   return issues;
 }

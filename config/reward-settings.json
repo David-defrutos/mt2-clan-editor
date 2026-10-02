@@ -1,0 +1,12 @@
+{
+  "extensions": { "draft": "draft", "card_pool": "card_pool" },
+  "fields": [
+    { "id": "costs", "label": "Costes de compra", "type": "integer-list", "location": "root", "min": 0, "maxItems": 100, "help": "Costes sucesivos en oro cuando un comerciante ofrece la recompensa. No son el Ember de las cartas. Puede haber costes por rareza que los sustituyan." },
+    { "id": "draft_options_count", "label": "Opciones de cartas", "type": "integer", "location": "draft", "min": 1, "max": 3, "help": "Número de cartas entre las que se elige (1 a 3). Si grant_single_card está activado, la recompensa puede entregar una carta directamente." },
+    { "id": "rarity_floor", "label": "Rareza mínima", "type": "select", "location": "draft", "options": ["unset", "common", "uncommon", "starter", "rare", "champion"], "help": "Límite inferior de rareza. Las reglas de la partida y las reliquias pueden modificar el resultado; el editor no simula el sorteo." },
+    { "id": "extra_copies", "label": "Copias adicionales", "type": "integer", "location": "draft", "min": 0, "help": "Copias adicionales que concede la recompensa, además de la carta elegida." },
+    { "id": "disable_skip", "label": "Impedir omitir", "type": "boolean", "location": "draft", "help": "Actívalo para impedir que se omita esta selección de cartas." },
+    { "id": "ignore_relic_rarity_override", "label": "Ignorar cambios de rareza de reliquias", "type": "boolean", "location": "draft", "help": "Trainworks recomienda activarlo en estandartes de unidades para ignorar el cambio de rareza de Shattered Halo." }
+  ],
+  "source": "Esquemas locales rewards.json y reward_extension_draft.json de Trainworks-Reloaded, 2026-10-02"
+}

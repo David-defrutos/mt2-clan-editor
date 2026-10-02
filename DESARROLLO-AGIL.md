@@ -118,12 +118,26 @@ Decisiones que conviene cerrar en las primeras revisiones:
 
 ## 8. Estimación y seguimiento
 
+### Asignación de unidades a invocaciones · 01-10-2026
+
+- Inspector de carta y efecto: selector de invocación estándar, unidad principal/adicional, búsqueda de personajes y resumen de estadísticas; quitar unidad secundaria.
+- Lista de usos directos compartidos, vista previa y guardado localizado con respaldo. Referencias estructuradas idénticas se conservan sin escritura.
+- Configuración de efectos y campos en `config/spawn-assignment.json`. Rechaza referencias inexistentes/ambiguas, cambios en disco desde la revisión, eliminación de la unidad principal y pools/lógica personalizada sin adaptador.
+- Las referencias y parches C# no se simulan; la edición de pools de personajes continúa pendiente.
+
+### Arte independiente · 30-09-2026
+
+- Formulario de copia dentro del selector de arte, con ID, previsualización de archivos/definiciones y guardado con respaldo.
+- Duplica game_object, sprites y PNG, conservando transformaciones, pivotes, PPU, campos desconocidos y frames de animación local. Asigna solo al objeto seleccionado.
+- Configuración en `config/visual-copy.json`; bloquea Spine/referencias externas hasta disponer de adaptadores. Control de hashes de JSON e imágenes, IDs/rutas ocupados y guardados simultáneos de copias.
+- Verificación de independencia, conservación de originales y retirada de archivos nuevos ante fallo de la asignación final. Los cambios de este incremento permanecen locales.
+
 ### Asignación visual desde catálogo · 30-09-2026
 
 - Inspector de cartas/unidades: búsqueda y selección de arte por tipo, imagen, dimensiones y lista de usuarios; vista previa y guardado con respaldo.
 - Configuración en `config/visual-assignments.json`; IDs de recursos locales únicos y tipo correcto. Seleccionar el recurso ya asignado no reescribe una referencia estructurada.
 - Pruebas verifican conservación byte a byte del JSON salvo la referencia, PNG, comentarios, campos desconocidos, respaldo y bloqueo de hashes antiguos, IDs duplicados y tipos incorrectos.
-- Continúa pendiente crear arte independiente para una copia y asignar recursos de otros contextos mediante formularios específicos.
+- La copia independiente de arte se completa en el incremento siguiente; asignar recursos de otros contextos mediante formularios específicos sigue pendiente.
 
 ### Biblioteca ampliada y transformaciones · 30-09-2026
 
@@ -186,3 +200,107 @@ Decisiones que conviene cerrar en las primeras revisiones:
 Estimación **preliminar**, para una persona con experiencia en TypeScript y conocimiento del modding de MT2: **360–580 horas**, aproximadamente **9–15 semanas a jornada completa**. Incluye la compatibilidad obligatoria con siete clanes, edición conservadora, creación jugable, recursos visuales, estadísticas, progresión y GitHub. El catálogo guiado inicial será pequeño; se amplía mediante ficheros de configuración. La estimación original no incluía Deva; su incorporación amplía los fixtures de compatibilidad. No incluye producir ilustraciones ni programar mecánicas C# nuevas para cada clan. La incertidumbre mayor está en importar y guardar sin pérdida los formatos existentes y en la prueba de carga real del juego.
 
 La primera reestimación se hace al terminar la iteración 0, con el prototipo de parser y los siete fixtures; la segunda al terminar la iteración 2, cuando ya se conoce el coste real de edición conservadora. Cada revisión informa **objetivo conseguido, evidencia, horas consumidas, riesgos y siguiente prioridad**. El avance se mide por historias aceptadas y pruebas superadas, no por porcentaje de pantallas dibujadas.
+
+### Incremento de pertenencia a pools · 01-10-2026
+
+- Entregado: altas y bajas de cartas en pools, filtros, revisión y descarte, guardado de varios archivos con respaldo y recuperación.
+- Criterios verificados: conserva referencias externas/estructuradas y otros pools, campos desconocidos, BOM, CRLF y comentarios; rechaza IDs duplicados, pools desconocidos y vistas previas caducadas; restaura el primer archivo ante fallo del segundo.
+- Evidencia: 55 pruebas superadas y compilación correcta. Lectura del catálogo de las 16 carpetas de la biblioteca sin escribir en clanes. Pools del juego de salas/equipo contrastados con el esquema y la wiki locales de Trainworks.
+- Pendiente de aceptación: recorrido visual/teclado y partida con un lote modificado. La membresía construida desde C# requiere adaptadores. Crear definiciones de pools y clonar mejoras siguen en backlog.
+- Cambios locales pendientes de autorización para publicar en GitHub.
+
+### Incremento de creación y copia de mejoras · 01-10-2026
+
+- Entregado: catálogo de mejoras en Campeones y sendas, filtros, selección de origen, creación desde plantilla y copia independiente del objeto. Los originales y árboles no se modifican automáticamente.
+- Criterios verificados: conservación de idiomas, bonificaciones, referencias externas y datos desconocidos; ninguna textura generada; creación y asignación posterior a una senda; rechazo de solicitudes distintas de las revisadas. Se amplía la comprobación de revisión a toda creación de contenido.
+- Evidencia: compilación correcta y 58 pruebas superadas. Escrituras de prueba únicamente en carpetas temporales. El siguiente paso de aceptación es recorrer el catálogo visualmente y probar una mejora asignada dentro del juego.
+- Pendiente: crear definiciones de pools, adaptadores de mecánicas y cierre de internacionalización/multiplataforma. La implementación de creación/clonado de mejoras del backlog anterior está cubierta por este incremento.
+- Cambios locales, sin publicación en GitHub.
+
+### Incremento de creación de pools · 02-10-2026
+
+- Entregado: crear definición vacía desde plantilla, previsualizar, guardar archivo independiente, seleccionar el nuevo pool y añadir cartas con el flujo anterior. Abrir definición permite revisar su JSON en Todos los objetos.
+- Evidencia: compilación correcta y 61 pruebas superadas. Prueba del recorrido crear → guardar → añadir carta con respaldo; rechazo de copia no soportada, colisiones y vista previa caducada; lectura de unión de miembros directos/indirectos sin duplicar ni confundir referencias externas.
+- Fuentes: esquema local Trainworks-Reloaded/schemas/schemas/card_pools.json. Plantilla y avisos versionados en configuración.
+- Pendiente de aceptación: recorrido visual/teclado y prueba en juego. Pendiente de implementación: adaptadores para edición/copia de miembros directos, conexión guiada a recompensas, internacionalización y verificación multiplataforma. Crear definiciones de pools ya está cubierto.
+- Cambios locales, sin publicación en GitHub.
+
+### Incremento de edición de miembros directos · 02-10-2026
+
+- Entregado: altas en la lista directa del pool cuando la declara, bajas en ambas fuentes, origen de pertenencia visible y archivos/listas afectados en la revisión. Regla de altas configurable y misma transacción de respaldo/recuperación.
+- Evidencia: compilación correcta y 65 pruebas superadas. Altas directas conservan el archivo de cartas; bajas múltiples eliminan referencias locales duplicadas conservando externas; revisión caducada bloqueada; fallo del segundo archivo restaura el primero; listas vacías, miembro único, comentarios y comas finales verificados.
+- Corrección incluida: eliminación localizada por árbol JSONC ante el defecto observado en la librería al borrar el último elemento de un array compacto.
+- Pendiente de aceptación: recorrido visual/teclado y carga en el juego. Pendiente de implementación: copia de pools, conexión guiada a recompensas, adaptadores de C#/referencias externas e internacionalización/multiplataforma.
+- Cambios locales, sin publicación en GitHub.
+
+### Incremento de copia de pools · 02-10-2026
+
+- Entregado: copia de pool local desde Pools, revisión de miembros/usos, materialización de pertenencias en la definición nueva y selección posterior. El origen y los archivos de cartas no cambian.
+- Evidencia: 68 pruebas superadas; copia de unión directa/indirecta con referencias externas y campos desconocidos, ausencia de duplicado local añadido, edición posterior de la copia sin cambiar origen, pools vacíos, rechazo de listas malformadas/límite de 500 referencias y revisión obsoleta. Compilación correcta.
+- Pendiente de aceptación: recorrido visual/teclado y carga en el juego. Pendiente de implementación: conexión guiada a recompensas, adaptadores C#/referencias externas e internacionalización/multiplataforma.
+- Cambios locales, sin publicación en GitHub.
+
+### Incremento de asignación de pools a efectos · 02-10-2026
+
+- Entregado: selector de pool desde cartas/reliquias y sus efectos configurados, miembros locales y usos compartidos, revisión y guardado con respaldo. Reglas y catálogo en configuración, basados en la wiki local.
+- Evidencia: 71 pruebas superadas y compilación correcta. Cambio localizado con conservación del origen, parámetros y pools; selección idéntica sin escritura; pools del juego en efectos de reliquias; rechazo de tipos no configurados, alternativas individuales, IDs duplicados y revisión obsoleta. Ante fallo del reemplazo se conserva el original y se retira el temporal.
+- Pendiente de aceptación: recorrido visual/teclado y partida. El selector no simula efectos ni verifica automáticamente que todos los miembros correspondan al tipo esperado.
+- Pendiente de implementación: recompensas/mapa, pools de personajes, adaptadores personalizados e internacionalización/multiplataforma.
+- Cambios locales, sin publicación en GitHub.
+
+### Incremento de pools de personajes · 02-10-2026
+
+- Entregado: selección de miembros inline de invocaciones, búsqueda/estadísticas, recuentos, referencias protegidas, parámetros individuales conservados, usos compartidos, descarte, revisión y guardado con respaldo. Reglas/límites en configuración.
+- Evidencia: compilación correcta y 75 pruebas superadas. Altas y bajas con referencias repetidas/estructuradas/externas, conservación del respaldo y archivos de unidades, selección idéntica sin escritura, creación de lista ausente, rechazo de pool vacío/IDs ambiguos/formato no soportado/revisión caducada y fallo de reemplazo sin pérdida ni temporales residuales.
+- Fuentes: esquema local Trainworks-Reloaded/schemas/schemas/effects.json, referencia de efectos de la wiki y listas reales de Sweetkin. Los pools de personajes son listas del efecto; no se generan definiciones con ID.
+- Pendiente de aceptación: recorrido visual/teclado y prueba en el juego. No se simulan probabilidades ni C#. Pendientes de implementación: recompensas/mapa, adaptadores personalizados/externos e internacionalización/multiplataforma.
+- Cambios locales, sin publicación en GitHub.
+
+### Incremento de pools de recompensas · 02-10-2026
+
+- Entregado: asignación de pools a recompensas draft/card_pool desde el inspector y desde estandartes que las referencien. Selector, filtros, miembros locales, usos compartidos, revisión y respaldo; adaptadores configurables.
+- Evidencia: compilación correcta y 78 pruebas superadas. Pruebas nuevas de rutas anidadas, conservación de costes/rarezas/nodos/extensiones/BOM/CRLF/comentarios, respaldo, referencias estructuradas idénticas, pools del juego, usos externos excluidos y rechazo de extensiones inválidas/ambiguas, IDs duplicados y revisión obsoleta.
+- Pendiente de aceptación: recorrido visual/teclado y partida. No se simulan sorteos ni se modifican pools de aparición del mapa. Próximas mejoras: creación y parámetros de recompensas, adaptadores externos, internacionalización y verificación multiplataforma.
+- Cambios locales, sin publicación en GitHub.
+
+### Incremento de ajustes de recompensas · 02-10-2026
+
+- Entregado: controles configurables para costes y parámetros draft, con explicación, revisión individual y respaldo desde recompensa o nodo del mapa.
+- Evidencia: compilación correcta y 81 pruebas superadas. Conservación del formato y datos ajenos, costes por rareza intactos, alta de campo antes ausente, selección idéntica sin escritura, rechazo de tipos/valores fuera de límites/campos no aplicables, IDs/extensiones ambiguos y revisión caducada; fallo de reemplazo conserva origen y elimina temporal.
+- Pendiente de aceptación: recorrido visual/teclado y partida. No se simulan probabilidades ni reglas de reliquias; campos avanzados mantienen edición JSON. Creación de recompensas/nodos e internacionalización/multiplataforma pendientes.
+- Cambios locales, sin publicación en GitHub.
+
+### Incremento de creación de recompensas · 02-10-2026
+
+- Entregado: creación desde plantillas configuradas draft/card_pool y copia de recompensas desde Todos los objetos; selección automática del resultado y continuidad hacia ajustes/pools.
+- Evidencia: compilación correcta y 84 pruebas superadas. Creación sin imágenes, integración con editores de ajustes/pools, conservación de origen/nodos/extensiones/referencias/idiomas, rechazo de pool desconocido/inválido/ambiguo, tipo no configurado, colisiones y revisión alterada/caducada.
+- Pendiente de aceptación: recorrido visual/teclado y partida. Conexión a nodos/eventos y creación de nodos siguen pendientes, además de internacionalización/multiplataforma.
+- Cambios locales, sin publicación en GitHub.
+
+### Corrección de escala animada · 02-10-2026
+
+- Corregido el cálculo de tamaño para character_art con animaciones por fotogramas, detectado en Roderic y Vesper. El renderizador local CharacterUIMeshAnimatedSprite conserva un quad fijo y aplica transform.scale; multiplicar también por tamaño PNG/PPU sobredimensionaba la vista.
+- Primer fotograma idle local válido, quad configurable de 1 × 1 unidades, pivote centrado, alineación por diferencia de altura respecto al sprite base. La altura automática mantiene el cálculo a partir del sprite base. Si idle no se resuelve, imagen base con aviso; referencias externas no se resuelven como locales. Arte estático mantiene su cálculo anterior.
+- Evidencia: compilación correcta y 85 pruebas superadas, incluyendo regresión de tamaño animado, pivote, fotograma, altura automática, fallback y conservación de archivos del clan. Verificación visual en el juego pendiente; animación completa y Spine siguen fuera de esta vista.
+- Cambios locales, sin publicación en GitHub.
+
+### Extracción de recursos oficiales · 02-10-2026
+
+- Completada extracción de los 25 bundles de personajes de la instalación local, sin modificar archivos del juego. 1.916 PNG (527 sprites/1.389 texturas), 1.683 archivos auxiliares de animación, cero errores y aproximadamente 281 MB de salida.
+- Evidencia: índice con hashes/procedencia/dimensiones/PPU/pivote, lectura correcta del sprite Shield Steward y revisión visual de su PNG. Script y reglas de extracción guardados; dependencias aisladas y salida en data ignorada por Git.
+- Pendiente: asociación a catálogo oficial, escala/posición de prefabs e integración en el visor. Los atlas Spine no son poses completas. Sin publicación en GitHub.
+
+### Revisión de requisitos de arte · 02-10-2026
+
+- Incorporada al plan la referencia aportada docs/referencia/arte-escalas.md: identidad, marcos, estados del mapa, presentación de campeones, sprites/atlas de mecánicas y recursos según contenido.
+- Carencias confirmadas: inventario actual solo sprites y asignaciones guiadas solo carta/personaje. Pendientes catálogo de roles en configuración, inventario atlas_icons/bundles, formularios de asignación y checklist con revisión de alpha/área visible.
+- Criterios: medidas orientativas sin rechazar variantes funcionales; medium/large se conserva según rol existente; compartir imágenes entre roles permitido. Compensación de escala estática no extrapolada automáticamente a quads animados/Spine; suelo calibrado localmente.
+- Revisión documental, sin cambios en clanes ni publicación en GitHub.
+
+### Inventario atlas y prioridad final · 02-10-2026
+
+- Entregado: atlas_icons en Recursos visuales y Validación, diferenciación de secciones/IDs compartidos y conservación de resolución exclusiva de sprites en los editores existentes.
+- Evidencia: compilación correcta y 86 pruebas superadas. Regresión de ID compartido con imágenes distintas, catálogo de carta sin confusión, atlas ausente detectado y JSON original conservado.
+- Pendiente: sustitución guiada de atlas, usos en texto, bundles y checklist/roles de arte.
+- Decisión del usuario: comparación con imágenes oficiales al final, prioridad baja, sin bloquear el cierre principal. Extracción ya disponible; integración del visor pospuesta.
+- Cambios locales, sin publicación en GitHub.

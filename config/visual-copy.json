@@ -1,0 +1,8 @@
+{
+  "idPattern": "^[A-Za-z][A-Za-z0-9_]{2,59}$",
+  "jsonPrefix": "json/editor-art-",
+  "imagePrefix": "textures/editor-art-",
+  "maxSprites": 500,
+  "maxTotalBytes": 100000000,
+  "unsupportedFields": ["skeleton_animations", "spine"]
+}

@@ -1,0 +1,9 @@
+{
+  "effectNames": ["CardEffectRecruit", "CardEffectSpawnHero", "CardEffectSpawnHeroIfNoOtherHeroUnits", "CardEffectSpawnMonster"],
+  "field": "param_character_pool",
+  "fallbackFields": ["param_character", "param_character_2"],
+  "minReferences": 1,
+  "maxReferences": 200,
+  "maxChanges": 100,
+  "source": "Wiki local Base-Game-Card-Effect-Reference.md, schemas/schemas/effects.json y ejemplos Sweetkin, 2026-10-02"
+}

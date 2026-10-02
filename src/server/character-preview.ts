@@ -12,6 +12,7 @@ interface Viewport { width: number; height: number; originX: number; originY?: n
 interface Rules { extensionPath: string; defaultPixelsPerUnit: number; defaultPivot: { x: number; y: number }; groundHeightMultiplier: number; viewport: Viewport; background?: { file: string; label: string; viewport: Viewport; calibration: string; reference?: Record<string, number>; available?: boolean; projectionOverrides?: { classId: string; artId: string; scaleX?: number; scaleY?: number; offsetY?: number; note: string }[] }; controls: Control[] }
 export interface CharacterRequest { root: string; file: string; id: string; expectedHash: string; changes: Record<string, number> }
 interface Rules { offsetCompatibility: { currentPath: string; legacyPath: string }; misplacedTransformPaths: string[] }
+interface Rules { frameAnimation: { quadWidthUnits: number; quadHeightUnits: number; idleAnimation: string } }
 function controlValue(extension: unknown, control: Control, rules: Rules): unknown {
   if (!control.id.startsWith('offset')) return at(extension, control.path);
   const axis = control.id.slice(-1).toLowerCase();
@@ -57,24 +58,37 @@ export async function characterModels(clan: ClanSnapshot) {
     const extension = at(entry.data, rules.extensionPath);
     const spriteId = refId(at(extension, 'sprite'));
     const matches = clan.entries.filter(e => e.section === 'sprites' && e.id === spriteId);
-    const sprite = matches.length === 1 ? matches[0] : undefined;
-    const asset = sprite ? assets.find(a => a.id === sprite.id && a.file === sprite.file) : undefined;
+    const baseSprite = matches.length === 1 ? matches[0] : undefined;
+    const baseAsset = baseSprite ? assets.find(a => a.section === 'sprites' && a.id === baseSprite.id && a.file === baseSprite.file) : undefined;
+    const animations = at(extension, 'animations');
+    const animated = Array.isArray(animations) && animations.length > 0 && !at(extension, 'skeleton_animations');
+    const idle = animated ? animations.find(a => at(a, 'animation') === rules.frameAnimation.idleAnimation) : undefined;
+    const frames = at(idle, 'frames'); const frameId = Array.isArray(frames) ? refId(frames[0]) : undefined;
+    const frameMatches = clan.entries.filter(e => e.section === 'sprites' && e.id === frameId);
+    const frameSprite = frameMatches.length === 1 ? frameMatches[0] : undefined;
+    const frameAsset = frameSprite ? assets.find(a => a.section === 'sprites' && a.id === frameSprite.id && a.file === frameSprite.file) : undefined;
+    const validFrame = frameAsset && ['ok', 'case-mismatch'].includes(frameAsset.status);
+    const sprite = validFrame ? frameSprite : baseSprite;
+    const asset = validFrame ? frameAsset : baseAsset;
     const ppu = number(sprite?.data.pixels_per_unit, rules.defaultPixelsPerUnit);
     const width = asset?.width ?? 0; const height = asset?.height ?? 0;
     const values = Object.fromEntries(rules.controls.map(c => [c.id, number(controlValue(extension, c, rules), c.default)]));
     const automaticY = at(extension, 'transform.position.y') === undefined;
-    if (automaticY) values.positionY = height / Math.max(ppu, 1) / 2 * rules.groundHeightMultiplier * values.scaleY;
+    const basePpu = number(baseSprite?.data.pixels_per_unit, rules.defaultPixelsPerUnit);
+    const automaticHeightPerScale = (baseAsset?.height ?? 0) / Math.max(basePpu, 1) / 2 * rules.groundHeightMultiplier;
+    if (automaticY) values.positionY = automaticHeightPerScale * values.scaleY;
+    const render = animated ? { widthUnits: rules.frameAnimation.quadWidthUnits, heightUnits: rules.frameAnimation.quadHeightUnits, pivot: { x: 0.5, y: 0.5 }, offsetY: ((asset?.height ?? 0) / Math.max(ppu, 1) - (baseAsset?.height ?? 0) / Math.max(basePpu, 1)) / 2 } : undefined;
     const warnings: string[] = characterTransformWarnings(entry.data, rules);
     if (!sprite || !asset || !['ok', 'case-mismatch'].includes(asset.status) || ppu <= 0) warnings.push('Sprite local sin imagen válida o píxeles por unidad inválidos.');
     if (asset?.status === 'case-mismatch') warnings.push('La ruta de imagen tiene diferencias de mayúsculas; corrígela para Linux.');
-    if (at(extension, 'animations')) warnings.push('Se muestra el sprite base; no se reproducen las animaciones.');
+    if (animated) warnings.push(validFrame ? 'Se muestra el primer fotograma de reposo sobre el quad fijo de Trainworks; no se reproduce la animación.' : 'No se pudo resolver el primer fotograma de reposo; se muestra el sprite base sobre el quad animado.');
     if (at(extension, 'skeleton_animations')) warnings.push('El sprite base no reproduce la geometría ni la alineación de Spine.');
     if (sprite?.data.mesh_type === 'tight') warnings.push('Los límites del mesh tight pueden cambiar la alineación automática en el juego.');
     if (sprite?.data.pixels_per_unit === undefined) warnings.push(`Se asumen ${rules.defaultPixelsPerUnit} píxeles por unidad. Los mods históricos pueden usar otro valor.`);
     const uses = clan.entries.filter(e => e !== entry && references(e.data, entry.id));
     const context = uses.some(e => e.section === 'characters') ? 'battle' : uses.some(e => e.section === 'classes') ? 'selection' : 'other';
     const projection = rules.background?.projectionOverrides?.find(p => p.classId === clan.classId && p.artId === entry.id);
-    return { entry, sprite, image: asset?.image, width, height, ppu, pivot: { x: number(at(sprite?.data, 'pivot.x'), rules.defaultPivot.x), y: number(at(sprite?.data, 'pivot.y'), rules.defaultPivot.y) }, values, automaticY, warnings, uses, context, projection, usable: Boolean(sprite && width && height && ppu > 0 && asset && ['ok', 'case-mismatch'].includes(asset.status)) };
+    return { entry, sprite, image: asset?.image, width, height, ppu, pivot: { x: number(at(sprite?.data, 'pivot.x'), rules.defaultPivot.x), y: number(at(sprite?.data, 'pivot.y'), rules.defaultPivot.y) }, render, automaticHeightPerScale, values, automaticY, warnings, uses, context, projection, usable: Boolean(baseSprite && baseAsset && sprite && width && height && ppu > 0 && asset && ['ok', 'case-mismatch'].includes(asset.status)) };
   });
   return { rules, items };
 }

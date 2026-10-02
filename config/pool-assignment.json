@@ -1,0 +1,14 @@
+{
+  "sections": {
+    "effects": ["CardEffectAddBattleCard", "CardEffectAddBattleCardPerTarget", "CardEffectAddRunCard", "CardEffectDrawOrAddBattleCard", "CardEffectGrantEquipmentFromPool"],
+    "relic_effects": ["RelicEffectAddBattleCardToHand", "RelicEffectAddCardsStartOfBattle", "RelicEffectAddCardsStartOfRun"]
+  },
+  "field": "param_card_pool",
+  "label": "Pool de cartas",
+  "blockedFields": ["param_card", "param_card_data"],
+  "rewardAdapters": {
+    "draft": { "extension": "draft", "field": "draft_pool" },
+    "card_pool": { "extension": "card_pool", "field": "card_pool" }
+  },
+  "source": "Wiki local Trainworks-Reloaded: Base-Game-Card-Effect-Reference.md y Base-Game-Relic-Effect-Reference.md, 2026-10-02"
+}

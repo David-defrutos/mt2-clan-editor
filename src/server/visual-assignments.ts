@@ -28,7 +28,7 @@ export async function visualCatalog(clan: ClanSnapshot, section: string) {
     for (const entry of clan.entries.filter(entry => entry.section === rule.sourceSection)) counts.set(entry.id, (counts.get(entry.id) ?? 0) + 1);
     return { path: rule.path, label: rule.label, candidates: entries.filter(entry => counts.get(entry.id) === 1).map(entry => {
       const spriteId = ref(at(entry.data, rule.spritePath));
-      const matches = assets.filter(asset => asset.id === spriteId);
+      const matches = assets.filter(asset => asset.section === 'sprites' && asset.id === spriteId);
       const asset = matches.length === 1 ? matches[0] : undefined;
       const uses = clan.entries.filter(item => item !== entry && references(item.data, entry.id)).map(item => ({ section: item.section, id: item.id, name: item.name, file: item.file }));
       return { id: entry.id, name: entry.name, file: entry.file, spriteId, image: asset && ['ok', 'case-mismatch'].includes(asset.status) ? asset.image : undefined, width: asset?.width, height: asset?.height, uses };

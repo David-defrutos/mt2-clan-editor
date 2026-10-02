@@ -238,9 +238,13 @@ Las configuraciones se validan antes de abrir un proyecto. Si una versión nueva
 
 ## 8. Decisiones pendientes antes de implementar
 
-**Asignación visual implementada (30-09-2026):** el inspector de Cartas y Unidades permite buscar recursos locales del tipo correspondiente, seleccionar arte existente, mostrar imagen y dimensiones, revisar todos sus usos, previsualizar y guardar con respaldo. Configuración en `config/visual-assignments.json`. Conserva PNG y transformaciones; selección del arte actual sin escritura. Excluye IDs duplicados y rechaza tipo incorrecto. Crear recursos independientes y otros contextos visuales permanecen en el backlog.
+**Unidad invocada implementada (01-10-2026):** formulario en inspector de carta y efecto para asignar unidades locales a invocaciones estándar. Selector de efecto cuando hay varios, unidad principal/adicional, búsqueda, estadísticas del personaje, usos directos, Previsualizar invocación y Guardar invocación con respaldo. Permite quitar la unidad adicional. Modifica solo la referencia y protege identidad/hash del efecto y cambios del clan entre revisión y guardado. Reglas en `config/spawn-assignment.json`; pools, invocación personalizada y usos desde C# requieren adaptadores.
 
-**Incremento de creación de contenido (30-09-2026):** Cartas permite crear unidad/hechizo y duplicar selección; Unidades permite crear personaje independiente y duplicarlo. Formulario con ID, nombre, tipo, Previsualizar, Guardar y Cancelar. La vista previa enumera objetos y referencias compartidas. Se añaden JSON independientes y arte marcador desde `config/templates/content.json`; no se sobrescriben originales. Duplicar una unidad estándar copia efecto de invocación y personajes, conservando arte y otras mecánicas compartidos con aviso. Copias de campeones no se añaden al árbol automáticamente. Los adaptadores de invocación personalizada/pools, recursos independientes de una copia y asignación guiada de unidades a efectos quedan en el backlog.
+**Arte independiente implementado (30-09-2026):** en el inspector de Cartas/Unidades, el selector de arte permite crear una copia independiente del recurso seleccionado y asignarla al objeto actual. ID nuevo, previsualización de archivos/definiciones y Crear copia y asignarla con respaldo. Se copian game_object, sprites y PNG, con frames locales; transformaciones y campos desconocidos se conservan. Configuración en `config/visual-copy.json`. La operación protege JSON e imágenes mediante hashes, evita sobrescrituras y retira archivos nuevos si falla la asignación. Spine/referencias externas y otros contextos siguen pendientes de adaptadores.
+
+**Asignación visual implementada (30-09-2026):** el inspector de Cartas y Unidades permite buscar recursos locales del tipo correspondiente, seleccionar arte existente, mostrar imagen y dimensiones, revisar todos sus usos, previsualizar y guardar con respaldo. Configuración en `config/visual-assignments.json`. Conserva PNG y transformaciones; selección del arte actual sin escritura. Excluye IDs duplicados y rechaza tipo incorrecto. La copia de recursos independientes se completa en el incremento siguiente; otros contextos visuales permanecen en el backlog.
+
+**Incremento de creación de contenido (30-09-2026):** Cartas permite crear unidad/hechizo y duplicar selección; Unidades permite crear personaje independiente y duplicarlo. Formulario con ID, nombre, tipo, Previsualizar, Guardar y Cancelar. La vista previa enumera objetos y referencias compartidas. Se añaden JSON independientes y arte marcador desde `config/templates/content.json`; no se sobrescriben originales. Duplicar una unidad estándar copia efecto de invocación y personajes, conservando arte y otras mecánicas compartidos con aviso. Copias de campeones no se añaden al árbol automáticamente. Los adaptadores de invocación personalizada/pools quedan en el backlog; la asignación guiada de unidades a efectos estándar se completa el 01-10-2026; la copia independiente de arte se completa en el incremento posterior.
 
 
 **Requisito confirmado para el cierre:** traducir la interfaz completa y añadir un selector de idiomas. Se realizará al completar y estabilizar las funcionalidades, antes de considerar terminada la versión final. La lista de idiomas se concretará en esa fase; este requisito incluye tooltips y mensajes, no solo los títulos de las pantallas.
@@ -261,3 +265,152 @@ Estas decisiones no impiden desarrollar el lector conservador, los formularios b
 - Definir un idioma de respaldo para claves ausentes y adaptar números y plurales. Los valores JSON escritos deben conservar su formato de datos, independientemente del idioma de la interfaz.
 - La elección del idioma de interfaz no debe reescribir automáticamente nombres o descripciones del contenido del clan; su edición por idioma se gestiona por separado.
 - Aceptación: selector funcional, catálogos completos, ayudas y errores traducidos, ausencia de cadenas de interfaz sin catalogar y revisión de desbordamientos de texto y accesibilidad en los idiomas acordados.
+
+## Incremento de pertenencia a pools · 01-10-2026
+
+- Pantalla implementada: navegación lateral por pool, recuentos, filtros de nombre/ID/archivo, tipo, rareza y pertenencia; estados todas/en el pool/fuera/cambios pendientes.
+- Checkbox de pertenencia por carta, límite configurable, descarte, revisión de altas y bajas y guardado de lote con respaldo. La selección persiste al cambiar filtros; el cambio de pool y abrir una carta se bloquean mientras haya modificaciones pendientes.
+- Catálogo y avisos en `config/pool-editor.json`: pools del juego comprobados con el esquema/wiki locales, locales con `@ID`, desconocidos y duplicados en solo lectura. Las referencias externas se conservan y no se confunden con miembros locales.
+- Edición localizada por elemento JSONC, conservando referencias ajenas y campos no relacionados. Token de vista previa, comprobación de hashes, bloqueo de guardado concurrente de pools, respaldo y diario de recuperación. Ante fallo parcial se restauran archivos propios; cambios externos durante la recuperación se señalan explícitamente.
+- Fuera del alcance de este incremento: crear/eliminar definiciones de pools, modificar pools construidos desde C#, cambiar automáticamente la carta inicial del campeón y reparar IDs duplicados. La traducción de la interfaz sigue en la fase de internacionalización ya planificada.
+
+## Incremento de creación y copia de mejoras · 01-10-2026
+
+- Campeones y sendas incorpora Catálogo de mejoras: búsqueda de nombre/ID/archivo, filtro de archivo, selección única para copiar, botones Crear mejora, Duplicar selección y Abrir mejora.
+- Modal reutilizado con ID, nombre, JSON, avisos, previsualización, cancelar y guardar. Cada creación añade un JSON independiente; no conecta automáticamente la mejora al árbol.
+- Plantilla de bonificaciones y descripción en `config/templates/content.json`, propiedad `upgrade`. El nombre usa `titles.english`. Las copias conservan títulos en otros idiomas, referencias, campos desconocidos y todas las bonificaciones.
+- Edición posterior desde el inspector existente y asignación desde Editar árbol de sendas. El catálogo contiene todas las mejoras locales, incluidas mejoras de cartas; las ambiguas no admiten copia.
+- Revisión de creación ligada a los parámetros y al estado del clan; comprobación antes/después de preparar y antes de escribir; archivos nuevos exclusivos y eliminación ante fallos. Los originales se conservan.
+- Creación/clonado de mejoras deja de estar pendiente de implementación. Sigue pendiente su aceptación visual y en el juego, así como crear definiciones de pools y adaptadores para mecánicas personalizadas.
+
+## Incremento de creación de pools · 02-10-2026
+
+- Pantalla Pools: botón Crear pool, modal de ID técnico, revisión de JSON y guardar/cancelar. No se pide un nombre traducible: el esquema de pool identifica el objeto por ID.
+- Plantilla vacía en `config/templates/content.json`, propiedad `pool`. Archivo nuevo exclusivo `json/editor-ID.json`, colisiones y revisión caducada bloqueadas. No modifica cartas, recompensas ni invocaciones automáticamente.
+- Tras crear, se selecciona @ID y se habilita el flujo existente de pertenencia. Crear queda bloqueado mientras haya pertenencias pendientes. Abrir definición navega a Todos los objetos para revisar y editar el JSON.
+- Compatibilidad ampliada: miembros directos en `card_pools.cards` se unen a los declarados en `cards.pools`, conservando referencias externas/no resueltas y evitando doble recuento. La edición guiada de pools con miembros directos queda en solo lectura, con aviso configurable y acceso al JSON.
+- Creación de definiciones de pools queda implementada. Sigue pendiente el adaptador de edición/copia de miembros directos y conexión guiada a recompensas/efectos, además de aceptación visual y en el juego.
+
+## Incremento de edición de miembros directos · 02-10-2026
+
+- Se habilita la edición guiada de listas `card_pools.cards`, incluidas listas vacías. La regla configurable `useDirectListWhenDeclared` conserva el formato de altas del pool existente; los demás pools usan `cards.pools`.
+- La baja elimina todas las pertenencias locales de la carta en ambas fuentes, incluidos duplicados. Conserva referencias estructuradas ajenas, externas y no resueltas, comentarios, BOM/CRLF y otros campos. Selección idéntica no escribe ni cambia la representación.
+- Tabla con columna Declarada en y revisión con archivo/lista afectados por cambio. El mismo guardado transaccional respalda y recupera definiciones y cartas, con token de revisión y control de cambios externos.
+- Eliminación localizada por posiciones del árbol JSONC para evitar un defecto observado al borrar el último elemento de una lista compacta. Cubiertas bajas repetidas, única referencia, coma final y comentarios.
+- Las listas malformadas, pools duplicados y desconocidos conservan solo lectura. Pendientes: referencias externas guiadas, pools generados por C#, copia de pools y conexión guiada a recompensas. La edición de miembros directos del backlog anterior ya está implementada; aceptación visual y en juego pendiente.
+
+## Incremento de copia de pools · 02-10-2026
+
+- Pools: Duplicar selección para definiciones locales únicas; modal de ID, cancelar, previsualizar y guardar copia. Se bloquea mientras haya pertenencias pendientes y se explica por qué los pools del juego sin definición local no admiten copia.
+- Copia independiente de definición y lista de miembros. Conserva campos desconocidos y referencias directas con sus propiedades; materializa las pertenencias de cartas en cards de la copia, sin añadir un segundo miembro local si ya está directamente incluido. Las referencias externas, no resueltas y duplicados directos se preservan.
+- Revisión de referencias directas, cartas añadidas y objetos JSON que siguen usando el origen. Aviso explícito de cartas compartidas, propiedades adicionales en referencias de pertenencia y miembros/usos desde C# no detectables.
+- Configuración del límite de copia en templates/content.json, poolCopy.maxReferences. Colisiones, listas malformadas, IDs ambiguos y revisión caducada bloqueadas. Archivo nuevo exclusivo y selección del pool tras guardar; originales sin cambios.
+- Pendiente: conexión guiada a recompensas/efectos, adaptadores C#/referencias externas, aceptación visual y en juego e internacionalización/multiplataforma. La copia de pools locales queda implementada.
+
+## Incremento de asignación de pools a efectos · 02-10-2026
+
+- Inspector de cartas, reliquias, efectos y efectos de reliquia: bloque Pool del efecto · asignación guiada. Selector de efecto compatible, búsqueda de pool, miembros locales, lista de usos compartidos, revisión y guardado con respaldo.
+- Catálogo configurable en config/pool-assignment.json para effects/relic_effects y param_card_pool; campos de carta individual bloqueados para evitar alternativas ambiguas. Fuentes: wiki local Base-Game-Card-Effect-Reference.md y Base-Game-Relic-Effect-Reference.md.
+- Pools locales únicos y del juego configurados; desconocidos, duplicados y listas inválidas excluidos. Recuento solo local con aviso de miembros externos, del juego o construidos desde C#.
+- Cambio localizado de referencia, conservando BOM/CRLF, comentarios, campos desconocidos, parámetros y miembros. Selección idéntica conserva referencias estructuradas. Token de revisión ligado a solicitud, JSON y configuración; respaldo, archivo temporal y comprobación antes del reemplazo.
+- Pendientes: conexiones de recompensas/mapa, pools de personajes, efectos personalizados, validación en partida y cierre de internacionalización/multiplataforma. La asignación de pools a efectos estándar de cartas/reliquias queda implementada.
+
+## Incremento de pools de personajes · 02-10-2026
+
+- Formato confirmado en el esquema local effects.json y ejemplos Sweetkin: param_character_pool es una lista inline de referencias a personajes, no un objeto de pool con ID.
+- Inspector de efectos/cartas compatibles: Pool de personajes · invocación aleatoria, selector de efecto, búsqueda por nombre/ID, casillas de pertenencia, estadísticas, referencias actuales, total y límites, lista de referencias protegidas y respaldo individual conservado.
+- Descartar, previsualizar la lista final y guardar con respaldo. El selector de efecto se bloquea mientras haya cambios. Conserva repeticiones actuales y referencias estructuradas idénticas; las bajas eliminan todas las referencias locales del personaje elegido, preservando externas y no resueltas.
+- Configuración de efectos/campo/respaldo/límites en character-pool.json. Control de hashes y revisión ligada a solicitud/JSON/configuración; respaldo original, temporal exclusivo y reemplazo tras verificar el estado del clan. Las definiciones de personajes, su arte y otros parámetros permanecen intactos.
+- Se puede crear una lista antes ausente; se explica que esto cambia la selección de la invocación. El mínimo configurado evita vaciar el pool por la edición guiada. Los IDs ambiguos se excluyen y se muestran sus referencias como protegidas.
+- Pendiente: simulación de selección/probabilidades, referencias externas guiadas, adaptadores personalizados, recompensas/mapa e internacionalización/multiplataforma. Aceptación visual y en partida pendiente.
+
+## Incremento de pools de recompensas · 02-10-2026
+
+- Selector guiado en Todos los objetos para rewards y para map_nodes que referencien recompensas locales únicas. Navegación por filtros de sección, selección de recompensa cuando hay varias, búsqueda de pool, miembros y usos compartidos, previsualización y guardado con respaldo.
+- Adaptadores draft y card_pool declarados en config/pool-assignment.json, con extensión y campo configurables. Se modifica exclusivamente la referencia de pool en la extensión correcta; los pools de aparición del nodo, costes, filtros de rareza y opciones se conservan.
+- Se rechazan tipos no configurados y extensiones inexistentes, duplicadas o de forma incorrecta. Se mantienen referencias estructuradas idénticas sin escritura, comprobaciones de estado del clan y token vinculado a la solicitud.
+- Fuentes: wiki local Custom-Clans.md y esquemas rewards.json, reward_extension_draft.json y reward_extension_card_pool.json de Trainworks-Reloaded.
+- Pendientes: creación guiada de nodos/recompensas, ajustes de costes y opciones, adaptadores personalizados/externos, aceptación visual/en partida e internacionalización/multiplataforma.
+
+## Incremento de ajustes de recompensas · 02-10-2026
+
+- Panel Ajustes de la recompensa en el selector de pools de recompensas/nodos: campo, valor actual o aviso de ausencia, explicación visible y tooltip, controles tipados, revisión y guardado con respaldo.
+- Catálogo configurable reward-settings.json: costes sucesivos (draft/card_pool), opciones 1 a 3, rareza mínima, copias adicionales, impedir omitir e ignorar override de rareza de reliquias (draft). Límites contrastados con esquemas locales de Trainworks.
+- No se materializan valores predeterminados durante la carga. Se escribe únicamente el campo elegido, conservando pool, otras extensiones, costes por rareza, comentarios y campos desconocidos.
+- Validación servidor, ID único, extensión única válida, hash de origen y revisión vinculada al valor, JSON del clan y configuración. Respaldo, temporal exclusivo y verificación antes del reemplazo.
+- Pendiente: creación guiada de recompensas/nodos, ajustes de probabilidades y overrides, adaptadores externos, aceptación visual/en partida e internacionalización/multiplataforma.
+
+## Incremento de creación de recompensas · 02-10-2026
+
+- Todos los objetos: Crear recompensa y Duplicar selección para rewards. Modal con ID, nombre, tipos desde configuración, pool válido, JSON de revisión y guardado. Tras crear, filtro rewards y selección del objeto nuevo; el filtro existe también en clanes sin recompensas.
+- Plantillas draft/card_pool en config/templates/content.json: etiquetas, extensión, campo de pool y valores iniciales. Pool local único válido o del juego configurado; creación sin imágenes ni carpeta textures.
+- Copia independiente de la definición, conservando costes, extensiones, metadatos y otros idiomas. Renombra titles.english, cambia ID, conserva referencias compartidas; no cambia usuarios del origen ni conecta nodos/eventos.
+- Revisión vinculada a solicitud, pool elegido, estado JSON y configuración de plantillas/pools. Escritura exclusiva de archivo nuevo, rollback ante fallo, rechazo de colisiones, JSON inválidos, IDs duplicados y revisión caducada.
+- Pendientes: conexión guiada de recompensas a nodos/eventos, creación de nodos, aceptación visual/en partida e internacionalización/multiplataforma.
+
+## Corrección de preview animado · 02-10-2026
+
+- Arte animado por fotogramas usa el quad fijo y el primer fotograma idle; las dimensiones del PNG no se vuelven a multiplicar por la escala. Parámetros en character-preview.json/frameAnimation. Roderic y Vesper dejan de usar el cálculo de sprites estáticos.
+- Altura automática desde sprite base, pivote centrado del quad y alineación del fotograma. Arte estático conservado, fallback visible para idle no resuelto. Los JSON y PNG del clan no se modifican por esta corrección.
+- Fuente local: GameObjectCharacterArtFinalizer.cs y CharacterUIMeshAnimatedSprite.cs de Trainworks-Reloaded. Pendiente contraste visual/en partida para versión instalada y reproducción completa de animaciones/Spine.
+
+## Arte oficial extraído · 02-10-2026
+
+Se han extraído localmente 25 paquetes de personajes del juego: 1.916 PNG y 1.683 archivos auxiliares, con índice de procedencia y cero errores. El resultado queda en data/official-art, fuera de Git. Configuración en config/official-art-extraction.json y script reproducible en scripts/extract-official-art.py. Detalle en EXTRACCION-ARTE-OFICIAL.md.
+
+Pendiente: enlazar prefabs/datos oficiales con las imágenes, obtener transformaciones y ofrecer unidades de referencia en el visor. Los atlas Spine necesitan renderizado para mostrar una pose; los PNG extraídos no equivalen todos a personajes completos.
+
+## Cobertura de arte por clan · referencia incorporada el 02-10-2026
+
+Fuente local aportada por el usuario: D:/Juegos/MT2_mod/docs/referencia/arte-escalas.md, revisión 02-10-2026. Se incorpora como referencia de requisitos y criterios de aceptación; esta sección no implica que los formularios siguientes estén implementados.
+
+### Recursos y enlaces que debe cubrir el editor
+
+| Grupo | Roles que se deben inventariar y asignar |
+|---|---|
+| Identidad | classes.icons.small/medium/large/silhouette y card_draft_icon; ui_color, ui_color_dark y ui_gradient como colores, no imágenes |
+| Marcos | classes.card_style → class_card_styles: unit_card_frame_sprite, spell_card_frame_sprite, equipment_card_frame_sprite, room_card_frame_sprite |
+| Mapa | map_node_icon: enabled_sprite, disabled_sprite, frozen_sprite, visited_sprite_disabled, visited_sprite_enabled; map_nodes.map_icon, minimap_icon y prefab |
+| Campeones | champions.icon, locked_icon y portrait; class_select_character_displays → character_art, con transformación independiente de combate |
+| Cartas y unidades | Ilustración de carta y personaje de combate; recursos adicionales de animaciones/Spine según el contenido |
+| Reliquias, equipo y salas | Ilustración/icono principal e icono HUD cuando corresponda; catálogo según las referencias del esquema y del clan |
+| Estados | status_effects.icon → sprites y símbolo de tooltip en atlas_icons.path; no inventar tooltip_icon |
+| Triggers | character_trigger_types.sprite y atlas_icons cuando se declaren; no añadir automáticamente sprite a card_trigger_types |
+| Otros | Recursos en bundles, arte de eventos/interfaz propio y el icon.png del paquete, separado del logo del clan |
+
+### Medidas y excepciones
+
+- Arte de carta: mínimo de referencia 210 × 250. Personaje estático: recomendación aproximada hasta 500 × 500, sin convertirla en límite de carga.
+- Campeón: icono 320 × 256 y retrato 240 × 270; icono bloqueado coherente con el normal.
+- Logos: small 48 × 48, silhouette aproximadamente 72 × 72. Medium/large tienen discrepancia documentada 128/92 frente a 92/128; conservar el rol declarado, ofrecer perfiles configurables y verificar en juego, sin corregir por nombre de archivo.
+- Marcos: referencia 504 × 588; conservar geometría y huecos del marco que funciona. Otras medidas existentes no se rechazan automáticamente.
+- Estado/trigger: referencia 50 × 50, distinguiendo tratamiento del símbolo de tooltip y del icono de combate.
+- Equipo 128 × 128; sala 112 × 112; reliquia 256 × 256 y HUD 96 × 96.
+- Estandarte aproximadamente 420 × 420, publicado como no confirmado. Draft 71 × 84 como referencia, admitiendo lienzos distintos como el 84 × 84 observado en SuccClan.
+- Compartir un PNG entre roles es válido. Los recursos condicionales no se declaran obligatorios para todo clan ni se deduce una imagen nueva de cada referencia.
+
+### Incrementos pendientes
+
+1. Catálogo configurable de roles de arte, con origen JSON, contexto, medidas orientativas, transparencia, condicionalidad y límites de soporte.
+2. Ampliar inventario a atlas_icons y recursos de bundles, identificando usos reales por referencia además de nombres de fichero.
+3. Asignación guiada para identidad, campeones, marcos y estados del mapa; mostrar usuarios compartidos y conservar referencias externas/estructuras existentes.
+4. Checklist por clan con estados: presente, falta archivo, referencia sin resolver, externo/bundle y revisión manual. Separar presencia técnica de aceptación visual.
+5. Previsualización sobre fondos claros/oscuros, comprobación de alpha real y área visible por umbral configurable. Comprobar alineación de estados del estandarte y geometría de marcos.
+6. Reescalado conservando lienzo y área visible, respaldo y revisión de transformaciones afectadas. Para sprites estáticos, considerar PPU y compensación por eje; no aplicar esa regla automáticamente a quads animados o Spine.
+7. Aceptación en selección de clan/campeones, registro, draft, cuatro tipos de marco, estados del mapa e iconos en combate/tooltips. Verificar circuito nodo → recompensa → pool además de los PNG.
+
+La altura depende del pivote, PPU, área opaca y renderizador. El suelo F = -0.70 de la referencia es una calibración local de Equestrian, no una constante universal. No ejecutar los scripts de modificación masiva incluidos en la referencia como parte de esta revisión.
+
+Estado contrastado: inventario actual centrado en sprites; asignación guiada actual limitada a cards.card_art y characters.character_art. Los roles restantes tienen acceso mediante JSON avanzado, pero necesitan los formularios e inventario específico descritos arriba.
+
+## Incremento de inventario atlas_icons · 02-10-2026
+
+- Recursos visuales incluye sprites y atlas_icons según config/assets.json/inventorySections. Categoría específica de tooltip, sección visible y clave independiente aunque compartan ID y archivo JSON.
+- Comprobación de existencia, lectura de dimensiones y diferencias de mayúsculas para ambos tipos. Validación señala la sección correcta. Selectores de arte, vista de personaje y copia de arte filtran sprites para evitar colisiones con atlas.
+- Los usos textuales de atlas no se cuentan como referencias de sprites. Sustitución guiada de atlas e inventario de bundles siguen pendientes; esta ampliación no altera imágenes ni JSON del clan.
+
+## Orden de cierre y mejora opcional final · 02-10-2026
+
+Prioridad acordada: completar catálogo/checklist de arte, asignaciones de identidad/campeones/marcos/mapa y validación; cerrar conexiones de mapa, pruebas en partida, idiomas y verificación multiplataforma.
+
+**Última mejora, prioridad baja: imágenes oficiales para comparar en el visor.** El arte ya está extraído localmente. Queda enlazarlo a personajes oficiales, recuperar escala/posición y permitir elegir aliados/enemigos como referencias. Resolver atlas/Spine cuando haga falta. Esta mejora se hará después del trabajo principal y no bloquea la primera versión funcional.

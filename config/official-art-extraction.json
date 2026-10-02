@@ -1,0 +1,8 @@
+{
+  "bundleDirectory": "StreamingAssets/aa/StandaloneWindows64",
+  "bundlePatterns": ["characterprefabs-*.bundle"],
+  "imageTypes": ["Texture2D", "Sprite"],
+  "exportTextAssets": true,
+  "outputDirectory": "data/official-art",
+  "note": "Extracción local de arte de unidades de la instalación del usuario. Las imágenes no se incluyen en Git. Los atlas Spine requieren renderizado para obtener un personaje completo."
+}

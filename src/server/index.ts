@@ -15,6 +15,12 @@ import { prepareArt, saveArt, type ArtRequest } from './art.js';
 import { createClan } from './create.js';
 import { discoverMods, importDiscovered } from './discovery.js';
 import { visualCatalog, prepareVisualAssignment, saveVisualAssignment, type VisualRequest } from './visual-assignments.js';
+import { prepareVisualCopy, saveVisualCopy, type VisualCopyRequest } from './visual-copy.js';
+import { spawnRules, spawnModel, prepareSpawnAssignment, saveSpawnAssignment, type SpawnRequest } from './spawn-assignment.js';
+import { poolModel, preparePoolChanges, savePoolChanges, type PoolChange } from './pool-editor.js';
+import { poolAssignmentRules, poolAssignmentModel, preparePoolAssignment, savePoolAssignment, type PoolAssignmentRequest } from './pool-assignment.js';
+import { rewardSettingsModel, prepareRewardSettings, saveRewardSettings, type RewardSettingsRequest } from './reward-settings.js';
+import { characterPoolRules, characterPoolModel, prepareCharacterPool, saveCharacterPool, type CharacterPoolRequest } from './character-pool.js';
 import { prepareContent, saveContent, type ContentRequest } from './content.js';
 import { buildClan, buildStatus } from './build.js';
 import { buildOffline, offlineStatus } from './offline-build.js';
@@ -80,6 +86,13 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   }
 
   if (req.method === 'GET' && pathname === '/api/health') return send(res, 200, { ok: true });
+  if (req.method === 'GET' && pathname === '/api/reward-templates') {
+    const rules = JSON.parse(await fs.readFile(path.join(configRoot, 'templates/content.json'), 'utf8'));
+    return send(res, 200, Object.entries(rules.rewards).map(([id, value]) => ({ id, label: (value as { label: string }).label })));
+  }
+  if (req.method === 'GET' && pathname === '/api/spawn-rules') return send(res, 200, await spawnRules());
+  if (req.method === 'GET' && pathname === '/api/pool-assignment-rules') return send(res, 200, await poolAssignmentRules());
+  if (req.method === 'GET' && pathname === '/api/character-pool-rules') return send(res, 200, await characterPoolRules());
   if (req.method === 'GET' && pathname === '/api/character-background') {
     const file = await characterBackground();
     if (!file) return send(res, 404, { error: 'No hay una captura de fondo configurada.' });
@@ -133,6 +146,75 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   }
   const contentMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/content\/(preview|save)$/);
   const visualMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/visual-assignments(?:\/(preview|save))?$/);
+  const visualCopyMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/visual-copy\/(preview|save)$/);
+  const spawnMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/spawn-assignment(?:\/(preview|save))?$/);
+  const characterPoolMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/character-pool(?:\/(preview|save))?$/);
+  if (characterPoolMatch) {
+    const item = await getLibraryItem(characterPoolMatch[1]);
+    if (req.method === 'GET' && !characterPoolMatch[2]) return send(res, 200, await characterPoolModel(item.root, required(url.searchParams.get('file'), 'file'), required(url.searchParams.get('id'), 'id')));
+    if (req.method === 'POST' && characterPoolMatch[2]) {
+      const input = await body(req); if (!Array.isArray(input.changes)) throw new Error('Falta la lista de cambios.');
+      const request: CharacterPoolRequest = { root: item.root, file: required(input.file, 'file'), id: required(input.id, 'id'), expectedHash: required(input.expectedHash, 'expectedHash'), changes: input.changes as CharacterPoolRequest['changes'], expectedToken: typeof input.expectedToken === 'string' ? input.expectedToken : undefined };
+      if (characterPoolMatch[2] === 'save') return send(res, 200, await saveCharacterPool(request));
+      const preview = await prepareCharacterPool(request); return send(res, 200, { changed: preview.changed, changes: preview.changes, members: preview.members, uses: preview.uses, token: preview.token });
+    }
+  }
+  const rewardSettingsMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/reward-settings(?:\/(preview|save))?$/);
+  if (rewardSettingsMatch) {
+    const item = await getLibraryItem(rewardSettingsMatch[1]);
+    if (req.method === 'GET' && !rewardSettingsMatch[2]) return send(res, 200, await rewardSettingsModel(item.root, required(url.searchParams.get('file'), 'file'), required(url.searchParams.get('id'), 'id')));
+    if (req.method === 'POST' && rewardSettingsMatch[2]) {
+      const input = await body(req);
+      const request: RewardSettingsRequest = { root: item.root, file: required(input.file, 'file'), id: required(input.id, 'id'), field: required(input.field, 'field'), value: input.value, expectedHash: required(input.expectedHash, 'expectedHash'), expectedToken: typeof input.expectedToken === 'string' ? input.expectedToken : undefined };
+      if (rewardSettingsMatch[2] === 'save') return send(res, 200, await saveRewardSettings(request));
+      const preview = await prepareRewardSettings(request);
+      return send(res, 200, { changed: preview.changed, label: preview.label, before: preview.before, after: preview.after, token: preview.token });
+    }
+  }
+  const poolAssignmentMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/pool-assignment(?:\/(preview|save))?$/);
+  if (poolAssignmentMatch) {
+    const item = await getLibraryItem(poolAssignmentMatch[1]);
+    if (req.method === 'GET' && !poolAssignmentMatch[2]) return send(res, 200, await poolAssignmentModel(item.root, required(url.searchParams.get('section'), 'section'), required(url.searchParams.get('file'), 'file'), required(url.searchParams.get('id'), 'id')));
+    if (req.method === 'POST' && poolAssignmentMatch[2]) {
+      const input = await body(req);
+      const request: PoolAssignmentRequest = { root: item.root, section: required(input.section, 'section'), file: required(input.file, 'file'), id: required(input.id, 'id'), poolId: required(input.poolId, 'poolId'), expectedHash: required(input.expectedHash, 'expectedHash'), expectedToken: typeof input.expectedToken === 'string' ? input.expectedToken : undefined };
+      if (poolAssignmentMatch[2] === 'save') return send(res, 200, await savePoolAssignment(request));
+      const preview = await preparePoolAssignment(request);
+      return send(res, 200, { changed: preview.changed, label: preview.label, before: preview.before, after: preview.after, pool: preview.pool, uses: preview.uses, token: preview.token });
+    }
+  }
+  const poolsMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/pools(?:\/(preview|save))?$/);
+  if (poolsMatch) {
+    const item = await getLibraryItem(poolsMatch[1]);
+    if (req.method === 'GET' && !poolsMatch[2]) return send(res, 200, await poolModel(item.root));
+    if (req.method === 'POST' && poolsMatch[2]) {
+      const input = await body(req);
+      if (!Array.isArray(input.changes)) throw new Error('Falta la lista de cambios.');
+      const request = { root: item.root, pool: required(input.pool, 'pool'), changes: input.changes as PoolChange[], expectedToken: typeof input.expectedToken === 'string' ? input.expectedToken : undefined };
+      if (poolsMatch[2] === 'save') return send(res, 200, await savePoolChanges(request));
+      const preview = await preparePoolChanges(request);
+      return send(res, 200, { pool: preview.pool, warning: preview.warning, changes: preview.changes, files: preview.files.map(f => f.file), token: preview.token });
+    }
+  }
+  if (spawnMatch) {
+    const item = await getLibraryItem(spawnMatch[1]);
+    if (req.method === 'GET' && !spawnMatch[2]) return send(res, 200, await spawnModel(item.root, required(url.searchParams.get('file'), 'file'), required(url.searchParams.get('id'), 'id')));
+    if (req.method === 'POST' && spawnMatch[2]) {
+      const input = await body(req);
+      const request: SpawnRequest = { root: item.root, file: required(input.file, 'file'), id: required(input.id, 'id'), field: required(input.field, 'field'), characterId: input.characterId === null ? null : required(input.characterId, 'characterId'), expectedHash: required(input.expectedHash, 'expectedHash'), expectedToken: typeof input.expectedToken === 'string' ? input.expectedToken : undefined };
+      if (spawnMatch[2] === 'save') return send(res, 200, await saveSpawnAssignment(request));
+      const preview = await prepareSpawnAssignment(request);
+      return send(res, 200, { changed: preview.changed, label: preview.label, before: preview.before, after: preview.after, character: preview.character, uses: preview.uses, token: preview.token });
+    }
+  }
+  if (visualCopyMatch && req.method === 'POST') {
+    const item = await getLibraryItem(visualCopyMatch[1]);
+    const input = await body(req);
+    const request: VisualCopyRequest = { root: item.root, section: required(input.section, 'section'), file: required(input.file, 'file'), id: required(input.id, 'id'), field: required(input.field, 'field'), sourceId: required(input.sourceId, 'sourceId'), newId: required(input.newId, 'newId'), expectedHash: required(input.expectedHash, 'expectedHash'), expectedToken: typeof input.expectedToken === 'string' ? input.expectedToken : undefined };
+    if (visualCopyMatch[2] === 'save') return send(res, 200, await saveVisualCopy(request));
+    const preview = await prepareVisualCopy(request);
+    return send(res, 200, { file: preview.file, token: preview.token, document: preview.document, images: preview.images.map(image => image.file), sourceUses: preview.sourceUses });
+  }
   if (visualMatch) {
     const item = await getLibraryItem(visualMatch[1]);
     if (req.method === 'GET' && !visualMatch[2]) return send(res, 200, await visualCatalog(await scanClan(item.root), required(url.searchParams.get('section'), 'section')));
@@ -145,16 +227,16 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   if (contentMatch && req.method === 'POST') {
     const item = await getLibraryItem(contentMatch[1]);
     const input = await body(req);
-    if (input.section !== 'cards' && input.section !== 'characters') throw new Error('Sección no permitida.');
+    if (input.section !== 'cards' && input.section !== 'characters' && input.section !== 'upgrades' && input.section !== 'card_pools' && input.section !== 'rewards') throw new Error('Sección no permitida.');
     let source: ContentRequest['source'];
     if (input.source) {
       const candidate = input.source as Record<string, unknown>;
       source = { id: required(candidate.id, 'source.id'), file: required(candidate.file, 'source.file') };
     }
-    const request: ContentRequest = { root: item.root, section: input.section, id: required(input.id, 'id'), name: required(input.name, 'name'), kind: input.kind as ContentRequest['kind'], source, expectedToken: typeof input.expectedToken === 'string' ? input.expectedToken : undefined };
+    const request: ContentRequest = { root: item.root, section: input.section, id: required(input.id, 'id'), name: input.section === 'card_pools' ? '' : required(input.name, 'name'), kind: input.kind as ContentRequest['kind'], poolId: typeof input.poolId === 'string' ? input.poolId : undefined, source, expectedToken: typeof input.expectedToken === 'string' ? input.expectedToken : undefined };
     if (contentMatch[2] === 'save') return send(res, 200, await saveContent(request));
     const preview = await prepareContent(request);
-    return send(res, 200, { file: preview.file, token: preview.token, objects: preview.objects, warnings: preview.warnings, document: preview.document, images: preview.images.map(image => image.file) });
+    return send(res, 200, { file: preview.file, token: preview.token, objects: preview.objects, warnings: preview.warnings, poolCopy: preview.poolCopy, document: preview.document, images: preview.images.map(image => image.file) });
   }
   const characterMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/character-art(?:\/(preview|save))?$/);
   if (characterMatch) {

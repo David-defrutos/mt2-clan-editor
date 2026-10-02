@@ -33,7 +33,7 @@ export interface ClanSnapshot {
 }
 
 export interface LibraryItem { key: string; root: string; addedAt: string }
-export interface AssetInfo { id: string; file: string; image: string; category: string; categoryLabel: string; width?: number; height?: number; format?: string; bytes?: number; status: 'ok' | 'missing' | 'case-mismatch' | 'invalid-path'; uses: { section: string; id: string; file: string }[] }
+export interface AssetInfo { id: string; section: string; file: string; image: string; category: string; categoryLabel: string; width?: number; height?: number; format?: string; bytes?: number; status: 'ok' | 'missing' | 'case-mismatch' | 'invalid-path'; uses: { section: string; id: string; file: string }[] }
 export interface NavItem { id: string; label: string; icon: string }
 export interface FieldRule { path: string; label: string; type: string; optional?: boolean; options?: string[] }
 export interface Config {

@@ -4,14 +4,15 @@ import { createHash } from 'node:crypto';
 import sharp from 'sharp';
 import { configRoot, inside } from './paths.js';
 import { scanClan } from './scan.js';
+import { poolModel } from './pool-editor.js';
 import type { Entry, JsonRecord } from './types.js';
 
 export interface ContentRequest {
-  root: string; section: 'cards' | 'characters'; id: string; name: string;
-  kind?: 'monster' | 'spell'; source?: { id: string; file: string }; expectedToken?: string;
+  root: string; section: 'cards' | 'characters' | 'upgrades' | 'card_pools' | 'rewards'; id: string; name: string;
+  kind?: 'monster' | 'spell' | 'draft' | 'card_pool'; poolId?: string; source?: { id: string; file: string }; expectedToken?: string;
 }
 type Image = { file: string; width: number; height: number; color: string };
-type Rules = { idPattern: string; schemaUrl: string; card: JsonRecord; character: JsonRecord; spawnEffect: JsonRecord; images: Record<string, Omit<Image, 'file'>> };
+type Rules = { idPattern: string; schemaUrl: string; card: JsonRecord; character: JsonRecord; upgrade: JsonRecord; pool: JsonRecord; rewards: Record<string, { label: string; extension: string; poolField: string; data: JsonRecord }>; poolCopy: { maxReferences: number }; spawnEffect: JsonRecord; images: Record<string, Omit<Image, 'file'>> };
 function hash(text: string) { return createHash('sha256').update(text).digest('hex'); }
 function reference(value: unknown): string | undefined {
   if (typeof value === 'string') return value.startsWith('@') ? value.slice(1) : undefined;
@@ -23,7 +24,7 @@ function replaceReference(value: unknown, id: string): unknown {
 async function token(root: string, config: string): Promise<string> {
   const clan = await scanClan(root);
   const files = await Promise.all(clan.files.map(async file => [file, hash(await fs.readFile(path.join(root, file), 'utf8'))]));
-  return hash(JSON.stringify([config, files]));
+  return hash(JSON.stringify([config, await fs.readFile(path.join(configRoot, 'pool-editor.json'), 'utf8'), files]));
 }
 async function safeFolders(root: string, folders: string[]) {
   const realRoot = await fs.realpath(root);
@@ -35,16 +36,18 @@ async function safeFolders(root: string, folders: string[]) {
 export async function prepareContent(request: ContentRequest) {
   const config = await fs.readFile(path.join(configRoot, 'templates/content.json'), 'utf8');
   const rules = JSON.parse(config) as Rules;
-  if (!['cards', 'characters'].includes(request.section)) throw new Error('Sección no permitida.');
+  if (!['cards', 'characters', 'upgrades', 'card_pools', 'rewards'].includes(request.section)) throw new Error('Sección no permitida.');
   if (!new RegExp(rules.idPattern).test(request.id)) throw new Error('El ID debe tener 3–80 letras, números o guiones bajos y empezar por letra.');
-  if (!request.name?.trim() || request.name.length > 120 || /[\r\n]/.test(request.name)) throw new Error('Introduce un nombre de hasta 120 caracteres en una línea.');
+  if (request.section !== 'card_pools' && (!request.name?.trim() || request.name.length > 120 || /[\r\n]/.test(request.name))) throw new Error('Introduce un nombre de hasta 120 caracteres en una línea.');
+  const currentState = await token(request.root, config);
+  const currentToken = hash(JSON.stringify([currentState, request.section, request.id, request.name, request.kind, request.source, request.poolId]));
+  if (request.expectedToken && request.expectedToken !== currentToken) throw new Error('El clan cambió en disco o la solicitud es distinta. Vuelve a previsualizar.');
   const clan = await scanClan(request.root);
   if (clan.issues.some(issue => issue.code === 'json-parse' || issue.code === 'duplicate-id')) throw new Error('Corrige los JSON inválidos o IDs duplicados antes de crear contenido.');
-  const currentToken = await token(request.root, config);
-  if (request.expectedToken && request.expectedToken !== currentToken) throw new Error('El clan cambió en disco. Vuelve a previsualizar.');
   const document: Record<string, unknown> = { $schema: rules.schemaUrl };
   const images: Image[] = [];
   const warnings: string[] = [];
+  let poolCopy: { directReferences: number; addedCards: { id: string; name: string; file: string }[]; uses: { id: string; name: string; file: string; section: string }[] } | undefined;
   const used = new Set(clan.entries.map(entry => entry.id.toLowerCase()));
   function add(section: string, data: JsonRecord) {
     const id = String(data.id);
@@ -59,8 +62,9 @@ export async function prepareContent(request: ContentRequest) {
     return matches[0];
   }
   function named(data: JsonRecord): JsonRecord {
-    const names = typeof data.names === 'object' && data.names && !Array.isArray(data.names) ? data.names as JsonRecord : {};
-    return { ...data, names: { ...names, english: request.name.trim() } };
+    const field = ['upgrades', 'rewards'].includes(request.section) ? 'titles' : 'names';
+    const names = typeof data[field] === 'object' && data[field] && !Array.isArray(data[field]) ? data[field] as JsonRecord : {};
+    return { ...data, [field]: { ...names, english: request.name.trim() } };
   }
   function art(base: string, type: 'card' | 'character') {
     const sprite = base + 'Sprite'; const object = base + 'Art'; const file = `textures/editor-${sprite}.png`;
@@ -72,7 +76,36 @@ export async function prepareContent(request: ContentRequest) {
   if (request.source) {
     const source = clan.entries.find(entry => entry.section === request.section && entry.id === request.source!.id && entry.file === request.source!.file);
     if (!source) throw new Error('El objeto de origen ya no existe.');
-    const copy = named(structuredClone(source.data)); copy.id = request.id;
+    const copy = request.section === 'card_pools' ? structuredClone(source.data) : named(structuredClone(source.data)); copy.id = request.id;
+    if (request.section === 'card_pools') {
+      const sourceId = source.id;
+      if (copy.cards !== undefined && !Array.isArray(copy.cards)) throw new Error('La lista cards del pool de origen no es un array. Revisa su JSON.');
+      const members = structuredClone((copy.cards ?? []) as unknown[]);
+      const directReferences = members.length;
+      const addedCards: { id: string; name: string; file: string }[] = [];
+      for (const card of clan.entries.filter(e => e.section === 'cards')) {
+        if (card.data.pools !== undefined && !Array.isArray(card.data.pools)) throw new Error(`La lista pools de ${card.id} no es válida. No se puede verificar la copia completa.`);
+        const memberships = (card.data.pools ?? []) as unknown[];
+        if (!memberships.some(value => reference(value) === source.id)) continue;
+        if (card.data.id !== card.id) throw new Error('Una carta del pool no tiene un ID técnico. Corrígelo antes de copiar.');
+        if (members.some(value => reference(value) === card.id)) continue;
+        members.push('@' + card.id); addedCards.push({ id: card.id, name: card.name, file: card.file });
+        if (memberships.some(value => reference(value) === source.id && typeof value === 'object' && value !== null && Object.keys(value).some(key => key !== 'id' && key !== 'mod_reference'))) warnings.push(`La pertenencia de ${card.id} tiene propiedades adicionales en su referencia al pool; quedan en la carta original. La copia incluye la referencia @${card.id}.`);
+      }
+      if (members.length > rules.poolCopy.maxReferences) throw new Error(`La copia admite hasta ${rules.poolCopy.maxReferences} referencias. Divide el pool o revisa la configuración.`);
+      copy.cards = members;
+      function refers(value: unknown): boolean {
+        if (reference(value) === sourceId) return true;
+        if (Array.isArray(value)) return value.some(refers);
+        if (value && typeof value === 'object' && !(value as JsonRecord).mod_reference) return Object.values(value).some(refers);
+        return false;
+      }
+      const uses = clan.entries.filter(e => e !== source && refers(e.data)).map(e => ({ id: e.id, name: e.name, file: e.file, section: e.section }));
+      poolCopy = { directReferences, addedCards, uses };
+      warnings.push(`Se conservan ${directReferences} referencias directas y se añaden ${addedCards.length} cartas declaradas por pertenencia al pool. Las nuevas pertenencias se guardan en cards del pool copiado; los archivos originales no se modifican.`);
+      warnings.push('Las cartas siguen compartidas: editar sus estadísticas o mecánicas afecta a ambos pools. Las referencias externas, no resueltas y directas repetidas se conservan para su revisión.');
+      warnings.push('La copia no sustituye el pool origen en recompensas, efectos ni estandartes. Los miembros y usos construidos desde C# no se detectan y requieren un adaptador.');
+    }
     if (request.section === 'cards') {
       const effects = copy.effects;
       if (copy.card_type === 'monster' && !Array.isArray(effects)) throw new Error('La carta de unidad no declara una lista de efectos de invocación.');
@@ -110,11 +143,34 @@ export async function prepareContent(request: ContentRequest) {
       if (copy.rarity === 'champion') warnings.push('La copia conserva rareza champion, pero no se añade al árbol ni a la selección de campeones.');
     }
     add(request.section, copy);
-    warnings.push('El arte, las mecánicas y otras referencias conservadas siguen compartidos con el origen. Cambiarlos modifica todos sus usuarios. Los nombres en otros idiomas se conservan y requieren revisión.');
+    if (request.section !== 'card_pools') warnings.push('El arte, las mecánicas y otras referencias conservadas siguen compartidos con el origen. Cambiarlos modifica todos sus usuarios. Los nombres en otros idiomas se conservan y requieren revisión.');
     if (request.section === 'characters') warnings.push('Se crea una definición de unidad; no se añade automáticamente a una carta de invocación.');
+    if (request.section === 'upgrades') warnings.push('La copia no se asigna automáticamente al árbol. Conserva bonificaciones, descripciones y referencias; revisa sus valores e idiomas antes de asignarla a una senda.');
+    if (request.section === 'rewards') warnings.push('La copia conserva tipo, pool, costes y extensiones. No se añade a nodos ni eventos; sus pools y otras referencias siguen compartidos. Revisa los idiomas conservados.');
   } else {
-    if (!clan.classId) throw new Error('No se encontró una clase para la nueva carta.');
-    if (request.section === 'characters') {
+    if (!clan.classId && request.section === 'cards') throw new Error('No se encontró una clase para la nueva carta.');
+    if (request.section === 'rewards') {
+      const template = rules.rewards[request.kind ?? ''];
+      if (!template) throw new Error('Selecciona un tipo de recompensa configurado.');
+      const pool = (await poolModel(request.root)).pools.find(p => p.id === request.poolId && p.editable);
+      if (!pool) throw new Error('Selecciona un pool del juego configurado o un pool local válido y único.');
+      const data = structuredClone(template.data); const extensions = data.extensions;
+      if (!Array.isArray(extensions)) throw new Error('La plantilla de recompensa necesita extensiones válidas.');
+      const matches = extensions.filter(value => value && typeof value === 'object' && Object.hasOwn(value, template.extension));
+      if (matches.length !== 1) throw new Error('La extensión de la plantilla debe aparecer exactamente una vez.');
+      const extension = (matches[0] as JsonRecord)[template.extension];
+      if (!extension || typeof extension !== 'object' || Array.isArray(extension) || data.type !== request.kind) throw new Error('La plantilla de recompensa no es válida.');
+      (extension as JsonRecord)[template.poolField] = pool.id;
+      add('rewards', { ...named(data), id: request.id });
+      warnings.push('La recompensa usa el pool elegido, pero no se añade automáticamente a ningún nodo o evento. Revisa sus opciones y filtros en Ajustes de la recompensa y prueba su conexión en partida.');
+    } else if (request.section === 'card_pools') {
+      if (rules.pool.cards !== undefined && (!Array.isArray(rules.pool.cards) || rules.pool.cards.length)) throw new Error('La plantilla de pools debe empezar sin miembros.');
+      add('card_pools', { ...structuredClone(rules.pool), id: request.id });
+      warnings.push('Pool vacío. Después de crearlo, selecciónalo como @' + request.id + ' en Pools y añade las cartas. No se conecta automáticamente a recompensas, estandartes ni efectos.');
+    } else if (request.section === 'upgrades') {
+      add('upgrades', { ...structuredClone(rules.upgrade), id: request.id, titles: { english: request.name.trim() } });
+      warnings.push('Mejora con bonificaciones iniciales de la plantilla. Edita sus estadísticas y descripción; después asígnala a un nivel en el editor del árbol.');
+    } else if (request.section === 'characters') {
       add('characters', { ...rules.character, id: request.id, names: { english: request.name.trim() }, character_art: art(request.id, 'character') });
       warnings.push('Unidad sin carta de invocación. Puedes asignarla a un efecto desde el editor de objetos.');
     } else {
@@ -127,7 +183,7 @@ export async function prepareContent(request: ContentRequest) {
       } else warnings.push('El hechizo empieza sin efectos. Asigna su mecánica antes de probarlo en el juego.');
       add('cards', { ...rules.card, id: request.id, names: { english: request.name.trim() }, class: '@' + clan.classId, card_type: request.kind, card_art: art(request.id + 'Card', 'card'), effects });
     }
-    warnings.push('Las imágenes de color son marcadores: sustitúyelas en Recursos visuales. Revisa pools, desbloqueo y validación.');
+    if (!['upgrades', 'card_pools', 'rewards'].includes(request.section)) warnings.push('Las imágenes de color son marcadores: sustitúyelas en Recursos visuales. Revisa pools, desbloqueo y validación.');
   }
   const file = `json/editor-${request.id}.json`;
   await safeFolders(request.root, images.length ? ['json', 'textures'] : ['json']);
@@ -136,7 +192,8 @@ export async function prepareContent(request: ContentRequest) {
     const exists = (await fs.readdir(folder)).some(name => name.toLowerCase() === path.basename(output).toLowerCase());
     if (exists) throw new Error(`El archivo ya existe: ${output}.`);
   }
-  return { file, token: currentToken, document, images, warnings, objects: Object.entries(document).filter(([, value]) => Array.isArray(value)).flatMap(([section, value]) => (value as JsonRecord[]).map(data => ({ section, id: String(data.id) }))) };
+  if (await token(request.root, config) !== currentState) throw new Error('El clan cambió durante la preparación. Vuelve a previsualizar.');
+  return { file, token: currentToken, state: currentState, document, images, warnings, poolCopy, objects: Object.entries(document).filter(([, value]) => Array.isArray(value)).flatMap(([section, value]) => (value as JsonRecord[]).map(data => ({ section, id: String(data.id) }))) };
 }
 const saving = new Set<string>();
 export async function saveContent(request: ContentRequest) {
@@ -158,7 +215,7 @@ export async function saveContent(request: ContentRequest) {
       await writeNew(file, bytes);
     }
     const config = await fs.readFile(path.join(configRoot, 'templates/content.json'), 'utf8');
-    if (await token(request.root, config) !== preview.token) throw new Error('El clan cambió en disco. Vuelve a previsualizar.');
+    if (await token(request.root, config) !== preview.state) throw new Error('El clan cambió en disco. Vuelve a previsualizar.');
     const file = path.join(request.root, preview.file);
     await writeNew(file, JSON.stringify(preview.document, null, 2) + '\n');
     return { file: preview.file, id: request.id, section: request.section };

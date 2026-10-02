@@ -1,0 +1,8 @@
+{
+  "effectNames": ["CardEffectSpawnMonster"],
+  "poolField": "param_character_pool",
+  "fields": [
+    { "path": "param_character", "label": "Unidad principal", "optional": false },
+    { "path": "param_character_2", "label": "Unidad adicional", "optional": true }
+  ]
+}
