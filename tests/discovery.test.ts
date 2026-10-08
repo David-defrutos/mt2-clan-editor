@@ -4,12 +4,16 @@ import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 
-const workspace = await fs.mkdtemp(path.join(os.tmpdir(), 'mt2-discovery-'));
+const fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'mt2-discovery-'));
+const actualWorkspace = path.join(fixtureRoot, 'actual');
+const workspace = path.join(fixtureRoot, 'alias');
+await fs.mkdir(actualWorkspace);
+await fs.symlink(actualWorkspace, workspace, process.platform === 'win32' ? 'junction' : 'dir');
 await fs.mkdir(path.join(workspace, 'config'));
 await fs.copyFile(new URL('../config/library-discovery.json', import.meta.url), path.join(workspace, 'config/library-discovery.json'));
 process.env.CLAN_EDITOR_HOME = workspace;
 const { discoverMods, importDiscovered } = await import('../src/server/discovery.ts');
-after(async () => { await fs.rm(workspace, { recursive: true, force: true }); });
+after(async () => { await fs.unlink(workspace); await fs.rm(fixtureRoot, { recursive: true, force: true }); });
 
 test('detecta clanes activos y desactivados y distingue complementos sin classes', async () => {
   const plugins = path.join(workspace, 'plugins'); await fs.mkdir(plugins);

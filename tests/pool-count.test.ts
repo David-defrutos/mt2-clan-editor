@@ -51,7 +51,8 @@ test('rechaza entradas externas, cantidades inválidas, revisiones cambiadas y t
 test('si falla el reemplazo, conserva el original y retira el temporal',async t=>{
  const {root,file,original}=await fixture();try{
   const input=await request(root,'pool:0',5);const review=await preparePoolCount(input);
-  const rename=fs.rename;t.mock.method(fs,'rename',async(from,to)=>{if(String(from).startsWith(file+'.clan-editor-'))throw Error('simulated write failure');return rename(from,to);});
+  const actualFile=await fs.realpath(file);
+  const rename=fs.rename;t.mock.method(fs,'rename',async(from,to)=>{if(String(to)===actualFile && String(from).startsWith(actualFile+'.clan-editor-'))throw Error('simulated write failure');return rename(from,to);});
   await assert.rejects(()=>savePoolCount({...input,expectedToken:review.token}),/simulated write failure/);
   assert.equal(await fs.readFile(file,'utf8'),original);assert.deepEqual((await fs.readdir(path.dirname(file))).sort(),['other.json','test.json']);
  }finally{t.mock.restoreAll();await fs.rm(root,{recursive:true,force:true});}

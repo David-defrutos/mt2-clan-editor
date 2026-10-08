@@ -65,8 +65,12 @@ export async function importDiscovered(input: string) {
   const mod = await inspectMod(input);
   if (mod.status === 'ready') return { item: await addLibraryPath(mod.root), copied: false };
   if (mod.status !== 'disabled') throw new Error(mod.reason);
+  const importsRoot = await fs.realpath(path.join(dataRoot, 'imports')).catch(error => {
+    if (error.code === 'ENOENT') return path.join(dataRoot, 'imports');
+    throw error;
+  });
   for (const item of await loadLibrary()) {
-    if (!inside(path.join(dataRoot, 'imports'), item.root)) continue;
+    if (!inside(importsRoot, item.root)) continue;
     try {
       const record = JSON.parse(await fs.readFile(path.join(item.root, '.clan-editor-import.json'), 'utf8'));
       if (record.sourceKey === keyForPath(mod.root)) return { item, copied: true };
