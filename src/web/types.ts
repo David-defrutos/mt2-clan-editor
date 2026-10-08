@@ -33,15 +33,16 @@ export interface ClanSnapshot {
 }
 
 export interface LibraryItem { key: string; root: string; addedAt: string }
-export interface AssetInfo { id: string; section: string; file: string; image: string; category: string; categoryLabel: string; width?: number; height?: number; format?: string; bytes?: number; status: 'ok' | 'missing' | 'case-mismatch' | 'invalid-path'; uses: { section: string; id: string; file: string }[] }
+export interface AssetInfo { id: string; section: string; file: string; image: string; category: string; categoryLabel: string; width?: number; height?: number; format?: string; bytes?: number; status: 'ok' | 'missing' | 'case-mismatch' | 'invalid-path' | 'external'; uses: { section: string; id: string; file: string }[] }
 export interface NavItem { id: string; label: string; icon: string }
-export interface FieldRule { path: string; label: string; type: string; optional?: boolean; options?: string[] }
+export interface FieldRule { path: string; label: string; type: string; optional?: boolean; options?: string[]; names?: string[]; modReferences?: string[]; requires?: {names?:string[];selector?:string;modReferences?:string[]}[]; selector?: string; help?: string; min?: number; max?: number; special?: boolean; statusPresets?: {label:string;status:unknown;help:string}[] }
 export interface Config {
+  poolReferences: {itemField:string;countField:string;minimumCount:number;maximumEditableCount:number};
   creation: { minimumDraftCards: number; defaultDraftCards: number; maximumDraftCards: number };
   navigation: { global: NavItem[]; clan: NavItem[] };
   fields: Record<string, FieldRule[]>;
   stats: { draftPools: string[]; starterPool: string; bannerPool: string; progressionMaxLevel: number; technicalUnlockLevels: number[]; metrics: { id: string; label: string }[] };
-  mechanics: { assignments: { section: string; path: string; label: string; sourceSection: string; filter?: string; mode: 'append-id' | 'set-reference' }[] };
+  mechanics: { tabs:{id:string;label:string}[]; assignments: { section: string; path: string; label: string; sourceSection: string; filter?: string; mode: 'append-id' | 'set-reference' }[] };
 }
 
 export interface ClanStats {

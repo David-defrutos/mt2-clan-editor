@@ -1,0 +1,8 @@
+{
+  "defaultLanguage": "es",
+  "storageKey": "mt2-clan-editor.language",
+  "languages": [
+    {"id":"es","label":"Español","locale":"es-ES","catalog":"locales/es.json"},
+    {"id":"en","label":"English","locale":"en-GB","catalog":"locales/en.json"}
+  ]
+}

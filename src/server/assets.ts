@@ -9,7 +9,7 @@ interface Rules { inventorySections: string[]; atlasCategory: { id: string; labe
 export interface AssetInfo {
   id: string; section: string; file: string; image: string; category: string; categoryLabel: string;
   width?: number; height?: number; format?: string; bytes?: number;
-  status: 'ok' | 'missing' | 'case-mismatch' | 'invalid-path'; uses: { section: string; id: string; file: string }[];
+  status: 'ok' | 'missing' | 'case-mismatch' | 'invalid-path' | 'external'; uses: { section: string; id: string; file: string }[];
 }
 
 export async function loadAssetRules(): Promise<Rules> {
@@ -38,6 +38,7 @@ export async function inventoryAssets(clan: ClanSnapshot): Promise<AssetInfo[]> 
     const uses = sprite.section === 'atlas_icons' ? [] : clan.entries.filter(entry => entry !== sprite && references(entry.data, target));
     const category = sprite.section === 'atlas_icons' ? rules.atlasCategory : categoryFor(sprite, uses, rules);
     const result: AssetInfo = { id: sprite.id, section: sprite.section, file: sprite.file, image, category: category.id, categoryLabel: category.label, status: 'missing', uses: uses.map(entry => ({ section: entry.section, id: entry.id, file: entry.file })) };
+    if(rawPath&&typeof rawPath==='object'&&!Array.isArray(rawPath)&&('bundle' in rawPath||'asset_guid' in rawPath)){result.status='external';result.image=JSON.stringify(rawPath);return result;}
     const absolute = path.resolve(clan.root, image);
     if (!image || !inside(clan.root, absolute) || !rules.extensions.includes(path.extname(absolute).toLowerCase())) { result.status = 'invalid-path'; return result; }
     let directory = clan.root;

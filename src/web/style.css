@@ -88,3 +88,12 @@ input,select,textarea{background:#131a20;border:1px solid #43515a;color:#e9e8e3;
 .character-pool-row{display:flex;align-items:center;gap:10px;padding:8px 0}
 .character-pool-row input[type=checkbox]{width:auto;flex-shrink:0;accent-color:#d6b27d}
 .character-pool-row small{display:block;margin-top:3px}
+
+.parameter-control { display: flex; flex-direction: column; gap: 7px; }
+.parameter-label { font-size: .76rem; font-weight: 600; color: #abb6bc; }
+tr[tabindex]:focus-visible { outline: 2px solid #e6c18d; outline-offset: -2px; }
+
+.language-selector label { gap: 3px; font-size: .7rem; }
+.language-selector select { padding: 5px 8px; max-width: 190px; }
+.language-selector small { display: block; max-width: 220px; }
+.top-actions { flex-wrap: wrap; }

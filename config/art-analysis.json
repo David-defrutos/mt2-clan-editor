@@ -1,0 +1,10 @@
+{
+  "alphaThreshold": 64,
+  "minimumRowCoverage": 0.01,
+  "minimumColumnCoverage": 0.01,
+  "maxPixels": 25000000,
+  "backgrounds": [
+    { "id": "dark", "label": "Fondo oscuro", "color": "#17212a" },
+    { "id": "light", "label": "Fondo claro", "color": "#f0eee7" }
+  ]
+}

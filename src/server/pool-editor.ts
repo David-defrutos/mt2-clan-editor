@@ -4,20 +4,16 @@ import { createHash } from 'node:crypto';
 import * as jsonc from 'jsonc-parser';
 import { configRoot, dataRoot, inside, keyForPath } from './paths.js';
 import { scanClan } from './scan.js';
+import { poolReferenceRules, localPoolReference, poolReference, invalidCountedPoolReference, type PoolReferenceRules } from './pool-references.js';
 import type { ClanSnapshot, Entry, JsonRecord } from './types.js';
 
-interface Rules { builtInPools: string[]; maxBatchSize: number; warnings: Record<string, string>; directMembersWarning: string; useDirectListWhenDeclared: boolean }
+interface Rules { references: PoolReferenceRules; builtInPools: string[]; maxBatchSize: number; warnings: Record<string, string>; directMembersWarning: string; useDirectListWhenDeclared: boolean }
 export interface PoolChange { id: string; file: string; expectedHash: string; member: boolean }
 export interface PoolRequest { root: string; pool: string; changes: PoolChange[]; expectedToken?: string }
 const hash = (text: string) => createHash('sha256').update(text).digest('hex');
-function ref(value: unknown): string | undefined {
-  if (value && typeof value === 'object' && !Array.isArray(value)) {
-    if ((value as JsonRecord).mod_reference) return;
-    value = (value as JsonRecord).id;
-  }
-  return typeof value === 'string' ? value : undefined;
+async function rules(): Promise<Rules> {
+  return { ...JSON.parse(await fs.readFile(path.join(configRoot, 'pool-editor.json'), 'utf8')), references: await poolReferenceRules() };
 }
-async function rules(): Promise<Rules> { return JSON.parse(await fs.readFile(path.join(configRoot, 'pool-editor.json'), 'utf8')); }
 export function removeArrayItem(source: string, base: (string | number)[], index: number) {
   const root = jsonc.parseTree(source);
   const children = root && jsonc.findNodeAtLocation(root, base)?.children;
@@ -34,37 +30,46 @@ export function removeArrayItem(source: string, base: (string | number)[], index
   return jsonc.applyEdits(source, edits);
 }
 function catalog(clan: ClanSnapshot, rule: Rules) {
+  const ref = (value: unknown) => localPoolReference(value, rule.references);
   const local = clan.entries.filter(e => e.section === 'card_pools' && typeof e.data.id === 'string');
   const declared = new Set(local.map(e => '@' + e.id));
   const used = clan.entries.filter(e => e.section === 'cards').flatMap(e => Array.isArray(e.data.pools) ? e.data.pools.map(ref).filter((x): x is string => x !== undefined) : []);
   return [...new Set([...rule.builtInPools, ...declared, ...used])].sort().map(id => {
     const definitions = local.filter(e => '@' + e.id === id);
     const valid = declared.has(id) ? definitions.length === 1 : rule.builtInPools.includes(id);
-    const malformed = definitions.some(e => e.data.cards !== undefined && !Array.isArray(e.data.cards));
+    const malformedList = definitions.some(e => e.data.cards !== undefined && !Array.isArray(e.data.cards));
+    const malformedCounts = definitions.some(e => Array.isArray(e.data.cards) && e.data.cards.some(value => invalidCountedPoolReference(value, rule.references)));
+    const malformed = malformedList || malformedCounts;
     const direct = definitions.some(e => Array.isArray(e.data.cards));
     const directCards = definitions.flatMap(e => Array.isArray(e.data.cards) ? e.data.cards : e.data.cards === undefined ? [] : [e.data.cards]);
-    return { id, editable: valid && !malformed, additionLocation: direct && rule.useDirectListWhenDeclared ? 'pool' : 'card', definition: definitions.length === 1 ? { id: definitions[0].id, file: definitions[0].file } : undefined, directCards, warning: !valid ? 'Pool sin definición local única ni regla de pool del juego. Solo lectura; revisa su referencia o añade una regla de configuración.' : malformed ? 'La lista cards de este pool no es un array. Revisa el JSON antes de editar sus miembros.' : direct ? rule.directMembersWarning : rule.warnings[id] ?? '' };
+    return { id, editable: valid && !malformed, additionLocation: direct && rule.useDirectListWhenDeclared ? 'pool' : 'card', definition: definitions.length === 1 ? { id: definitions[0].id, file: definitions[0].file } : undefined, directCards, warning: !valid ? 'Pool sin definición local única ni regla de pool del juego. Solo lectura; revisa su referencia o añade una regla de configuración.' : malformedList ? 'La lista cards de este pool no es un array. Revisa el JSON antes de editar sus miembros.' : malformedCounts ? 'El pool tiene cantidades inválidas. Revisa el JSON antes de editar sus miembros.' : direct ? rule.directMembersWarning : rule.warnings[id] ?? '' };
   });
 }
 async function state(root: string) {
   const clan = await scanClan(root);
   const files = await Promise.all(clan.files.map(async file => [file, hash(await fs.readFile(path.join(root, file), 'utf8'))]));
-  return hash(JSON.stringify([await fs.readFile(path.join(configRoot, 'pool-editor.json'), 'utf8'), files]));
+  return hash(JSON.stringify([await fs.readFile(path.join(configRoot, 'pool-editor.json'), 'utf8'), await fs.readFile(path.join(configRoot, 'pool-references.json'), 'utf8'), files]));
 }
 export async function poolModel(root: string) {
   const clan = await scanClan(root); const rule = await rules();
+  const ref = (value: unknown) => localPoolReference(value, rule.references);
   const cards = clan.entries.filter(e => e.section === 'cards');
   const pools = catalog(clan, rule);
   return { pools, maxBatchSize: rule.maxBatchSize, cards: cards.map(e => ({
     id: e.id, name: e.name, file: e.file, hash: e.hash, rarity: String(e.data.rarity ?? ''), type: String(e.data.card_type ?? ''),
     pools: [...new Set([...(Array.isArray(e.data.pools) ? e.data.pools.map(ref).filter((x): x is string => x !== undefined) : []), ...pools.filter(p => p.directCards.some(value => ref(value) === '@' + e.id)).map(p => p.id)])],
+    poolCounts: Object.fromEntries(pools.map(pool => [pool.id,
+      (Array.isArray(e.data.pools) ? e.data.pools : []).reduce((total: number, value: unknown) => total + (ref(value) === pool.id ? poolReference(value, rule.references)!.count : 0), 0)
+      + pool.directCards.reduce((total: number, value: unknown) => total + (ref(value) === '@' + e.id ? poolReference(value, rule.references)!.count : 0), 0)
+    ]).filter(([, count]) => Number(count) > 0)),
     directPools: pools.filter(p => p.directCards.some(value => ref(value) === '@' + e.id)).map(p => p.id),
     cardPools: Array.isArray(e.data.pools) ? e.data.pools.map(ref).filter((x): x is string => x !== undefined) : [],
-    editable: e.data.id === e.id && cards.filter(c => c.id === e.id).length === 1 && (e.data.pools === undefined || Array.isArray(e.data.pools))
+    editable: e.data.id === e.id && cards.filter(c => c.id === e.id).length === 1 && (e.data.pools === undefined || Array.isArray(e.data.pools) && !e.data.pools.some(value => invalidCountedPoolReference(value, rule.references)))
   })) };
 }
 export async function preparePoolChanges(request: PoolRequest) {
   const initial = await state(request.root); const rule = await rules(); const clan = await scanClan(request.root);
+  const ref = (value: unknown) => localPoolReference(value, rule.references);
   const pool = catalog(clan, rule).find(p => p.id === request.pool);
   if (!pool?.editable) throw new Error(pool?.warning || 'Selecciona un pool del juego configurado o un pool local con ID único.');
   if (!Array.isArray(request.changes) || !request.changes.length || request.changes.length > rule.maxBatchSize) throw new Error(`Selecciona entre 1 y ${rule.maxBatchSize} cambios.`);
@@ -103,7 +108,7 @@ export async function preparePoolChanges(request: PoolRequest) {
     const entries = clan.entries.filter(e => e.section === 'cards' && e.id === change.id);
     const entry = entries[0];
     if (entries.length !== 1 || entry.file !== change.file || entry.data.id !== change.id) throw new Error('La carta necesita un ID local único.');
-    if (entry.data.pools !== undefined && !Array.isArray(entry.data.pools)) throw new Error('La lista de pools de la carta no es válida. Revisa su JSON.');
+    if (entry.data.pools !== undefined && (!Array.isArray(entry.data.pools) || entry.data.pools.some(value => invalidCountedPoolReference(value, rule.references)))) throw new Error('La lista de pools de la carta no es válida. Revisa su JSON.');
     const file = await openFile(entry);
     if (file.oldHash !== change.expectedHash || entry.hash !== change.expectedHash) throw new Error('El archivo cambió en disco. Actualiza el clan.');
     const members = (entry.data.pools ?? []) as unknown[];

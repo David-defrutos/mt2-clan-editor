@@ -1,0 +1,11 @@
+import {useEffect,useState} from 'react';
+import {api} from './api';
+import {useLanguage} from './i18n';
+export interface OfficialSprite {id:string;name:string;group:string;width:number;height:number;ppu:number;pivot:{x:number;y:number}}
+export function OfficialArtReference({onSelect}:{onSelect:(sprite:OfficialSprite|undefined,scale:number,xRatio:number)=>void}){
+ const {t}=useLanguage();const [model,setModel]=useState<{rules:{groups:{id:string;label:string}[];help:string;defaultScale:number;minimumScale:number;maximumScale:number;comparisonXRatio:number};rows:OfficialSprite[]}>();
+ const [id,setId]=useState('');const [query,setQuery]=useState('');const [group,setGroup]=useState('all');const [scale,setScale]=useState(1);const [error,setError]=useState('');
+ useEffect(()=>{api<typeof model>('/official-art').then(m=>{setModel(m);setScale(m?.rules.defaultScale??1);}).catch(e=>setError(e.message));},[]);
+ useEffect(()=>{onSelect(model?.rows.find(r=>r.id===id),scale,model?.rules.comparisonXRatio??0.72);},[id,scale,model]);
+ return <details className="edit-box"><summary>{t('Comparar con una unidad oficial')}</summary><p>{t(model?.rules.help??'')}</p>{error&&<p role="alert">{t(error)}</p>}{!model?.rows.length?<p>{t('No hay sprites oficiales extraídos. Consulta la guía de referencias oficiales.')}</p>:<><label>{t('Buscar unidad oficial')}<input value={query} onChange={e=>setQuery(e.target.value)} /></label><label>{t('Equipo')}<select value={group} onChange={e=>setGroup(e.target.value)}><option value="all">{t('Todos')}</option>{model.rules.groups.map(g=><option key={g.id} value={g.id}>{t(g.label)}</option>)}</select></label><label>{t('Sprite oficial')}<select value={id} onChange={e=>setId(e.target.value)}><option value="">{t('Sin referencia oficial')}</option>{model.rows.filter(r=>(group==='all'||r.group===group)&&r.name.toLowerCase().includes(query.toLowerCase())||r.id===id).map(r=><option key={r.id} value={r.id}>{r.name} · {r.width} × {r.height}</option>)}</select></label><label>{t('Escala de comparación (no se guarda)')}<input type="number" min={model.rules.minimumScale} max={model.rules.maximumScale} step={0.01} value={scale} onChange={e=>{const n=Number(e.target.value);if(Number.isFinite(n)&&n>=model.rules.minimumScale&&n<=model.rules.maximumScale)setScale(n);}} /></label></>}</details>;
+}

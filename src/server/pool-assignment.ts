@@ -53,7 +53,7 @@ function uses(clan: ClanSnapshot, entry: Entry) { return clan.entries.filter(e =
 async function state(root: string) {
   const clan = await scanClan(root);
   const files = await Promise.all(clan.files.map(async file => [file, hash(await fs.readFile(path.join(root, file), 'utf8'))]));
-  const configs = await Promise.all(['pool-assignment.json', 'pool-editor.json'].map(file => fs.readFile(path.join(configRoot, file), 'utf8')));
+  const configs = await Promise.all(['pool-assignment.json', 'pool-editor.json', 'pool-references.json'].map(file => fs.readFile(path.join(configRoot, file), 'utf8')));
   return hash(JSON.stringify([configs, files]));
 }
 async function candidates(root: string) {

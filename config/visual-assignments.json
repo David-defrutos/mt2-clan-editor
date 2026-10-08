@@ -1,6 +1,197 @@
 {
   "assignments": [
-    { "section": "cards", "path": "card_art", "label": "Arte de carta", "sourceSection": "game_objects", "sourceType": "card_art", "spritePath": "extensions.card_art.sprite" },
-    { "section": "characters", "path": "character_art", "label": "Arte de personaje", "sourceSection": "game_objects", "sourceType": "character_art", "spritePath": "extensions.character_art.sprite" }
+    {
+      "section": "cards",
+      "path": "card_art",
+      "label": "Arte de carta",
+      "sourceSection": "game_objects",
+      "sourceType": "card_art",
+      "spritePath": "extensions.card_art.sprite"
+    },
+    {
+      "section": "characters",
+      "path": "character_art",
+      "label": "Arte de personaje",
+      "sourceSection": "game_objects",
+      "sourceType": "character_art",
+      "spritePath": "extensions.character_art.sprite"
+    },
+    {
+      "section": "classes",
+      "path": "icons.small",
+      "label": "Logo pequeño",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "classes",
+      "path": "icons.medium",
+      "label": "Logo mediano",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "classes",
+      "path": "icons.large",
+      "label": "Logo grande",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "classes",
+      "path": "icons.silhouette",
+      "label": "Silueta del logo",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "classes",
+      "path": "card_draft_icon",
+      "label": "Icono de recompensa de cartas",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "class_card_styles",
+      "path": "unit_card_frame_sprite",
+      "label": "Marco de unidad",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "class_card_styles",
+      "path": "spell_card_frame_sprite",
+      "label": "Marco de hechizo",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "class_card_styles",
+      "path": "equipment_card_frame_sprite",
+      "label": "Marco de equipo",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "class_card_styles",
+      "path": "room_card_frame_sprite",
+      "label": "Marco de sala",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "game_objects",
+      "path": "extensions.map_node_icon.enabled_sprite",
+      "label": "Estandarte disponible",
+      "sourceSection": "sprites",
+      "destinationType": "map_node_icon"
+    },
+    {
+      "section": "game_objects",
+      "path": "extensions.map_node_icon.disabled_sprite",
+      "label": "Estandarte desactivado",
+      "sourceSection": "sprites",
+      "destinationType": "map_node_icon"
+    },
+    {
+      "section": "game_objects",
+      "path": "extensions.map_node_icon.frozen_sprite",
+      "label": "Estandarte congelado",
+      "sourceSection": "sprites",
+      "destinationType": "map_node_icon"
+    },
+    {
+      "section": "game_objects",
+      "path": "extensions.map_node_icon.visited_sprite_disabled",
+      "label": "Visitado desactivado",
+      "sourceSection": "sprites",
+      "destinationType": "map_node_icon"
+    },
+    {
+      "section": "game_objects",
+      "path": "extensions.map_node_icon.visited_sprite_enabled",
+      "label": "Visitado activo",
+      "sourceSection": "sprites",
+      "destinationType": "map_node_icon"
+    },
+    {
+      "section": "map_nodes",
+      "path": "map_icon",
+      "label": "Icono de mapa",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "map_nodes",
+      "path": "minimap_icon",
+      "label": "Icono de minimapa",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "status_effects",
+      "path": "icon",
+      "label": "Icono de estado",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "character_trigger_types",
+      "path": "sprite",
+      "label": "Icono de trigger de unidad",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "classes",
+      "path": "champions[].icon",
+      "label": "Icono de campeón",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "classes",
+      "path": "champions[].locked_icon",
+      "label": "Icono bloqueado de campeón",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "classes",
+      "path": "champions[].portrait",
+      "label": "Retrato de campeón",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "classes",
+      "path": "class_select_character_displays[]",
+      "label": "Personaje de selección",
+      "sourceSection": "game_objects",
+      "sourceType": "character_art",
+      "spritePath": "extensions.character_art.sprite"
+    },
+    {
+      "section": "classes",
+      "path": "card_style",
+      "label": "Estilo de cartas",
+      "sourceSection": "class_card_styles"
+    },
+    {
+      "section": "relics",
+      "path": "icon",
+      "label": "Icono principal de reliquia",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "relics",
+      "path": "icon_small",
+      "label": "Icono HUD de reliquia",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "upgrades",
+      "path": "icon",
+      "label": "Icono de mejora, equipo o sala",
+      "sourceSection": "sprites"
+    },
+    {
+      "section": "game_objects",
+      "path": "extensions.character_art.sprite",
+      "label": "Sprite de personaje",
+      "sourceSection": "sprites",
+      "destinationType": "character_art"
+    },
+    {
+      "section": "game_objects",
+      "path": "extensions.card_art.sprite",
+      "label": "Sprite de carta",
+      "sourceSection": "sprites",
+      "destinationType": "card_art"
+    }
   ]
 }

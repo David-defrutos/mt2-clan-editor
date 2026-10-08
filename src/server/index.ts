@@ -1,8 +1,12 @@
+import {officialArtCatalog,officialArtImage} from './official-art.js';
+import {exampleCatalog,copyExample} from './examples.js';
+import {poolCountModel, preparePoolCount, savePoolCount, type PoolCountRequest} from './pool-count.js';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { execFile } from 'node:child_process';
+import { languageCatalogs } from './locales.js';
 import { promisify } from 'node:util';
 import { addLibraryPath, getLibraryItem, loadLibrary, removeLibraryItem } from './library.js';
 import { configRoot, inside, projectRoot } from './paths.js';
@@ -10,18 +14,24 @@ import { scanClan } from './scan.js';
 import { loadStatsRules, statsDetails, summarizeClan } from './stats.js';
 import { prepareEdit, saveEdit, prepareObjectEdit, saveObjectEdit, type EditRequest, type ObjectEditRequest } from './edit.js';
 import { inventoryAssets } from './assets.js';
+import { artChecklist } from './art-checklist.js';
+import { analyzeArt } from './art-analysis.js';
 import { validateClan } from './validate.js';
 import { prepareArt, saveArt, type ArtRequest } from './art.js';
 import { createClan } from './create.js';
 import { discoverMods, importDiscovered } from './discovery.js';
 import { visualCatalog, prepareVisualAssignment, saveVisualAssignment, type VisualRequest } from './visual-assignments.js';
+import { bundleInventory } from './resource-review.js';
+import { referenceModel, prepareReference, saveReference, type ReferenceRequest } from './reference-editor.js';
+import { mechanicsSupport } from './mechanics-support.js';
+import {contentActionRules,prepareContentAction,saveContentAction,type ActionRequest} from './content-actions.js';
 import { prepareVisualCopy, saveVisualCopy, type VisualCopyRequest } from './visual-copy.js';
 import { spawnRules, spawnModel, prepareSpawnAssignment, saveSpawnAssignment, type SpawnRequest } from './spawn-assignment.js';
 import { poolModel, preparePoolChanges, savePoolChanges, type PoolChange } from './pool-editor.js';
 import { poolAssignmentRules, poolAssignmentModel, preparePoolAssignment, savePoolAssignment, type PoolAssignmentRequest } from './pool-assignment.js';
 import { rewardSettingsModel, prepareRewardSettings, saveRewardSettings, type RewardSettingsRequest } from './reward-settings.js';
 import { characterPoolRules, characterPoolModel, prepareCharacterPool, saveCharacterPool, type CharacterPoolRequest } from './character-pool.js';
-import { prepareContent, saveContent, type ContentRequest } from './content.js';
+import { prepareContent, saveContent, contentTemplates, type ContentRequest } from './content.js';
 import { buildClan, buildStatus } from './build.js';
 import { buildOffline, offlineStatus } from './offline-build.js';
 import { artifactStatus, packageClan } from './artifacts.js';
@@ -75,6 +85,7 @@ const mime: Record<string, string> = { '.html': 'text/html', '.js': 'text/javasc
 async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   const url = new URL(req.url ?? '/', `http://127.0.0.1:${port}`);
   const pathname = url.pathname;
+  if (req.method === 'GET' && pathname === '/api/languages') return send(res,200,await languageCatalogs());
   if (!pathname.startsWith('/api/')) {
     const dist = path.join(projectRoot, 'dist');
     const candidate = path.resolve(dist, '.' + pathname);
@@ -85,6 +96,8 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     return;
   }
 
+  if (req.method === 'GET' && pathname === '/api/official-art') { const model=await officialArtCatalog();return send(res,200,{rules:model.rules,rows:model.rows.map(({file,sha256,...row})=>row)}); }
+  if (req.method === 'GET' && pathname === '/api/official-art/image') { const bytes=await officialArtImage(required(url.searchParams.get('id'),'id'));res.writeHead(200,{'Content-Type':'image/png','X-Content-Type-Options':'nosniff'});res.end(bytes);return; }
   if (req.method === 'GET' && pathname === '/api/health') return send(res, 200, { ok: true });
   if (req.method === 'GET' && pathname === '/api/reward-templates') {
     const rules = JSON.parse(await fs.readFile(path.join(configRoot, 'templates/content.json'), 'utf8'));
@@ -101,9 +114,11 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     return;
   }
   if (req.method === 'GET' && pathname === '/api/config') {
-    const [navigation, fields, stats, assets, mechanics, creation] = await Promise.all(['navigation.json', 'fields.json', 'stats.json', 'assets.json', 'mechanics.json', 'templates/new-clan.json'].map(file => fs.readFile(path.join(configRoot, file), 'utf8').then(JSON.parse)));
-    return send(res, 200, { navigation, fields, stats, assets, mechanics, creation: { minimumDraftCards: creation.banner.unitCount, defaultDraftCards: creation.defaultDraftCards, maximumDraftCards: creation.maxDraftCards } });
+    const [navigation, fields, stats, assets, mechanics, creation, poolReferences] = await Promise.all(['navigation.json', 'fields.json', 'stats.json', 'assets.json', 'mechanics.json', 'templates/new-clan.json', 'pool-references.json'].map(file => fs.readFile(path.join(configRoot, file), 'utf8').then(JSON.parse)));
+    return send(res, 200, { navigation, fields, stats, assets, mechanics, poolReferences, creation: { minimumDraftCards: creation.banner.unitCount, defaultDraftCards: creation.defaultDraftCards, maximumDraftCards: creation.maxDraftCards } });
   }
+  if (req.method === 'GET' && pathname === '/api/examples') return send(res,200,await exampleCatalog());
+  if (req.method === 'POST' && pathname === '/api/examples/copy') { const input=await body(req);const id=required(input.id,'id');const root=await copyExample(id);const example=(await exampleCatalog()).find(e=>e.id===id)!;return send(res,200,example.kind==='source'?{root,kind:'source'}:{...await addLibraryPath(root),kind:'clan'}); }
   if (req.method === 'GET' && pathname === '/api/library') return send(res, 200, await loadLibrary());
   if (req.method === 'POST' && pathname === '/api/library/discover') {
     const input = await body(req);
@@ -145,6 +160,23 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     return send(res, 200, snapshot);
   }
   const contentMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/content\/(preview|save)$/);
+  if(req.method==='GET'&&pathname==='/api/content-actions')return send(res,200,await contentActionRules());
+  const contentActionMatch=pathname.match(/^\/api\/clans\/([a-f0-9]+)\/content-actions\/(preview|save)$/);
+  if(req.method==='POST'&&contentActionMatch){const item=await getLibraryItem(contentActionMatch[1]);const input=await body(req);const request={...input,root:item.root} as ActionRequest;if(contentActionMatch[2]==='save')return send(res,200,await saveContentAction(request));const p=await prepareContentAction(request);return send(res,200,{changed:p.changed,changes:p.changes,token:p.token});}
+  const templatesMatch=pathname.match(/^\/api\/clans\/([a-f0-9]+)\/content-templates$/);
+  if(req.method==='GET'&&pathname==='/api/content-sections'){const config=JSON.parse(await fs.readFile(path.join(configRoot,'templates/content.json'),'utf8'));return send(res,200,[{id:'rewards',label:'recompensa'},...Object.entries(config.objects).map(([id,value])=>({id,label:(value as {label:string}).label}))]);}
+  if(req.method==='GET'&&templatesMatch){const item=await getLibraryItem(templatesMatch[1]);return send(res,200,await contentTemplates(item.root,required(url.searchParams.get('section'),'section')));}
+  const referenceMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/references(?:\/(preview|save))?$/);
+  if (referenceMatch) {
+    const item = await getLibraryItem(referenceMatch[1]);
+    if (req.method === 'GET' && !referenceMatch[2]) return send(res,200,await referenceModel(await scanClan(item.root),required(url.searchParams.get('section'),'section'),required(url.searchParams.get('id'),'id'),required(url.searchParams.get('file'),'file')));
+    if (req.method === 'POST' && referenceMatch[2]) {
+      const input=await body(req);
+      const request={...input,root:item.root,section:required(input.section,'section'),id:required(input.id,'id'),file:required(input.file,'file'),field:required(input.field,'field'),expectedHash:required(input.expectedHash,'expectedHash')} as ReferenceRequest;
+      const preview=referenceMatch[2]==='save'?await saveReference(request):await prepareReference(request);
+      return send(res,200,referenceMatch[2]==='save'?preview: {changed:preview.changed,before:'before' in preview?preview.before:undefined,after:'after' in preview?preview.after:undefined,token:'token' in preview?preview.token:undefined,uses:'uses' in preview?preview.uses:[]});
+    }
+  }
   const visualMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/visual-assignments(?:\/(preview|save))?$/);
   const visualCopyMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/visual-copy\/(preview|save)$/);
   const spawnMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/spawn-assignment(?:\/(preview|save))?$/);
@@ -183,6 +215,17 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
       return send(res, 200, { changed: preview.changed, label: preview.label, before: preview.before, after: preview.after, pool: preview.pool, uses: preview.uses, token: preview.token });
     }
   }
+  const poolCountMatch=pathname.match(/^\/api\/clans\/([a-f0-9]+)\/pool-count(?:\/(preview|save))?$/);
+  if(poolCountMatch){
+    const item=await getLibraryItem(poolCountMatch[1]);
+    if(req.method==='GET' && !poolCountMatch[2])return send(res,200,await poolCountModel(item.root,required(url.searchParams.get('pool'),'pool'),required(url.searchParams.get('id'),'id')));
+    if(req.method==='POST' && poolCountMatch[2]){
+      const input=await body(req);const request:PoolCountRequest={root:item.root,pool:required(input.pool,'pool'),id:required(input.id,'id'),entry:required(input.entry,'entry'),count:input.count as number,expectedHash:required(input.expectedHash,'expectedHash'),expectedToken:typeof input.expectedToken==='string'?input.expectedToken:undefined};
+      if(poolCountMatch[2]==='save')return send(res,200,await savePoolCount(request));
+      const preview=await preparePoolCount(request);
+      return send(res,200,{changed:preview.changed,before:preview.before,after:preview.after,totalBefore:preview.totalBefore,totalAfter:preview.totalAfter,file:preview.file,token:preview.token});
+    }
+  }
   const poolsMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/pools(?:\/(preview|save))?$/);
   if (poolsMatch) {
     const item = await getLibraryItem(poolsMatch[1]);
@@ -217,7 +260,7 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   }
   if (visualMatch) {
     const item = await getLibraryItem(visualMatch[1]);
-    if (req.method === 'GET' && !visualMatch[2]) return send(res, 200, await visualCatalog(await scanClan(item.root), required(url.searchParams.get('section'), 'section')));
+    if (req.method === 'GET' && !visualMatch[2]) return send(res, 200, await visualCatalog(await scanClan(item.root), required(url.searchParams.get('section'), 'section'), url.searchParams.has('id') ? { id: required(url.searchParams.get('id'), 'id'), file: required(url.searchParams.get('file'), 'file') } : undefined));
     if (req.method === 'POST' && visualMatch[2]) {
       const input = await body(req);
       const request: VisualRequest = { root: item.root, section: required(input.section, 'section'), file: required(input.file, 'file'), id: required(input.id, 'id'), field: required(input.field, 'field'), targetId: required(input.targetId, 'targetId'), expectedHash: required(input.expectedHash, 'expectedHash') };
@@ -227,13 +270,13 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   if (contentMatch && req.method === 'POST') {
     const item = await getLibraryItem(contentMatch[1]);
     const input = await body(req);
-    if (input.section !== 'cards' && input.section !== 'characters' && input.section !== 'upgrades' && input.section !== 'card_pools' && input.section !== 'rewards') throw new Error('Sección no permitida.');
+    if (!['cards','characters','upgrades','card_pools','rewards','map_nodes','effects','relic_effects','character_triggers','card_triggers','relics'].includes(String(input.section))) throw new Error('Sección no permitida.');
     let source: ContentRequest['source'];
     if (input.source) {
       const candidate = input.source as Record<string, unknown>;
       source = { id: required(candidate.id, 'source.id'), file: required(candidate.file, 'source.file') };
     }
-    const request: ContentRequest = { root: item.root, section: input.section, id: required(input.id, 'id'), name: input.section === 'card_pools' ? '' : required(input.name, 'name'), kind: input.kind as ContentRequest['kind'], poolId: typeof input.poolId === 'string' ? input.poolId : undefined, source, expectedToken: typeof input.expectedToken === 'string' ? input.expectedToken : undefined };
+    const request: ContentRequest = { root: item.root, section: input.section as ContentRequest['section'], id: required(input.id, 'id'), name: typeof input.name==='string'?input.name:'', kind: input.kind as ContentRequest['kind'], poolId: typeof input.poolId === 'string' ? input.poolId : undefined, links:input.links as ContentRequest['links'], source, expectedToken: typeof input.expectedToken === 'string' ? input.expectedToken : undefined };
     if (contentMatch[2] === 'save') return send(res, 200, await saveContent(request));
     const preview = await prepareContent(request);
     return send(res, 200, { file: preview.file, token: preview.token, objects: preview.objects, warnings: preview.warnings, poolCopy: preview.poolCopy, document: preview.document, images: preview.images.map(image => image.file) });
@@ -254,7 +297,7 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
   if (treeMatch && req.method === 'POST') {
     const item = await getLibraryItem(treeMatch[1]);
     const input = await body(req);
-    const request: TreeRequest = { root: item.root, file: required(input.file, 'file'), classId: required(input.classId, 'classId'), championIndex: Number(input.championIndex), expectedHash: required(input.expectedHash, 'expectedHash'), changes: input.changes as TreeRequest['changes'] };
+    const request: TreeRequest = { root: item.root, file: required(input.file, 'file'), classId: required(input.classId, 'classId'), championIndex: Number(input.championIndex), expectedHash: required(input.expectedHash, 'expectedHash'), changes: input.changes as TreeRequest['changes'], structure: input.structure as TreeRequest['structure'] };
     if (treeMatch[2] === 'save') return send(res, 200, await saveChampionTree(request));
     const preview = await prepareChampionTree(request);
     return send(res, 200, { changed: preview.changed, file: preview.file, champion: preview.champion, changes: preview.changes, warnings: preview.warnings });
@@ -267,7 +310,7 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     const champions = describeChampions(snapshot, rules);
     if (req.method === 'GET' && !championMatch[2]) {
       const upgrades = snapshot.entries.filter(e => e.section === 'upgrades');
-      return send(res, 200, { champions, upgrades, maxCombinedLevels: rules.maxCombinedLevels, maxSelectedPaths: rules.maxSelectedPaths });
+      return send(res, 200, { champions, upgrades, maxCombinedLevels: rules.maxCombinedLevels, maxSelectedPaths: rules.maxSelectedPaths, structure: rules.structure });
     }
     if (req.method === 'POST' && championMatch[2]) {
       const input = await body(req);
@@ -275,6 +318,20 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
       return send(res, 200, combineChampion(champions[Number(input.champion)], input.levels, rules));
     }
   }
+  const analysisMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/art-analysis$/);
+  if (req.method === 'GET' && analysisMatch) {
+    const item = await getLibraryItem(analysisMatch[1]);
+    return send(res, 200, await analyzeArt(item.root, required(url.searchParams.get('file'), 'file')));
+  }
+  const checklistMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/art-checklist$/);
+  if (req.method === 'GET' && checklistMatch) {
+    const item = await getLibraryItem(checklistMatch[1]);
+    return send(res, 200, await artChecklist(await scanClan(item.root)));
+  }
+  const resourceReviewMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/resource-review$/);
+  const mechanicsSupportMatch=pathname.match(/^\/api\/clans\/([a-f0-9]+)\/mechanics-support$/);
+  if(req.method==='GET'&&mechanicsSupportMatch){const item=await getLibraryItem(mechanicsSupportMatch[1]);return send(res,200,await mechanicsSupport(await scanClan(item.root)));}
+  if (req.method === 'GET' && resourceReviewMatch) { const item = await getLibraryItem(resourceReviewMatch[1]); return send(res, 200, await bundleInventory(await scanClan(item.root))); }
   const inventoryMatch = pathname.match(/^\/api\/clans\/([a-f0-9]+)\/assets$/);
   if (req.method === 'GET' && inventoryMatch) {
     const item = await getLibraryItem(inventoryMatch[1]);
@@ -368,10 +425,10 @@ async function route(req: IncomingMessage, res: ServerResponse): Promise<void> {
     const item = await getLibraryItem(required(input.key, 'key'));
     const mode = required(input.mode, 'mode');
     if (mode !== 'preserve' && mode !== 'match-existing') throw new Error('Modo de ajuste no válido.');
-    const request: ArtRequest = { root: item.root, spriteId: required(input.spriteId, 'spriteId'), file: required(input.file, 'file'), imageBase64: required(input.imageBase64, 'imageBase64'), mode, expectedHash: required(input.expectedHash, 'expectedHash') };
+    const request: ArtRequest = { root: item.root, section: typeof input.section === 'string' ? input.section : undefined, spriteId: required(input.spriteId, 'spriteId'), file: required(input.file, 'file'), imageBase64: required(input.imageBase64, 'imageBase64'), mode, expectedHash: required(input.expectedHash, 'expectedHash'), expectedDefinitionHash: typeof input.expectedDefinitionHash === 'string' ? input.expectedDefinitionHash : undefined, compensateCharacterScale:input.compensateCharacterScale===true,expectedToken:typeof input.expectedToken==='string'?input.expectedToken:undefined };
     if (pathname.endsWith('/save')) return send(res, 200, await saveArt(request));
     const preview = await prepareArt(request);
-    return send(res, 200, { changed: preview.changed, oldWidth: preview.oldWidth, oldHeight: preview.oldHeight, sourceWidth: preview.sourceWidth, sourceHeight: preview.sourceHeight, newWidth: preview.newWidth, newHeight: preview.newHeight, image: `data:image/png;base64,${preview.output.toString('base64')}` });
+    return send(res, 200, { changed: preview.changed, oldWidth: preview.oldWidth, oldHeight: preview.oldHeight, sourceWidth: preview.sourceWidth, sourceHeight: preview.sourceHeight, newWidth: preview.newWidth, newHeight: preview.newHeight, token:preview.token,compensations:preview.compensation.changes,warnings:preview.compensation.warnings,image: `data:image/png;base64,${preview.output.toString('base64')}` });
   }
   if (req.method === 'POST' && (pathname === '/api/edit/preview' || pathname === '/api/edit/save')) {
     const input = await body(req);

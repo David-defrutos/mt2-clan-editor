@@ -1,0 +1,163 @@
+{
+  "assignments": [
+    {
+      "section": "map_nodes",
+      "path": "extensions[].reward.rewards",
+      "label": "Recompensas del nodo",
+      "sourceSection": "rewards",
+      "mode": "list",
+      "help": "El orden se conserva. Cambiar esta lista afecta al nodo; los pools se editan en cada recompensa.",
+      "external": true
+    },
+    {
+      "section": "map_nodes",
+      "path": "prefab",
+      "label": "Estandarte visual del nodo",
+      "sourceSection": "game_objects",
+      "sourceType": "map_node_icon",
+      "mode": "single",
+      "help": "Objeto de mapa con los sprites de sus estados.",
+      "external": true
+    },
+    {
+      "section": "classes",
+      "path": "champions[].card_data",
+      "label": "Carta de campeón",
+      "sourceSection": "cards",
+      "mode": "single",
+      "help": "Selecciona una carta configurada como campeón. Revisa rareza, efecto de invocación y sendas.",
+      "external": true
+    },
+    {
+      "section": "classes",
+      "path": "champions[].starter_card",
+      "label": "Carta inicial",
+      "sourceSection": "cards",
+      "mode": "single",
+      "help": "Carta que acompaña a este campeón al iniciar la partida.",
+      "external": true
+    },
+    {
+      "section": "cards",
+      "path": "effects",
+      "label": "Efectos de la carta",
+      "sourceSection": "effects",
+      "mode": "list",
+      "help": "Se ejecutan en el orden configurado. Los efectos compartidos afectan a todos sus usuarios.",
+      "external": true
+    },
+    {
+      "section": "cards",
+      "path": "triggers",
+      "label": "Triggers de carta",
+      "sourceSection": "card_triggers",
+      "mode": "list",
+      "help": "Definiciones de cuándo se activan efectos de la carta.",
+      "external": true
+    },
+    {
+      "section": "characters",
+      "path": "triggers",
+      "label": "Triggers de unidad",
+      "sourceSection": "character_triggers",
+      "mode": "list",
+      "help": "Definiciones de cuándo se activan efectos de la unidad.",
+      "external": true
+    },
+    {
+      "section": "characters",
+      "path": "ability",
+      "label": "Habilidad de unidad",
+      "sourceSection": "cards",
+      "filter": "is_an_ability",
+      "mode": "single",
+      "help": "Carta declarada como habilidad; conserva su propia definición.",
+      "external": true
+    },
+    {
+      "section": "character_triggers",
+      "path": "effects",
+      "label": "Efectos del trigger",
+      "sourceSection": "effects",
+      "mode": "list",
+      "help": "Efectos que ejecuta el trigger; revisa sus condiciones y orden.",
+      "external": true
+    },
+    {
+      "section": "card_triggers",
+      "path": "effects",
+      "label": "Efectos del trigger",
+      "sourceSection": "effects",
+      "mode": "list",
+      "help": "Efectos que ejecuta el trigger de carta.",
+      "external": true
+    },
+    {
+      "section": "relics",
+      "path": "relic_effects",
+      "label": "Efectos de reliquia",
+      "sourceSection": "relic_effects",
+      "mode": "list",
+      "help": "Referencias compartidas a efectos de reliquia.",
+      "external": true
+    },
+    {
+      "section": "upgrades",
+      "path": "room_modifier_upgrades",
+      "label": "Modificadores de sala",
+      "sourceSection": "room_modifiers",
+      "mode": "list",
+      "help": "Mecánicas aplicadas a la sala por esta mejora.",
+      "external": true
+    },
+    {
+      "section": "events",
+      "path": "possible_rewards",
+      "label": "Recompensas posibles del evento",
+      "sourceSection": "rewards",
+      "mode": "list",
+      "help": "Se modifica la lista declarada. Las llamadas a recompensas y su orden en el guion Ink deben concordar; este editor conserva el archivo Ink.",
+      "external": true
+    },
+    {
+      "section": "effects",
+      "path": "param_upgrade",
+      "label": "Mejora del efecto",
+      "sourceSection": "upgrades",
+      "mode": "single",
+      "help": "Card Upgrade",
+      "external": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ]
+    },
+    {
+      "section": "effects",
+      "path": "param_upgrade",
+      "label": "Mejora del efecto",
+      "sourceSection": "upgrades",
+      "mode": "single",
+      "help": "Card Upgrade",
+      "external": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ]
+    },
+    {
+      "section": "effects",
+      "path": "param_character_pool",
+      "label": "Unidades compatibles con la variante",
+      "sourceSection": "characters",
+      "mode": "list",
+      "help": "Unidades que permiten cambiar de variante animada. Añade solo personajes con esa variante preparada; no es un pool de invocación. Se conservan referencias externas y el orden. Requiere Conductor 0.5.14 o posterior.",
+      "external": true,
+      "names": [
+        "CardEffectSwitchCharacterAnimationModel",
+        "@CardEffectSwitchCharacterAnimationModel"
+      ],
+      "modReferences": [
+        "Conductor"
+      ]
+    }
+  ]
+}

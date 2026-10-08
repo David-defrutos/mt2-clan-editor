@@ -30,3 +30,12 @@ Se extrajeron los paquetes de personajes aliados y enemigos. No se extrajeron to
 Hay imágenes estáticas completas y atlas Spine con piezas del personaje. Los TextAsset conservan datos `.atlas` y `.skel` como `.bytes`, con su nombre original en el índice. Obtener una pose animada requiere cargar el esqueleto y sus atlas; extraer un atlas no produce por sí solo una imagen ensamblada.
 
 La extracción no determina por sí sola la escala/posición final del prefab ni enlaza automáticamente cada recurso con su CharacterData. Pendientes: resolver ese vínculo, recuperar transformaciones y añadir selector de referencia oficial al visor. La extracción está disponible; la integración en el visor aún no está implementada.
+
+
+## Integración del visor · 08-10-2026
+
+Vista de personaje → Comparar con una unidad oficial. Catálogo local de 353 sprites únicos PLR_/ENM_ del dataset más reciente de data/official-art, con búsqueda y filtro aliados/enemigos. Solo sprites con tamaño, PPU y pivote válidos; se excluyen Texture2D, FX y atlas sin ensamblar. Se verifica la ruta y el hash al servir el PNG. El índice se reutiliza mientras no cambien manifiesto o reglas.
+
+La referencia se dibuja a la derecha, alineando el borde inferior del lienzo con el suelo; no se infiere el apoyo de los pies. Su escala manual y selección solo afectan a la vista. Las transformaciones finales del prefab, la perspectiva y las animaciones no se han recuperado. Esta función facilita comparar arte estático, sin garantizar el tamaño real de todas las unidades oficiales.
+
+Configuración: config/official-art-viewer.json. Ausencia de extracción: el panel informa de que no hay sprites, sin bloquear el editor. Los datos oficiales siguen excluidos de Git y de la distribución. Lectura HTTP comprobada: 353 entradas y un PNG con respuesta 200 image/png. Revisión visual pendiente.

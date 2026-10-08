@@ -1,0 +1,281 @@
+{
+  "source": "D:/Juegos/MT2_mod/docs/referencia/arte-escalas.md, revisión 2026-10-02",
+  "roles": [
+    {
+      "section": "classes",
+      "path": "icons.small",
+      "label": "Logo pequeño",
+      "group": "Identidad",
+      "target": "sprites",
+      "size": "48 × 48"
+    },
+    {
+      "section": "classes",
+      "path": "icons.medium",
+      "label": "Logo mediano",
+      "group": "Identidad",
+      "target": "sprites",
+      "size": "128 × 128 o 92 × 92; conservar el rol existente"
+    },
+    {
+      "section": "classes",
+      "path": "icons.large",
+      "label": "Logo grande",
+      "group": "Identidad",
+      "target": "sprites",
+      "size": "92 × 92 o 128 × 128; conservar el rol existente"
+    },
+    {
+      "section": "classes",
+      "path": "icons.silhouette",
+      "label": "Silueta del logo",
+      "group": "Identidad",
+      "target": "sprites",
+      "size": "~72 × 72"
+    },
+    {
+      "section": "classes",
+      "path": "card_draft_icon",
+      "label": "Icono de draft",
+      "group": "Identidad",
+      "target": "sprites",
+      "size": "71 × 84; existen variantes 84 × 84"
+    },
+    {
+      "section": "classes",
+      "path": "champions[].icon",
+      "label": "Icono de campeón",
+      "group": "Campeones",
+      "target": "sprites",
+      "size": "320 × 256"
+    },
+    {
+      "section": "classes",
+      "path": "champions[].locked_icon",
+      "label": "Icono bloqueado",
+      "group": "Campeones",
+      "target": "sprites",
+      "size": "Mismo lienzo que el normal",
+      "conditional": true
+    },
+    {
+      "section": "classes",
+      "path": "champions[].portrait",
+      "label": "Retrato de campeón",
+      "group": "Campeones",
+      "target": "sprites",
+      "size": "240 × 270"
+    },
+    {
+      "section": "classes",
+      "path": "class_select_character_displays[]",
+      "label": "Personaje de selección",
+      "group": "Campeones",
+      "target": "game_objects",
+      "next": "extensions.character_art.sprite",
+      "size": "Escala independiente de combate"
+    },
+    {
+      "section": "class_card_styles",
+      "path": "unit_card_frame_sprite",
+      "label": "Marco de unidad",
+      "group": "Marcos",
+      "target": "sprites",
+      "size": "504 × 588 orientativo"
+    },
+    {
+      "section": "class_card_styles",
+      "path": "spell_card_frame_sprite",
+      "label": "Marco de hechizo",
+      "group": "Marcos",
+      "target": "sprites",
+      "size": "504 × 588 orientativo"
+    },
+    {
+      "section": "class_card_styles",
+      "path": "equipment_card_frame_sprite",
+      "label": "Marco de equipo",
+      "group": "Marcos",
+      "target": "sprites",
+      "size": "504 × 588 orientativo"
+    },
+    {
+      "section": "class_card_styles",
+      "path": "room_card_frame_sprite",
+      "label": "Marco de sala",
+      "group": "Marcos",
+      "target": "sprites",
+      "size": "504 × 588 orientativo"
+    },
+    {
+      "section": "game_objects",
+      "type": "map_node_icon",
+      "path": "extensions.map_node_icon.enabled_sprite",
+      "label": "Estandarte disponible",
+      "group": "Mapa",
+      "target": "sprites",
+      "size": "~420 × 420, no confirmado"
+    },
+    {
+      "section": "game_objects",
+      "type": "map_node_icon",
+      "path": "extensions.map_node_icon.disabled_sprite",
+      "label": "Estandarte desactivado",
+      "group": "Mapa",
+      "target": "sprites",
+      "size": "Conservar alineación entre estados"
+    },
+    {
+      "section": "game_objects",
+      "type": "map_node_icon",
+      "path": "extensions.map_node_icon.frozen_sprite",
+      "label": "Estandarte congelado",
+      "group": "Mapa",
+      "target": "sprites",
+      "size": "Conservar alineación entre estados"
+    },
+    {
+      "section": "game_objects",
+      "type": "map_node_icon",
+      "path": "extensions.map_node_icon.visited_sprite_disabled",
+      "label": "Estandarte visitado",
+      "group": "Mapa",
+      "target": "sprites",
+      "size": "Conservar alineación entre estados"
+    },
+    {
+      "section": "game_objects",
+      "type": "map_node_icon",
+      "path": "extensions.map_node_icon.visited_sprite_enabled",
+      "label": "Visitado activo",
+      "group": "Mapa",
+      "target": "sprites",
+      "size": "Puede compartir PNG",
+      "conditional": true
+    },
+    {
+      "section": "map_nodes",
+      "path": "map_icon",
+      "label": "Icono de mapa",
+      "group": "Mapa",
+      "target": "sprites",
+      "size": "Según contexto"
+    },
+    {
+      "section": "map_nodes",
+      "path": "minimap_icon",
+      "label": "Icono de minimapa",
+      "group": "Mapa",
+      "target": "sprites",
+      "size": "Según contexto"
+    },
+    {
+      "section": "cards",
+      "path": "card_art",
+      "label": "Ilustración de carta",
+      "group": "Cartas y unidades",
+      "target": "game_objects",
+      "next": "extensions.card_art.sprite",
+      "size": "Mínimo orientativo 210 × 250"
+    },
+    {
+      "section": "characters",
+      "path": "character_art",
+      "label": "Personaje de combate",
+      "group": "Cartas y unidades",
+      "target": "game_objects",
+      "next": "extensions.character_art.sprite",
+      "size": "Estático ~500 × 500 recomendado, no límite"
+    },
+    {
+      "section": "status_effects",
+      "path": "icon",
+      "label": "Icono de estado",
+      "group": "Mecánicas",
+      "target": "sprites",
+      "size": "50 × 50",
+      "conditional": true
+    },
+    {
+      "section": "character_trigger_types",
+      "path": "sprite",
+      "label": "Icono de trigger",
+      "group": "Mecánicas",
+      "target": "sprites",
+      "size": "50 × 50 orientativo",
+      "conditional": true
+    },
+    {
+      "section": "atlas_icons",
+      "path": "path",
+      "label": "Símbolo de tooltip",
+      "group": "Mecánicas",
+      "target": "file",
+      "size": "50 × 50 según uso",
+      "conditional": true
+    },
+    {
+      "section": "relics",
+      "path": "icon",
+      "label": "Icono de reliquia",
+      "group": "Reliquias, equipos y salas",
+      "target": "sprites",
+      "size": "256 × 256 orientativo",
+      "conditional": true
+    },
+    {
+      "section": "relics",
+      "path": "icon_small",
+      "label": "Icono HUD de reliquia",
+      "group": "Reliquias, equipos y salas",
+      "target": "sprites",
+      "size": "96 × 96 orientativo",
+      "conditional": true
+    },
+    {
+      "section": "upgrades",
+      "path": "icon",
+      "label": "Icono de mejora/equipo/sala",
+      "group": "Reliquias, equipos y salas",
+      "target": "sprites",
+      "size": "Equipo 128 × 128; sala 112 × 112; depende del uso",
+      "conditional": true
+    },
+    {
+      "section": "classes",
+      "path": "card_style",
+      "label": "Marco de unidad del clan",
+      "group": "Marcos",
+      "target": "class_card_styles",
+      "next": "unit_card_frame_sprite",
+      "size": "Según estilo enlazado"
+    },
+    {
+      "section": "classes",
+      "path": "card_style",
+      "label": "Marco de hechizo del clan",
+      "group": "Marcos",
+      "target": "class_card_styles",
+      "next": "spell_card_frame_sprite",
+      "size": "Según estilo enlazado"
+    },
+    {
+      "section": "classes",
+      "path": "card_style",
+      "label": "Marco de equipo del clan",
+      "group": "Marcos",
+      "target": "class_card_styles",
+      "next": "equipment_card_frame_sprite",
+      "size": "Según estilo enlazado"
+    },
+    {
+      "section": "classes",
+      "path": "card_style",
+      "label": "Marco de sala del clan",
+      "group": "Marcos",
+      "target": "class_card_styles",
+      "next": "room_card_frame_sprite",
+      "size": "Según estilo enlazado"
+    }
+  ]
+}

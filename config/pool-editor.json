@@ -1,13 +1,24 @@
 {
   "builtInPools": [
-    "MegaPool", "UnitsAllBanner", "StarterCardsOnly", "CardsExcludedFromJuice",
-    "EquipmentPool", "EquipmentPoolNonEnemy", "EquipmentPoolEnemy", "FreeEquipmentMutatorPool",
-    "RandomGraftedEquipmentForEvent_NoVoidArms_EquipmentPool", "RedCrownEquipmentPool",
-    "RoomAndEquipmentDraftPool", "RoomAndEquipmentMerchant_EquipmentPool",
-    "RoomAndEquipmentMerchant_RoomAndEquipmentPool", "RoomAndEquipmentMerchant_RoomPool",
-    "SpellsNotAllowedSpellPowerPool", "TrainRoomPool"
+    "MegaPool",
+    "UnitsAllBanner",
+    "StarterCardsOnly",
+    "CardsExcludedFromJuice",
+    "EquipmentPool",
+    "EquipmentPoolNonEnemy",
+    "EquipmentPoolEnemy",
+    "FreeEquipmentMutatorPool",
+    "RandomGraftedEquipmentForEvent_NoVoidArms_EquipmentPool",
+    "RedCrownEquipmentPool",
+    "RoomAndEquipmentDraftPool",
+    "RoomAndEquipmentMerchant_EquipmentPool",
+    "RoomAndEquipmentMerchant_RoomAndEquipmentPool",
+    "RoomAndEquipmentMerchant_RoomPool",
+    "SpellsNotAllowedSpellPowerPool",
+    "TrainRoomPool",
+    "CardsThatResolveSimultaneouslyOnUnplayed"
   ],
-  "source": "Trainworks-Reloaded/schemas/definitions/card_pool.json y wiki/Custom-Equipment-and-Room-Cards.md (copia local, 2026-10-01)",
+  "source": "Trainworks Reloaded schemas and CardPoolRegister, local source 39a3cb9 (0.7.32), 2026-10-08",
   "maxBatchSize": 200,
   "useDirectListWhenDeclared": true,
   "directMembersWarning": "Este pool declara miembros en su campo cards. Al quitar se elimina la pertenencia local tanto aquí como en la carta, si existe en ambos lugares. Las referencias externas se conservan.",
@@ -15,6 +26,7 @@
     "StarterCardsOnly": "Cambiar este pool no cambia la carta inicial asignada a cada campeón.",
     "UnitsAllBanner": "Este pool corresponde a unidades de estandarte; revisa que las cartas añadidas invoquen una unidad.",
     "EquipmentPool": "La wiki requiere este pool para precargar las cartas de equipo. Quitar un equipo puede impedir que el juego lo cargue.",
-    "TrainRoomPool": "La wiki requiere este pool para las cartas de sala. Revisa sus miembros antes de quitar una sala."
+    "TrainRoomPool": "La wiki requiere este pool para las cartas de sala. Revisa sus miembros antes de quitar una sala.",
+    "CardsThatResolveSimultaneouslyOnUnplayed": "Pool técnico de resolución simultánea de cartas no jugadas. No es un pool de recompensas."
   }
 }

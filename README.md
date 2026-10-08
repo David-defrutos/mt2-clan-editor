@@ -4,10 +4,10 @@ Aplicación local en TypeScript para crear, abrir y editar proyectos de clanes b
 
 ## Iniciar
 
-Requiere Node.js 22 o superior. En esta carpeta:
+Recomendado Node.js 24 o superior. En esta carpeta:
 
 ```powershell
-npm install
+npm ci
 npm run build
 npm start
 ```
@@ -69,7 +69,7 @@ Para arte estático, la vista dibuja el sprite base usando sus dimensiones, píx
 
 El guardado de desbloqueos conserva comentarios, formato y campos ajenos. Comprueba todos los hashes antes de escribir y respalda los originales bajo `data/backups/`; si falla un reemplazo, intenta revertir los archivos ya escritos sin sobrescribir cambios externos. `transaction.json` registra el resultado. Una interrupción del proceso entre archivos puede requerir recuperar las copias originales: el guardado completo de varios archivos no es una operación atómica del sistema de archivos.
 
-La creación produce una **base editable**. Los gráficos de color son marcadores y las cartas de draft son unidades simples. La estructura generada ya incluye el estandarte y pasa pruebas de referencias internas, pero aún no está confirmada por una carga en el juego. El proyecto requiere revisión de equilibrio, iconos, recompensas y mecánicas antes de distribuirse. La compilación local se ha probado con una biblioteca .NET sin dependencias. Además, el C# generado compiló sin errores contra las DLL de Trainworks Reloaded 0.7.27 instaladas en este equipo; esa prueba no equivale a compilar el proyecto generado con su dependencia declarada 0.7.1 ni a cargarlo en el juego. Ese build normal sigue bloqueado porque GitHub Packages responde `401` al restaurar `TrainworksReloaded.Base`. La [guía de Trainworks](https://github.com/Monster-Train-2-Modding-Group/Trainworks-Reloaded/wiki/Getting-Setup-for-Modding) indica usar una credencial con `read:packages` para ese feed. Las credenciales se configuran en NuGet fuera del proyecto; no deben añadirse al repositorio.
+La creación produce una **base editable** con arte provisional y unidades simples. Incluye dos campeones, sendas, starters y referencias internas comprobadas, pero requiere revisión de equilibrio y aceptación en el juego. El generador declara Trainworks 0.7.32 tanto en el manifiesto como en el proyecto C#. Se ha compilado un clan generado con las DLL locales de Trainworks 0.7.32.0, sin errores ni avisos. La restauración del paquete privado de GitHub no está confirmada: requiere credenciales NuGet con `read:packages`, configuradas fuera del proyecto. No deben añadirse al repositorio.
 
 La pantalla de publicación muestra Git, crea un commit limitado a la carpeta del clan, envía la rama a `origin` y consulta los runs de GitHub Actions asociados al SHA actual. Puede descargar el artefacto de un run exitoso del SHA actual y comprobar que incluye una DLL; no instala el archivo en el juego. La validación todavía no comprueba todas las referencias de Trainworks ni confirma el resultado dentro del juego. Los perfiles de dimensiones de arte y las reglas de edición están en `config/`; el editor conserva campos desconocidos de los clanes importados.
 
@@ -193,3 +193,55 @@ Los tipos, etiquetas, extensiones, campos de pool y valores iniciales están en 
 El inventario incluye sprites y atlas_icons, con sección visible y categoría Símbolo de tooltip · atlas. Puedes filtrar esta categoría, revisar PNG/dimensiones y detectar archivos ausentes, rutas inválidas o mayúsculas distintas. Validación enlaza cada problema a su sección de origen.
 
 Un mismo ID puede declarar un sprite de combate y un atlas de tooltip diferentes; el visor y los selectores de arte siguen resolviendo exclusivamente sprites. Los usos de atlas dentro del texto no se cuentan como referencias de sprites. La sustitución guiada de atlas sigue pendiente; su definición está accesible en Todos los objetos y su archivo permanece local.
+
+### Checklist de arte por uso
+
+En **Recursos visuales**, despliega **Checklist de arte del clan**. Filtra por grupo, estado y texto para revisar las referencias de identidad, campeones, marcos, mapa, cartas, personajes e iconos. Cada fila muestra objeto/campo/archivo, estado, ruta, medidas actuales y referencia orientativa.
+
+Las reglas están en config/art-checklist.json. Se resuelven referencias locales únicas, incluida la cadena personaje/carta → objeto de arte → sprite. Los iconos de tooltip se resuelven en atlas_icons, por separado. Referencias externas o del juego requieren revisión manual; un campo sin declarar no equivale automáticamente a un recurso obligatorio ausente.
+
+El checklist es de lectura. Archivo legible no significa arte terminado: falta comprobar transparencia, encuadre y resultado en partida. La relación de estilos con la clase, bundles y recursos específicos de reliquias/equipos/salas se ampliará posteriormente. Compartir PNG entre usos es válido.
+
+### Revisar transparencia y margen visible
+
+Abre un recurso en Recursos visuales. Los botones Fondo claro y Fondo oscuro permiten revisar el recorte. El panel indica si hay transparencia real, si todos los píxeles son opacos y el área visible con sus cuatro márgenes.
+
+Los umbrales están en config/art-analysis.json: alpha mayor que 64 y al menos 1% de cobertura por fila/columna, con límite de 25 millones de píxeles. La medición puede excluir detalles finos o brillos; no determina por sí sola si el fondo está bien ni dónde deben apoyarse los pies. Un fondo pintado de cuadros puede ser opaco. La operación solo lee y no recorta ni cambia PNG, transformaciones o escala.
+
+### Asignar logos, marcos y estados del estandarte
+
+En Todos los objetos abre una definición de classes, class_card_styles o un game_object de tipo map_node_icon. En Asignar arte existente elige el rol, busca un sprite local, revisa la imagen y sus usuarios, previsualiza y guarda con respaldo.
+
+Roles de clase: logos small/medium/large/silhouette e icono de draft. Marcos: unidad, hechizo, equipo y sala. Nodo de mapa: disponible, desactivado, congelado, visitado desactivado y visitado activo. Se define cada ruta y tipo en config/visual-assignments.json; los campos editables están en config/fields.json.
+
+Se modifica solo la referencia elegida; PNG, transformaciones y otros estados se conservan. El mismo sprite puede cubrir varios roles. Medium/large no se intercambian automáticamente. Elegir la referencia existente mantiene metadatos sin escritura. Las copias independientes de arte siguen disponibles para cartas/personajes; estos nuevos roles asignan sprites existentes. Revisa tamaño, transparencia y alineación antes de probarlos en juego.
+
+## Incremento de iconos de mapa y mecánicas · 02-10-2026
+
+- Asignación guiada desde Todos los objetos para map_nodes.map_icon y minimap_icon, status_effects.icon y character_trigger_types.sprite. Roles y soporte de referencias estructuradas declarados en configuración.
+- Catálogo local con búsqueda, imagen, dimensiones, usos compartidos, vista previa y guardado con respaldo. Los atlas con el mismo ID no se confunden con sprites; card_trigger_types no recibe un icono inventado.
+- Cambiar el ID de una referencia local estructurada conserva sus campos adicionales. La selección explícita de un sprite local sustituye una referencia externa y su namespace, con el cambio visible antes de guardar.
+- Verificado en carpetas temporales: arte y campos vecinos conservados, recompensas/prefab del nodo sin cambios. Pendientes campeones en arrays, enlace de estilos, atlas/bundles y aceptación en partida. Comparación oficial al final.
+
+## Entrega conjunta de bloques 1, 2 y 3 · 02-10-2026
+
+Implementados arte por campeón/selección, enlace de estilos, reliquias/mejoras, sustitución de atlas, inventario de bundles, comparación de encuadre y compensación opcional de escala estática. Implementados nodos conectados, referencias ordenadas de mapa/eventos/mecánicas, reparación de sendas/niveles, campos de identidad, edición masiva y retirada de definiciones con revisión. Ampliados creación y formularios de efectos/triggers, estados/acumulaciones, mejoras, referencias externas e informe de código propio/adaptadores.
+
+Detalle, navegación, configuración y límites: [ENTREGA-BLOQUES-1-3.md](ENTREGA-BLOQUES-1-3.md). Los párrafos de incrementos anteriores son históricos: sus pendientes deben contrastarse con esta entrega. El código propio se conserva y se integra mediante adaptadores declarados; no se genera su lógica ni se simula. Bundles/Spine e Ink requieren sus herramientas para recompilar su contenido.
+
+Siguiente: aceptación visual/teclado y en partida (bloque 4); traducción/selector de idioma y multiplataforma (bloque 5). Referencias oficiales en el visor siguen al final, prioridad baja. Cambios locales, sin publicación en GitHub.
+
+
+## Cierre funcional y distribución · 08-10-2026
+
+Compatibilidad actualizada a Trainworks 0.7.32, pools item/count, edición de cantidades de cartas, animaciones/Pierce/N-units de Conductor y nodos con clase C# propia. Inglés y español con auditoría de cobertura: `npm run check:i18n`. Las estadísticas y filtros reconocen referencias ponderadas. El visor permite comparar con sprites oficiales extraídos localmente; la escala de referencia es manual, no una reproducción exacta del prefab.
+
+Distribución: `npm run package:editor`, después de definir las fuentes de los dos ejemplos en `data/distribution-sources.json`. La salida usa dependencias de ejecución, HTML y JavaScript compilados, configuraciones y ejemplos con hashes; no copia biblioteca, backups, credenciales, node_modules ni DLL del editor de desarrollo. Lanzadores Windows/Linux/macOS y apertura de ejemplos como copias editables. No incluye imágenes oficiales del juego. La primera instalación necesita acceso a npm.
+
+The Free Company 0.2.6 está preparado localmente. El segundo ejemplo está pendiente de identificar: Conductor es una biblioteca de mecánicas y FullClan permite repetir el clan principal/aliado, no aporta una clase de clan propia. La distribución normal bloquea la entrega sin los dos ejemplos. Existe una distribución de prueba marcada como preview, con Free Company; no se presenta como entrega completa.
+
+Guía de distribución: DISTRIBUCION.md. Estado verificable de cierre y pendientes externos: CIERRE-2026-10-08.md. La matriz CI está preparada para Windows/Linux/macOS, pero no se ha enviado ni ejecutado en GitHub. La aceptación visual y en partida permanece pendiente.
+
+### Ejemplos confirmados: FullClan y Free Company
+
+El usuario confirmó FullClan como segundo ejemplo. La distribución normal incluye FullClan 0.3.0 (`source`, proyecto C# y licencia) y The Free Company 0.2.6 (`clan`, JSON/arte/fuentes/licencia). Biblioteca ofrece Copiar fuentes para FullClan y muestra su carpeta para abrir en un editor C#; Abrir copia añade Free Company a la biblioteca. Se conserva el mínimo de dos ejemplos y se valida cada uno según su tipo. Ya no queda pendiente identificar el segundo ejemplo. Los párrafos anteriores corresponden al estado histórico. Permanecen las comprobaciones externas recogidas en CIERRE-2026-10-08.md.

@@ -24,6 +24,9 @@ function render(source: string, values: Record<string, string>): string { return
 
 export async function createClan(request: CreateRequest): Promise<string> {
   const template = JSON.parse(await fs.readFile(path.join(configRoot, 'templates', 'new-clan.json'), 'utf8')) as Template;
+  if (!/^\d+\.\d+\.\d+$/.test(template.package.trainworksVersion)) throw new Error('La versión de Trainworks del generador debe tener el formato mayor.menor.parche.');
+  const dependencies = template.package.dependencies.map(dependency => render(dependency, { trainworksVersion: template.package.trainworksVersion }));
+  if (dependencies.filter(dependency => dependency.startsWith('MT2-Trainworks_Reloaded-')).length !== 1 || !dependencies.includes(`MT2-Trainworks_Reloaded-${template.package.trainworksVersion}`)) throw new Error('La dependencia de Trainworks y la versión del proyecto generado deben coincidir.');
   const clanName = name(request.name, 'El nombre');
   const author = name(request.author, 'El autor');
   if (!/^[A-Za-z][A-Za-z0-9_]{2,39}$/.test(request.id)) throw new Error('El ID debe tener 3–40 letras, cifras o guiones bajos, y empezar por letra.');
@@ -149,8 +152,8 @@ export async function createClan(request: CreateRequest): Promise<string> {
       const source = await fs.readFile(path.join(configRoot, 'templates', templateFile), 'utf8');
       await fs.writeFile(path.join(root, output), render(source, placeholders));
     }
-    await fs.writeFile(path.join(root, 'manifest.json'), JSON.stringify({ namespace: author, name: request.id, description: clanName, version_number: template.package.version, dependencies: template.package.dependencies, website_url: '' }, null, 2) + '\n');
-    await fs.writeFile(path.join(root, 'README.md'), `# ${clanName}\n\nProyecto inicial creado por Clan Editor. Las imágenes de color son marcadores pendientes de sustituir. Revisa cartas, pools, recompensas y mecánicas antes de usarlo en el juego.\n`);
+    await fs.writeFile(path.join(root, 'manifest.json'), JSON.stringify({ namespace: author, name: request.id, description: clanName, version_number: template.package.version, dependencies, website_url: '' }, null, 2) + '\n');
+    await fs.writeFile(path.join(root, 'README.md'), `# ${clanName}\n\nProyecto inicial creado por Clan Editor. Las imágenes de color son marcadores pendientes de sustituir. Revisa cartas, pools, recompensas y mecánicas antes de usarlo en el juego.\n\n## Requisitos y compilación\n\nRequiere Trainworks Reloaded ${template.package.trainworksVersion} o posterior para cargar el mod. El proyecto C# compila contra ${template.package.trainworksVersion}; ambas referencias proceden de la configuración del generador. Las mecánicas externas que añadas, como Conductor, necesitan su dependencia correspondiente en manifest.json.\n\nCompila con dotnet build src/${request.id}.Plugin.csproj -c Release. La restauración de GitHub Packages requiere autenticación con permiso read:packages. También puedes usar Compilar con DLL instaladas desde el editor si has configurado las referencias locales. Compilar no confirma que el clan funcione en partida: revisa selección de campeones, cartas, pools y recompensas dentro del juego.\n`);
     return root;
   } catch (error) {
     await fs.rm(root, { recursive: true, force: true });

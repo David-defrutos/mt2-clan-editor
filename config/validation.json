@@ -6,13 +6,70 @@
   "minEmber": 0,
   "maxEmber": 10,
   "maxNormalUnlockLevel": 10,
-  "technicalUnlockLevels": [99],
-  "draftPools": ["MegaPool", "UnitsAllBanner"],
+  "technicalUnlockLevels": [
+    99
+  ],
+  "draftPools": [
+    "MegaPool",
+    "UnitsAllBanner"
+  ],
   "externalReferencePaths": [
-    "effects.name", "status_effects.class_name", "effects.name.id",
-    "character_triggers.trigger.id", "relic_effects.param_trigger.id",
-    "traits.name.id", "effects.param_trigger.id", "status_effects.trigger_stage.id",
-    "relic_effects.name", "traits.name", "room_modifiers.name",
-    "traits.param_tracked_value.id", "huds.name"
+    "effects.name",
+    "status_effects.class_name",
+    "effects.name.id",
+    "character_triggers.trigger.id",
+    "relic_effects.param_trigger.id",
+    "traits.name.id",
+    "effects.param_trigger.id",
+    "status_effects.trigger_stage.id",
+    "relic_effects.name",
+    "traits.name",
+    "room_modifiers.name",
+    "traits.param_tracked_value.id",
+    "huds.name",
+    "map_nodes.custom_class",
+    "map_nodes.custom_class.id"
+  ],
+  "mechanicChecks": [
+    {
+      "section": "effects",
+      "match": {
+        "selector": "target_mode",
+        "names": [
+          "n-units",
+          "@n-units"
+        ],
+        "modReferences": [
+          "Conductor"
+        ]
+      },
+      "requiredMechanic": {
+        "names": [
+          "CardEffectNULL"
+        ]
+      },
+      "fields": [
+        {
+          "path": "param_int",
+          "type": "integer",
+          "min": 1,
+          "max": 2147483647
+        },
+        {
+          "path": "param_bool3",
+          "type": "boolean",
+          "optional": true
+        }
+      ],
+      "help": "Selecciona N unidades en total. Usa este selector en CardEffectNULL con target_mode de Conductor n-units. El efecto siguiente debe usar last_targeted_characters y conservar el orden de efectos. Requiere Conductor 0.5.14 o posterior."
+    }
+  ],
+  "customClassChecks": [
+    {
+      "section": "map_nodes",
+      "type": "custom_class",
+      "path": "custom_class",
+      "baseClass": "MapNodeData"
+    }
   ]
 }

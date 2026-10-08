@@ -1,15 +1,382 @@
 {
   "idPattern": "^[A-Za-z][A-Za-z0-9_]{2,79}$",
   "schemaUrl": "https://raw.githubusercontent.com/Monster-Train-2-Modding-Group/Trainworks-Reloaded/refs/heads/main/schemas/base.deref.json",
-  "card": { "cost": 1, "rarity": "common", "pools": ["MegaPool"], "targets_room": true, "targetless": false },
-  "character": { "attack_damage": 5, "health": 10, "size": 1 },
-  "upgrade": { "bonus_damage": 0, "bonus_hp": 0, "bonus_size": 0, "descriptions": { "english": "" } },
+  "card": {
+    "cost": 1,
+    "rarity": "common",
+    "pools": [
+      "MegaPool"
+    ],
+    "targets_room": true,
+    "targetless": false
+  },
+  "character": {
+    "attack_damage": 5,
+    "health": 10,
+    "size": 1
+  },
+  "upgrade": {
+    "bonus_damage": 0,
+    "bonus_hp": 0,
+    "bonus_size": 0,
+    "descriptions": {
+      "english": ""
+    }
+  },
   "pool": {},
   "rewards": {
-    "draft": { "label": "Selección de cartas", "extension": "draft", "poolField": "draft_pool", "data": { "type": "draft", "extensions": [{ "draft": { "draft_options_count": 2, "rarity_floor": "common" } }] } },
-    "card_pool": { "label": "Cartas de un pool", "extension": "card_pool", "poolField": "card_pool", "data": { "type": "card_pool", "extensions": [{ "card_pool": {} }] } }
+    "draft": {
+      "label": "Selección de cartas",
+      "extension": "draft",
+      "poolField": "draft_pool",
+      "data": {
+        "type": "draft",
+        "extensions": [
+          {
+            "draft": {
+              "draft_options_count": 2,
+              "rarity_floor": "common"
+            }
+          }
+        ]
+      }
+    },
+    "card_pool": {
+      "label": "Cartas de un pool",
+      "extension": "card_pool",
+      "poolField": "card_pool",
+      "data": {
+        "type": "card_pool",
+        "extensions": [
+          {
+            "card_pool": {}
+          }
+        ]
+      }
+    }
   },
-  "poolCopy": { "maxReferences": 500 },
-  "spawnEffect": { "name": "CardEffectSpawnMonster", "target_mode": "room" },
-  "images": { "card": { "width": 400, "height": 500, "color": "#57546f" }, "character": { "width": 400, "height": 500, "color": "#557062" } }
+  "poolCopy": {
+    "maxReferences": 500
+  },
+  "spawnEffect": {
+    "name": "CardEffectSpawnMonster",
+    "target_mode": "room"
+  },
+  "images": {
+    "card": {
+      "width": 400,
+      "height": 500,
+      "color": "#57546f"
+    },
+    "character": {
+      "width": 400,
+      "height": 500,
+      "color": "#557062"
+    }
+  },
+  "objects": {
+    "map_nodes": {
+      "label": "nodo de mapa",
+      "named": true,
+      "variants": {
+        "reward": {
+          "label": "Nodo de recompensa",
+          "data": {
+            "type": "reward",
+            "titles": {
+              "english": ""
+            },
+            "descriptions": {
+              "english": ""
+            },
+            "pools": [],
+            "extensions": [
+              {
+                "reward": {
+                  "rewards": []
+                }
+              }
+            ]
+          },
+          "links": [
+            {
+              "path": "prefab",
+              "label": "Estandarte visual",
+              "section": "game_objects",
+              "type": "map_node_icon"
+            },
+            {
+              "path": "extensions.0.reward.rewards",
+              "label": "Recompensa",
+              "section": "rewards",
+              "list": true
+            }
+          ]
+        },
+        "custom_class": {
+          "label": "Nodo con clase C# propia",
+          "data": {
+            "type": "custom_class",
+            "custom_class": "@MyMapNode",
+            "titles": {
+              "english": ""
+            },
+            "descriptions": {
+              "english": ""
+            },
+            "pools": []
+          },
+          "warnings": [
+            "Sustituye @MyMapNode por la clase real. Debe existir en la DLL del clan y heredar de MapNodeData. El editor no genera su código.",
+            "Requiere Trainworks 0.7.32 o posterior. Añade la dependencia del otro mod si usas mod_reference."
+          ]
+        }
+      }
+    },
+    "relics": {
+      "label": "reliquia",
+      "named": true,
+      "variants": {
+        "collectable": {
+          "label": "Reliquia coleccionable",
+          "data": {
+            "type": "collectable",
+            "names": {
+              "english": ""
+            },
+            "descriptions": {
+              "english": ""
+            },
+            "relic_effects": [],
+            "extensions": [
+              {
+                "collectable": {
+                  "rarity": "common",
+                  "pools": [
+                    "MegaRelicPool"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "effects": {
+      "label": "efecto",
+      "named": false,
+      "variants": {
+        "CardEffectDamage": {
+          "label": "CardEffectDamage",
+          "data": {
+            "name": "CardEffectDamage",
+            "anim_to_play": "none",
+            "hide_tooltip": false,
+            "should_test": true,
+            "target_subtype": "SubtypesData_None",
+            "target_mode": "room",
+            "target_mode_health_filter": "both",
+            "target_team": "none",
+            "param_multiplier": 1
+          }
+        },
+        "CardEffectHeal": {
+          "label": "CardEffectHeal",
+          "data": {
+            "name": "CardEffectHeal",
+            "anim_to_play": "none",
+            "hide_tooltip": false,
+            "should_test": true,
+            "target_subtype": "SubtypesData_None",
+            "target_mode": "room",
+            "target_mode_health_filter": "both",
+            "target_team": "none",
+            "param_multiplier": 1
+          }
+        },
+        "CardEffectDraw": {
+          "label": "CardEffectDraw",
+          "data": {
+            "name": "CardEffectDraw",
+            "anim_to_play": "none",
+            "hide_tooltip": false,
+            "should_test": true,
+            "param_multiplier": 1
+          }
+        },
+        "CardEffectAdjustEnergy": {
+          "label": "CardEffectAdjustEnergy",
+          "data": {
+            "name": "CardEffectAdjustEnergy",
+            "anim_to_play": "none",
+            "hide_tooltip": false,
+            "should_test": true,
+            "param_multiplier": 1
+          }
+        },
+        "CardEffectAddStatusEffect": {
+          "label": "CardEffectAddStatusEffect",
+          "data": {
+            "name": "CardEffectAddStatusEffect",
+            "anim_to_play": "none",
+            "hide_tooltip": false,
+            "should_test": true,
+            "target_subtype": "SubtypesData_None",
+            "target_mode": "room",
+            "target_mode_health_filter": "both",
+            "target_team": "none",
+            "param_multiplier": 1,
+            "param_subtype": "SubtypesData_None"
+          }
+        },
+        "CardEffectAddCardUpgradeToUnits": {
+          "label": "CardEffectAddCardUpgradeToUnits",
+          "data": {
+            "name": "CardEffectAddCardUpgradeToUnits",
+            "anim_to_play": "none",
+            "hide_tooltip": false,
+            "should_test": true,
+            "target_subtype": "SubtypesData_None",
+            "target_mode": "room",
+            "target_mode_health_filter": "both",
+            "target_team": "none"
+          }
+        },
+        "CardEffectSpawnMonster": {
+          "label": "CardEffectSpawnMonster",
+          "data": {
+            "name": "CardEffectSpawnMonster",
+            "anim_to_play": "none",
+            "hide_tooltip": false,
+            "should_test": true
+          }
+        },
+        "CardEffectAdjustRoomCapacity": {
+          "label": "CardEffectAdjustRoomCapacity",
+          "data": {
+            "name": "CardEffectAdjustRoomCapacity",
+            "anim_to_play": "none",
+            "hide_tooltip": false,
+            "should_test": true
+          }
+        },
+        "CardEffectPlayCharacterAnimation": {
+          "label": "Conductor · reproducir animación",
+          "warnings": [
+            "Requiere Conductor 0.5.14 o posterior, instalado y declarado como dependencia del mod. El editor crea la definición del efecto, pero no instala Conductor ni añade la dependencia al manifiesto o al plugin C#. El visor sigue siendo estático.",
+            "Reproduce una animación existente en las unidades objetivo al jugar una carta. No usar en triggers de unidad: ya admiten anim_to_play. Hover y Talk se cancelan al jugar la carta; no se ofrecen aquí. No crea animaciones a partir de una imagen."
+          ],
+          "data": {
+            "name": {
+              "id": "@CardEffectPlayCharacterAnimation",
+              "mod_reference": "Conductor"
+            },
+            "anim_to_play": "attack",
+            "target_mode": "room",
+            "target_team": "monsters"
+          }
+        },
+        "CardEffectSwitchCharacterAnimationModel": {
+          "label": "Conductor · cambiar variante animada",
+          "warnings": [
+            "Requiere Conductor 0.5.14 o posterior, instalado y declarado como dependencia del mod. El editor crea la definición del efecto, pero no instala Conductor ni añade la dependencia al manifiesto o al plugin C#. El visor sigue siendo estático.",
+            "Índice de la variante animada, empezando por 0. Debe existir en el personaje y tener su conjunto de animaciones preparado. Solo afecta a unidades incluidas en la lista compatible; no cambia ataque ni salud. El editor no valida el índice contra el modelo ni reproduce la animación.",
+            "Unidades que permiten cambiar de variante animada. Añade solo personajes con esa variante preparada; no es un pool de invocación. Se conservan referencias externas y el orden. Requiere Conductor 0.5.14 o posterior."
+          ],
+          "data": {
+            "name": {
+              "id": "@CardEffectSwitchCharacterAnimationModel",
+              "mod_reference": "Conductor"
+            },
+            "param_int": 0,
+            "param_character_pool": [],
+            "target_mode": "room",
+            "target_team": "monsters"
+          }
+        },
+        "ConductorNUnits": {
+          "label": "Conductor · seleccionar N unidades",
+          "data": {
+            "name": "CardEffectNULL",
+            "target_mode": {
+              "id": "@n-units",
+              "mod_reference": "Conductor"
+            },
+            "target_team": "heroes",
+            "param_int": 2,
+            "param_bool3": false
+          },
+          "warnings": [
+            "Selecciona N unidades en total. Usa este selector en CardEffectNULL con target_mode de Conductor n-units. El efecto siguiente debe usar last_targeted_characters y conservar el orden de efectos. Requiere Conductor 0.5.14 o posterior.",
+            "Desactivado: primeras N unidades. Activado: últimas N unidades. No es el número de unidades adicionales de Pierce.",
+            "Esta definición solo selecciona objetivos. No inflige daño ni aplica estados: añade después el efecto deseado con target_mode last_targeted_characters. El editor no instala ni añade automáticamente la dependencia Conductor."
+          ]
+        }
+      }
+    },
+    "relic_effects": {
+      "label": "efecto de reliquia",
+      "named": false,
+      "variants": {
+        "RelicEffectModifyGoldEndOfBattle": {
+          "label": "RelicEffectModifyGoldEndOfBattle",
+          "data": {
+            "name": "RelicEffectModifyGoldEndOfBattle"
+          }
+        },
+        "RelicEffectAddStatusEffectOnSpawn": {
+          "label": "RelicEffectAddStatusEffectOnSpawn",
+          "data": {
+            "name": "RelicEffectAddStatusEffectOnSpawn",
+            "source_team": "none",
+            "param_subtype": "SubtypesData_None"
+          }
+        },
+        "RelicEffectAddGoldOnExhaust": {
+          "label": "RelicEffectAddGoldOnExhaust",
+          "data": {
+            "name": "RelicEffectAddGoldOnExhaust"
+          }
+        },
+        "RelicEffectAdditionalDrawDuringRelentless": {
+          "label": "RelicEffectAdditionalDrawDuringRelentless",
+          "data": {
+            "name": "RelicEffectAdditionalDrawDuringRelentless"
+          }
+        },
+        "RelicEffectModifyEnergy": {
+          "label": "RelicEffectModifyEnergy",
+          "data": {
+            "name": "RelicEffectModifyEnergy"
+          }
+        }
+      }
+    },
+    "character_triggers": {
+      "label": "trigger de unidad",
+      "named": false,
+      "variants": {
+        "basic": {
+          "label": "Trigger configurable",
+          "data": {
+            "trigger": "on_death",
+            "effects": []
+          }
+        }
+      }
+    },
+    "card_triggers": {
+      "label": "trigger de carta",
+      "named": false,
+      "variants": {
+        "basic": {
+          "label": "Trigger configurable",
+          "data": {
+            "trigger": "on_cast",
+            "effects": []
+          }
+        }
+      }
+    }
+  }
 }

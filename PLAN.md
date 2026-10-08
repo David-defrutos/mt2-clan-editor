@@ -1,5 +1,7 @@
 # Plan funcional detallado — Editor de clanes MT2
 
+> Estado vigente al 08-10-2026: [cierre verificado y pendientes de entrega](CIERRE-2026-10-08.md). Los incrementos fechados de este documento describen la evolución del proyecto.
+
 Estado: especificación funcional; el primer incremento está implementado y sus límites figuran en [README.md](README.md). Fecha: 28-09-2026. El [borrador anterior](BORRADOR.md) queda como antecedente; este documento define el alcance vigente.
 
 ## 1. Objetivo y límites
@@ -252,7 +254,17 @@ Las configuraciones se validan antes de abrir un proyecto. Si una versión nueva
 1. **Catálogo inicial de mecánicas:** durante el inventario de la iteración 0, elegir un conjunto pequeño de efectos y triggers frecuentes. El resto seguirá disponible como JSON con validación estructural; ampliar el catálogo consistirá en añadir definiciones de parámetros a ficheros de configuración.
 2. **Idiomas de contenido:** decidir si el editor exige inglés como mínimo y qué otros idiomas ofrecerá inicialmente.
 3. **Instalación local de DLL:** decidir si se incluye en la primera entrega o tras estabilizar generación y GitHub.
-4. **Distribución del programa:** definir empaquetado para los tres sistemas y cómo se instala el servicio local con selector de carpeta.
+4. **Distribución del programa:** definir empaquetado para los tres sistemas y cómo se instala el servicio local con selector de carpeta. Incluir al menos dos clanes editables de ejemplo: Conductor y The Free Company, según el requisito añadido el 08-10-2026.
+
+### Clanes de ejemplo incluidos en la distribución · 08-10-2026
+
+La distribución debe incluir **al menos Conductor y The Free Company** para que quienes modifiquen clanes puedan examinar ejemplos completos y usarlos como punto de partida.
+
+- Declaración en `config/distribution.json`: catálogo ampliable, mínimo de dos ejemplos y versiones/orígenes por concretar al preparar el paquete.
+- Incluir las definiciones, recursos y fuentes necesarios para estudiar y editar cada ejemplo, junto con su versión, autoría, licencia y dependencias.
+- Ofrecer apertura del ejemplo y creación de una copia editable en la carpeta elegida por el usuario; conservar el ejemplo distribuido como referencia.
+- Verificar en la aceptación de la distribución que ambos ejemplos se pueden cargar, copiar y modificar, y que sus recursos y referencias están disponibles.
+- Estado: requisito registrado; aún no se han seleccionado las versiones ni empaquetado los clanes. El nombre Conductor se conserva tal como lo ha indicado el usuario; su paquete concreto se identificará al preparar la distribución.
 5. **Referencia de progresión:** el comportamiento deseado es el de Yokai. La iteración de progresión comprobará en juego cómo se presentan las cartas bloqueadas en el libro de registro y reproducirá ese patrón; no se necesita diseñar un sistema distinto antes de esa prueba.
 
 Estas decisiones no impiden desarrollar el lector conservador, los formularios base, el gestor de recursos ni las estadísticas.
@@ -414,3 +426,83 @@ Estado contrastado: inventario actual centrado en sprites; asignación guiada ac
 Prioridad acordada: completar catálogo/checklist de arte, asignaciones de identidad/campeones/marcos/mapa y validación; cerrar conexiones de mapa, pruebas en partida, idiomas y verificación multiplataforma.
 
 **Última mejora, prioridad baja: imágenes oficiales para comparar en el visor.** El arte ya está extraído localmente. Queda enlazarlo a personajes oficiales, recuperar escala/posición y permitir elegir aliados/enemigos como referencias. Resolver atlas/Spine cuando haga falta. Esta mejora se hará después del trabajo principal y no bloquea la primera versión funcional.
+
+## Incremento de checklist de arte · 02-10-2026
+
+- Recursos visuales: panel plegable de checklist, búsqueda por uso/objeto/campo/archivo y filtros de grupo/estado. Tabla de objeto, referencia, archivo, estado y medidas actuales/orientativas.
+- Roles en config/art-checklist.json: identidad, campeones, marcos, estados de mapa, cartas/personajes e iconos de mecánicas. Resolución local por sección y por cadena objeto→sprite, sin confundir atlas del mismo ID. Referencias externas y ausencias diferenciadas de errores de archivo.
+- Estado técnico de lectura; transparencia, encuadre y aceptación en juego permanecen manuales. Pendientes asociación de estilos con clase, bundles, recursos de reliquias/equipos/salas y asignaciones guiadas adicionales.
+- Comparación con arte oficial mantiene prioridad baja y se hará al final del cierre principal.
+
+## Incremento de revisión alpha y área visible · 02-10-2026
+
+- Modal de Recursos visuales: fondos claro/oscuro configurables, transparencia real detectada y área visible con márgenes por eje. Disponible para sprites y atlas con imagen legible.
+- Análisis de lectura con umbral alpha/cobertura de filas/columnas/límite de píxeles en config/art-analysis.json. No recorta imágenes ni compensa escalas automáticamente. Puede excluir detalles finos y no sustituye revisión visual/en partida.
+- Pendientes: conectar revisión con los roles del checklist, alineación entre estados del mapa, geometría de marcos, asignaciones guiadas adicionales y recursos externos. Comparación con imágenes oficiales se mantiene al final y con prioridad baja.
+
+## Incremento de asignación de identidad/marcos/mapa · 02-10-2026
+
+- Selector visual del inspector ampliado por configuración a classes.icons y card_draft_icon, cuatro roles class_card_styles y cinco estados de extensions.map_node_icon.
+- Catálogo de sprites únicos con imagen, dimensiones y usos; búsqueda, selección de rol, referencia actual anidada, vista previa y guardado localizado con respaldo. Filtro de tipo de destino para map_node_icon.
+- Selección idéntica conserva referencia estructurada. Se rechaza identidad duplicada del destino, sprite ambiguo y tipo incompatible. Se conservan PNG, otros roles, transformaciones y campos desconocidos.
+- Pendientes: presentación de campeones/roles en arrays, enlaces de estilos y minimapa, atlas y referencias externas, aceptación visual/en partida. Arte oficial para comparación continúa al final con prioridad baja.
+
+## Incremento de iconos de mapa y mecánicas · 02-10-2026
+
+- Asignación guiada desde Todos los objetos para map_nodes.map_icon y minimap_icon, status_effects.icon y character_trigger_types.sprite. Roles y soporte de referencias estructuradas declarados en configuración.
+- Catálogo local con búsqueda, imagen, dimensiones, usos compartidos, vista previa y guardado con respaldo. Los atlas con el mismo ID no se confunden con sprites; card_trigger_types no recibe un icono inventado.
+- Cambiar el ID de una referencia local estructurada conserva sus campos adicionales. La selección explícita de un sprite local sustituye una referencia externa y su namespace, con el cambio visible antes de guardar.
+- Verificado en carpetas temporales: arte y campos vecinos conservados, recompensas/prefab del nodo sin cambios. Pendientes campeones en arrays, enlace de estilos, atlas/bundles y aceptación en partida. Comparación oficial al final.
+
+## Entrega conjunta de bloques 1, 2 y 3 · 02-10-2026
+
+Implementados arte por campeón/selección, enlace de estilos, reliquias/mejoras, sustitución de atlas, inventario de bundles, comparación de encuadre y compensación opcional de escala estática. Implementados nodos conectados, referencias ordenadas de mapa/eventos/mecánicas, reparación de sendas/niveles, campos de identidad, edición masiva y retirada de definiciones con revisión. Ampliados creación y formularios de efectos/triggers, estados/acumulaciones, mejoras, referencias externas e informe de código propio/adaptadores.
+
+Detalle, navegación, configuración y límites: [ENTREGA-BLOQUES-1-3.md](ENTREGA-BLOQUES-1-3.md). Los párrafos de incrementos anteriores son históricos: sus pendientes deben contrastarse con esta entrega. El código propio se conserva y se integra mediante adaptadores declarados; no se genera su lógica ni se simula. Bundles/Spine e Ink requieren sus herramientas para recompilar su contenido.
+
+Siguiente: aceptación visual/teclado y en partida (bloque 4); traducción/selector de idioma y multiplataforma (bloque 5). Referencias oficiales en el visor siguen al final, prioridad baja. Cambios locales, sin publicación en GitHub.
+
+## Compatibilidad con actualizaciones · 08-10-2026
+
+Antes de seguir con idiomas: resolver el formato de pools con item/count de Trainworks 0.7.31, que afecta a pertenencias y estadísticas y puede causar altas duplicadas. Añadir CardsThatResolveSimultaneouslyOnUnplayed, revisar la versión mínima del generador y ampliar adaptadores de Conductor según versión publicada comprobada. Incorporar aceptación de overrides vacíos, triggers sin buff_effect y nodos personalizados. Evaluación, fuentes y reproducción: [REVISION-ACTUALIZACIONES-2026-10-08.md](REVISION-ACTUALIZACIONES-2026-10-08.md). Evaluado; no implementado en esta revisión.
+
+### Avance de compatibilidad · 08-10-2026
+
+Implementada lectura/guardado de pertenencias item/count, estadísticas y desgloses, catálogo de asignación y copia con cantidades; protección ante cantidades malformadas. Tabla de Pools muestra entradas locales, distintas del contador de cartas. Nuevo pool técnico reconocido. 110 pruebas completas y compilación correctas. Pendientes control de edición de count, mínimo de Trainworks en el generador, adaptadores de Conductor y aceptación de runtime. Consultar el informe de actualizaciones para el estado vigente.
+
+### Avance de animación Conductor · 08-10-2026
+
+Implementadas plantillas y edición guiada de CardEffectPlayCharacterAnimation y CardEffectSwitchCharacterAnimationModel, objetivos y lista compatible. Dependencia/limitaciones indicadas en revisión y ayudas. Referencias externas filtradas por namespace para evitar clases homónimas. 114 pruebas completas superadas y compilación correcta. Aceptación en partida pendiente; visor estático. Guía: ANIMACIONES-CONDUCTOR.md. Pierce, N-units y descarte restringido por pool siguen pendientes como adaptadores separados.
+
+### Edición de cantidades por entrada · 08-10-2026
+
+Implementado botón Editar cantidades en Pools, panel con foco/desplazamiento al abrir, selección de entrada de carta.pools/pool.cards, cantidad entera, revisión de referencia y total local y guardado con respaldo. Se modifica una entrada concreta sin consolidar repeticiones ni editar externos. Al cambiar una referencia simple a una cantidad distinta de 1 se crea item/count conservando la referencia completa; una referencia ponderada cambia solo count. Valores idénticos no escriben. Rango en config/pool-references.json; no calcula probabilidades. La edición guiada de cantidades de reliquias/almas/mejoras sigue pendiente.
+
+Compilación correcta y 12 pruebas relacionadas superadas (cuatro nuevas de cantidades, cuatro de pertenencia ponderada y cuatro de idiomas). Revisión ligada a clan, entrada, hash, cantidad y configuración; bloquea revisiones obsoletas y elimina temporales si falla el reemplazo. No se guardó en clanes reales. Aceptación visual/en partida pendiente. Sin commit ni push.
+
+### Pierce y N-units · 08-10-2026
+
+Implementado preset externo Conductor · Pierce en formularios de estados, y plantilla CardEffectNULL con selector Conductor n-units. Campos de N, primeras/últimas y equipo condicionados a la combinación correcta. Validación de clase y parámetros; ayudas y etiquetas ES/EN. Conserva referencias y entradas de estados ajenas. 121 pruebas completas y compilación correctas. Orden/efecto posterior con last_targeted_characters requiere revisión manual; aceptación en juego pendiente. Guía: MECANICAS-CONDUCTOR.md. Continúan pendientes descarte restringido por pool, mínimo del generador, cierre de idiomas y distribución/aceptación.
+
+
+### Generador alineado con Trainworks 0.7.32 · 08-10-2026
+
+- Nuevos clanes declaran Trainworks 0.7.32 en manifest.json y en TrainworksReloaded.Base del proyecto C#. La versión se define una sola vez en config/templates/new-clan.json; la dependencia usa {{trainworksVersion}} y se resuelve antes de escribir. Una configuración incoherente o una versión mal formada bloquea la generación antes de crear la carpeta.
+- README generado explica requisitos, dotnet build, autenticación de GitHub Packages, alternativa con DLL instaladas y comprobación en partida. No modifica proyectos existentes ni añade Conductor automáticamente.
+- Se mantiene transform.position en selección de campeón: es la posición absoluta soportada por GameObjectCharacterArtFinalizer, distinta de transform.offset que se añade a la altura base. Regresión de generación comprueba versiones coincidentes, ausencia de marcadores pendientes y posición anidada.
+- Compilación del editor y prueba de generación correctas. Clan temporal compilado con dotnet 10.0.203 y DLL instalada de TrainworksReloaded.Base 0.7.32.0: cero errores y cero avisos. Esta comprobación usa referencias locales, no verifica la restauración del paquete privado de GitHub ni la carga en el juego. Los archivos temporales del clan se retiraron; la DLL de comprobación permanece en data/offline-builds, excluido del repositorio.
+- Corregida la versión informativa local de data/build-local.json (0.7.27 → 0.7.32), contrastada con la DLL y el manifiesto instalado, con copia previa en data/build-local.before-0732.json. No se cambiaron referencias ni DLL instaladas.
+
+Pendiente: aceptación en partida y restauración autenticada de GitHub Packages, nodos custom_class, revisión de overrides vacíos/triggers, cierre de idiomas y distribución. Comparación oficial mantiene prioridad final. Sin commit ni push.
+
+## Cierre técnico y entrega pendiente · 08-10-2026
+
+Completados nodos custom_class, preservación de overrides vacíos y triggers sin buff_effect, filtros/progresión de pools ponderados, catálogo ES/EN de 1.501 textos y auditoría automática, copias editables de ejemplos y empaquetado configurable con lanzadores. Comparación opcional del visor con 353 sprites oficiales locales añadida; escala manual, sin reproducción de prefabs/animaciones.
+
+Compilación y 128 pruebas correctas. La distribución de prueba arranca fuera del proyecto y permite copiar Free Company 0.2.6. La entrega normal exige dos clanes reales: falta identificar el segundo pedido como Conductor, que es una biblioteca. FullClan no contiene una clase de clan y no sirve como sustituto.
+
+Pendientes de aceptación: recorrido visual (herramienta bloqueada por ACL), partida real, Linux/macOS y restauración autenticada de GitHub Packages. Matriz CI preparada, sin ejecutar ni publicar. El adaptador de descarte por pool espera confirmar una versión publicada compatible. Estado vigente y evidencias: [CIERRE-2026-10-08.md](CIERRE-2026-10-08.md). Los incrementos anteriores son históricos; no se declara terminada toda la entrega. Sin commit ni push.
+
+### Ejemplos confirmados: FullClan y Free Company
+
+El usuario confirmó FullClan como segundo ejemplo. La distribución normal incluye FullClan 0.3.0 (`source`, proyecto C# y licencia) y The Free Company 0.2.6 (`clan`, JSON/arte/fuentes/licencia). Biblioteca ofrece Copiar fuentes para FullClan y muestra su carpeta para abrir en un editor C#; Abrir copia añade Free Company a la biblioteca. Se conserva el mínimo de dos ejemplos y se valida cada uno según su tipo. Ya no queda pendiente identificar el segundo ejemplo. Los párrafos anteriores corresponden al estado histórico. Permanecen las comprobaciones externas recogidas en CIERRE-2026-10-08.md.

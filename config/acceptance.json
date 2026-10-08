@@ -1,0 +1,12 @@
+{
+  "baseUrl": "http://127.0.0.1:4319",
+  "timeoutMs": 30000,
+  "routes": [
+    {"path": "", "requiredArrays": ["entries", "files", "issues"]},
+    {"path": "/champions", "requiredArrays": ["champions", "upgrades"]},
+    {"path": "/character-art", "requiredArrays": ["items"]},
+    {"path": "/art-checklist", "requiredArrays": ["rows"]},
+    {"path": "/mechanics-support", "requiredArrays": ["rows"]},
+    {"path": "/resource-review", "requiredArrays": ["bundles", "references"]}
+  ]
+}

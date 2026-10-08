@@ -1,0 +1,11 @@
+{
+  "directory": "official-art",
+  "datasetPrefix": "characters-",
+  "spriteType": "Sprite",
+  "groups": [{"prefix":"PLR_","id":"allies","label":"Aliados oficiales"},{"prefix":"ENM_","id":"enemies","label":"Enemigos oficiales"}],
+  "comparisonXRatio": 0.72,
+  "defaultScale": 1,
+  "minimumScale": 0.1,
+  "maximumScale": 5,
+  "help": "Referencia local del sprite oficial con su PPU y pivote. La escala de comparación es manual: no se han recuperado las transformaciones del prefab ni las animaciones. No se guarda en el clan ni reproduce exactamente la unidad en partida."
+}

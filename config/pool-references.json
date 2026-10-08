@@ -1,0 +1,46 @@
+{
+  "itemField": "item",
+  "countField": "count",
+  "minimumCount": 1,
+  "fields": [
+    {
+      "section": "cards",
+      "path": "pools"
+    },
+    {
+      "section": "card_pools",
+      "path": "cards"
+    },
+    {
+      "section": "relic_pools",
+      "path": "relics"
+    },
+    {
+      "section": "enhancer_pools",
+      "path": "enhancers"
+    },
+    {
+      "section": "soul_pools",
+      "path": "souls"
+    },
+    {
+      "section": "relics",
+      "path": "extensions[].collectable.pools"
+    },
+    {
+      "section": "relics",
+      "path": "extensions[].enhancer.pools"
+    },
+    {
+      "section": "relics",
+      "path": "extensions[].soul.pools"
+    },
+    {
+      "section": "soul_pools",
+      "path": "relics"
+    }
+  ],
+  "source": "Trainworks Reloaded 0.7.31, commit 799e45c: ParseReferenceWithCount and pool schemas",
+  "notes": "SoulPoolFinalizer reads souls; the 0.7.32 schema names that list relics. Both paths are reviewed; generation of soul pools is not enabled.",
+  "maximumEditableCount": 2147483647
+}

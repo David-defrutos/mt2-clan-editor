@@ -112,9 +112,9 @@ El perfil también contiene carpetas de versiones originales y otros mods. Las c
 
 ## Base observada en este workspace
 
-- `repos/david/mt2-freecompany/json/plugin.json`: clase, campeones, sendas y pools.
-- `repos/david/mt2-freecompany/json/units/unit_berserker.json`: carta, unidad, efectos, triggers y sprites.
-- `repos/david/mt2-freecompany/src/Plugin.cs`: registro explícito de rutas JSON.
+- `repos/MT2/repos-propios/mt2-freecompany/json/plugin.json`: clase, campeones, sendas y pools.
+- `repos/MT2/repos-propios/mt2-freecompany/json/units/unit_berserker.json`: carta, unidad, efectos, triggers y sprites.
+- `repos/MT2/repos-propios/mt2-freecompany/src/Plugin.cs`: registro explícito de rutas JSON.
 - `scripts/preparar-arte-mt2.ps1`: reglas actuales de preparación de imágenes.
 - `scripts/publicar-y-instalar-dll.ps1`: validación, envío, seguimiento y comprobación de artefacto.
 - `docs/referencia/efectos-carta.md`, `triggers-carta.md`, `triggers-personaje.md` y `habilidades-de-unidad.md`: punto de partida para catálogos, sujetos a revisión contra la versión instalada.

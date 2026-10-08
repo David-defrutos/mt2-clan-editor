@@ -5,6 +5,7 @@ import type { ClanSnapshot, Entry, JsonRecord } from './types.js';
 
 export interface ChampionRules {
   maxCombinedLevels: number; maxSelectedPaths: number; maxTreeChanges: number;
+  structure: { maxPaths:number; maxLevels:number };
   fields: { champions: string; card: string; starter: string; tree: string; effects: string; character: string };
   spawnEffects: string[];
   stats: { label: string; base: string; bonus: string }[];

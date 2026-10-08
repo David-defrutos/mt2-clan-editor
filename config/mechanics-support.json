@@ -1,0 +1,16 @@
+{
+  "sections": [
+    "effects",
+    "relic_effects",
+    "room_modifiers",
+    "traits",
+    "map_nodes"
+  ],
+  "sourceFolder": "src",
+  "maxSourceBytes": 500000,
+  "maxSourceFiles": 300,
+  "description": "Un adaptador declara campos compatibles en fields.json y referencias en reference-editor.json; no genera ni simula C#.",
+  "selectors": {
+    "map_nodes": "custom_class"
+  }
+}

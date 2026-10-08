@@ -56,6 +56,18 @@ test('genera un clan nuevo con dos campeones, seis sendas, dos iniciales y N car
     assert.ok((await fs.readFile(path.join(root, 'src', 'Plugin.cs'), 'utf8')).includes('json/cards.json'));
     assert.ok((await fs.readFile(path.join(root, 'src', 'Plugin.cs'), 'utf8')).includes('using TrainworksReloaded.Core.Extensions;'));
     assert.ok((await fs.readFile(path.join(root, 'src', 'Plugin.cs'), 'utf8')).includes('BepInPlugin("Local.NuevoClan"'));
+    const manifest = JSON.parse(await fs.readFile(path.join(root, 'manifest.json'), 'utf8'));
+    const project = await fs.readFile(path.join(root, 'src', 'NuevoClan.Plugin.csproj'), 'utf8');
+    const trainworksVersion = project.match(/Include="TrainworksReloaded.Base" Version="([^"]+)"/)?.[1];
+    assert.equal(trainworksVersion, '0.7.32');
+    assert.deepEqual(manifest.dependencies.filter((value: string) => value.startsWith('MT2-Trainworks_Reloaded-')), [`MT2-Trainworks_Reloaded-${trainworksVersion}`]);
+    assert.ok(!JSON.stringify(manifest).includes('{{'), 'el manifiesto no conserva marcadores de plantilla');
+    assert.ok((await fs.readFile(path.join(root, 'README.md'), 'utf8')).includes(`Trainworks Reloaded ${trainworksVersion}`));
+    for (const display of classData.class_select_character_displays as string[]) {
+      const art = clan.entries.find(item => item.section === 'game_objects' && item.id === display.slice(1))!.data;
+      const transform = (art.extensions as { character_art: { transform: Record<string, unknown> } }).character_art.transform;
+      assert.deepEqual(transform.position, { x: 0, y: 1.4, z: 0 }, 'la selección conserva su posición absoluta, no un offset añadido a la altura automática');
+    }
     const workflow = await fs.readFile(path.join(root, '.github', 'workflows', 'build.yml'), 'utf8');
     assert.ok(workflow.includes('GH_AUTH_TOKEN'));
     assert.ok(workflow.includes('read:packages'));

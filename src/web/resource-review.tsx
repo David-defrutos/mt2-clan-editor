@@ -1,0 +1,17 @@
+import {useLanguage} from './i18n';
+import React, { useEffect, useState } from 'react';
+import { api } from './api';
+import type { AssetInfo } from './types';
+type Model = { bundles: { id: string; platform: string; path: string; status: string; bytes: number }[]; references: { section: string; id: string; field: string; bundle: unknown; assetPath: unknown }[]; comparison: { width: number; height: number; background: string } };
+export function ResourceReview({ clanKey, assets }: { clanKey: string; assets: AssetInfo[] }) {
+ const {t}=useLanguage();
+  const [model, setModel] = useState<Model>(); const [error, setError] = useState('');
+  const [a, setA] = useState(''); const [b, setB] = useState(''); const [opacity, setOpacity] = useState(50);
+  useEffect(() => { let active = true; api<Model>(`/clans/${clanKey}/resource-review`).then(v => { if (active) setModel(v); }).catch(e => { if (active) setError(e.message); }); return () => { active = false; }; }, [clanKey]);
+  const options = assets.filter(x => ['ok', 'case-mismatch'].includes(x.status));
+  const key = (x: AssetInfo) => x.section + ':' + x.file + ':' + x.id;
+  const first = options.find(x => key(x) === a); const second = options.find(x => key(x) === b);
+  const width = Math.max(first?.width ?? 0, second?.width ?? 0, 1); const height = Math.max(first?.height ?? 0, second?.height ?? 0, 1);
+  const scale = Math.min((model?.comparison.width ?? 504) / width, (model?.comparison.height ?? 588) / height, 1);
+  return <details className="panel content-panel"><summary>{t("Comparar encuadre y revisar bundles")}</summary>{error && <p role="alert">{t(error)}</p>}<p>{t("Superpone dos recursos a la misma escala de píxel, centrados en su lienzo. Útil para marcos y estados del estandarte; no representa la cámara del juego.")}</p>{[[t("Primera imagen"),a,setA],[t("Segunda imagen"),b,setB]].map(([label,value,setter],i) => <label key={i}>{label as string}<select value={value as string} onChange={e => (setter as (v:string)=>void)(e.target.value)}><option value="">{t("Selecciona una imagen")}</option>{options.map(x => <option key={key(x)} value={key(x)}>{x.id} · {x.section} · {x.width} × {x.height}</option>)}</select></label>)}<label>{t("Opacidad de la segunda imagen")}<input type="range" min="0" max="100" value={opacity} onChange={e => setOpacity(Number(e.target.value))} /></label>{first && <div style={{ position:'relative',width:width*scale,height:height*scale,maxWidth:'100%',background:model?.comparison.background,overflow:'hidden' }}>{[first,second].map((x,i) => x && <img key={i} alt={x.id} src={`/api/assets/${clanKey}?file=${encodeURIComponent(x.image)}`} style={{position:'absolute',width:(x.width??0)*scale,height:(x.height??0)*scale,left:(width-(x.width??0))*scale/2,top:(height-(x.height??0))*scale/2,opacity:i ? opacity/100 : 1}} />)}</div>}<h3>{t("Bundles por plataforma")}</h3><p>{t("Se comprueba el archivo declarado. El contenido interno, los atlas y los esqueletos necesitan Unity/Spine o una comprobación en el juego.")}</p>{model?.bundles.length ? model.bundles.map((x,i)=><p key={i}><b>{x.id} · {x.platform}</b> · {x.status} · {x.bytes}{" "}{t("bytes")}<br/>{x.path}</p>) : <p>{t("Sin bundles declarados.")}</p>}<details><summary>{t("Referencias a contenido de bundles (")}{model?.references.length ?? 0})</summary>{model?.references.map((x,i)=><p key={i}>{x.section} · {x.id} · {x.field}<br/>{JSON.stringify(x.bundle)} → {String(x.assetPath ?? t("Sin asset_path"))}</p>)}</details></details>;
+}

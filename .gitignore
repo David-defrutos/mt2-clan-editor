@@ -4,3 +4,9 @@ dist/
 dist-server/
 data/
 *.tsbuildinfo
+
+# Local example assets are assembled for distribution, not published with source.
+examples/
+
+# Official game sprites extracted locally are not redistributed.
+art/original/

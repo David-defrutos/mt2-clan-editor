@@ -1,0 +1,5 @@
+{
+  "bundleSection": "asset_bundles",
+  "platforms": [{ "id": "windows", "label": "Windows" }, { "id": "macosx", "label": "macOS" }, { "id": "linux", "label": "Linux" }],
+  "comparison": { "width": 504, "height": 588, "background": "#6b7280" }
+}

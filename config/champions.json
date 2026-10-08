@@ -3,14 +3,45 @@
   "maxSelectedPaths": 2,
   "maxTreeChanges": 9,
   "fields": {
-    "champions": "champions", "card": "card_data", "starter": "starter_card",
-    "tree": "upgrade_tree", "effects": "effects", "character": "param_character"
+    "champions": "champions",
+    "card": "card_data",
+    "starter": "starter_card",
+    "tree": "upgrade_tree",
+    "effects": "effects",
+    "character": "param_character"
   },
-  "spawnEffects": ["CardEffectSpawnMonster"],
-  "stats": [
-    { "label": "Ataque", "base": "attack_damage", "bonus": "bonus_damage" },
-    { "label": "Salud", "base": "health", "bonus": "bonus_hp" },
-    { "label": "Tamaño", "base": "size", "bonus": "bonus_size" }
+  "spawnEffects": [
+    "CardEffectSpawnMonster"
   ],
-  "presentationFields": ["id", "titles", "descriptions", "icon", "hide_icon_on_card", "show_description_on_cards", "use_upgrade_highlight_tags", "use_upgrade_hightlight_tags"]
+  "stats": [
+    {
+      "label": "Ataque",
+      "base": "attack_damage",
+      "bonus": "bonus_damage"
+    },
+    {
+      "label": "Salud",
+      "base": "health",
+      "bonus": "bonus_hp"
+    },
+    {
+      "label": "Tamaño",
+      "base": "size",
+      "bonus": "bonus_size"
+    }
+  ],
+  "presentationFields": [
+    "id",
+    "titles",
+    "descriptions",
+    "icon",
+    "hide_icon_on_card",
+    "show_description_on_cards",
+    "use_upgrade_highlight_tags",
+    "use_upgrade_hightlight_tags"
+  ],
+  "structure": {
+    "maxPaths": 3,
+    "maxLevels": 3
+  }
 }

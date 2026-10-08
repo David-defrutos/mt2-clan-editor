@@ -1,0 +1,10 @@
+import {useLanguage} from './i18n';
+import React,{useEffect,useState} from 'react';
+import {api} from './api';
+type Model={description:string;rows:{section:string;id:string;name:string;modReference:unknown;fields:string[];sourceFiles:string[];status:string}[]};
+export function MechanicsSupport({clanKey}:{clanKey:string}){
+ const {t}=useLanguage();
+ const [model,setModel]=useState<Model>();const [query,setQuery]=useState('');const [filter,setFilter]=useState('all');const [error,setError]=useState('');
+ useEffect(()=>{let active=true;api<Model>(`/clans/${clanKey}/mechanics-support`).then(v=>{if(active)setModel(v);}).catch(e=>{if(active)setError(e.message);});return()=>{active=false;};},[clanKey]);
+ return <details className="panel content-panel"><summary>{t("Compatibilidad de mecánicas y código propio")}</summary><p>{t(model?.description??'')}</p><div className="filters"><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t("ID, clase o sección…")}/><select value={filter} onChange={e=>setFilter(e.target.value)}><option value="all">{t("Todas")}</option><option value="configured">{t("Con formulario configurado")}</option><option value="custom">{t("C# propio")}</option><option value="external">{t("Otro mod")}</option><option value="uncatalogued">{t("Fuera del catálogo")}</option></select></div>{error&&<p role="alert">{t(error)}</p>}{model?.rows.filter(r=>(filter==='all'||filter===r.status)&&`${r.section} ${r.id} ${r.name}`.toLowerCase().includes(query.toLowerCase())).map(r=><p key={r.section+r.id}><b>{r.id}</b> · {r.name} · {t(r.status)}<br/>{r.fields.length?t("Campos guiados: {v0}",{v0:r.fields.join(', ')}):t("Sin formulario de parámetros específico; definición conservada y disponible en JSON.")}{r.modReference!==undefined&&<><br/>{t("Mod:")}{" "}{String(r.modReference)}</>}{r.sourceFiles.length>0&&<><br/>{t("Declaraciones de clase encontradas:")}{" "}{r.sourceFiles.join(", ")}{" "}{t("(no confirma que compilen)")}</>}{r.status==='custom'&&!r.sourceFiles.length&&<><br/>{t("No se encontró su declaración de clase en las fuentes revisadas.")}</>}</p>)}</details>;
+}

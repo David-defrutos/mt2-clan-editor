@@ -1,11 +1,17 @@
+import {matchesMechanic, type MechanicRule} from './mechanic-rule.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { inventoryAssets } from './assets.js';
 import { configRoot } from './paths.js';
+import { poolReferenceRules, invalidCountedPoolReference } from './pool-references.js';
+import { atField, fieldLocations } from './field-paths.js';
 import type { ClanSnapshot, Issue, JsonRecord } from './types.js';
 import { characterRules, characterTransformWarnings } from './character-preview.js';
+import { validClassReference } from './class-reference.js';
 
 interface Rules {
+  customClassChecks?: {section:string;type:string;path:string;baseClass:string}[];
+  mechanicChecks?: {section:string;match:MechanicRule;requiredMechanic:MechanicRule;fields:{path:string;type:string;min?:number;max?:number;optional?:boolean}[];help:string}[];
   expectedChampions: number; expectedPathsPerChampion: number; expectedLevelsPerPath: number;
   minimumStarterCards: number; minEmber: number; maxEmber: number;
   maxNormalUnlockLevel: number; technicalUnlockLevels: number[]; draftPools: string[];
@@ -20,8 +26,29 @@ export async function validateClan(clan: ClanSnapshot): Promise<Issue[]> {
   const issues = [...clan.issues];
   const transformRules = await characterRules();
   const add = (severity: Issue['severity'], code: string, message: string, file?: string, section?: string, id?: string) => issues.push({ severity, code, message, file, section, id });
+  for (const check of rules.customClassChecks ?? []) for (const entry of clan.entries.filter(e => e.section === check.section && e.data.type === check.type)) {
+    if (!validClassReference(atField(entry.data,check.path))) add('error','custom-class-reference',`${entry.id}: ${check.path} necesita una referencia de clase válida.`,entry.file,entry.section,entry.id);
+    else add('info','custom-class-runtime',`${entry.id}: verifica que la clase indicada herede de ${check.baseClass} y exista en la DLL correspondiente.`,entry.file,entry.section,entry.id);
+  }
   for (const entry of clan.entries.filter(entry => entry.section === 'game_objects' && entry.data.type === 'character_art')) {
     for (const message of characterTransformWarnings(entry.data, transformRules)) add('warning', 'character-transform', `${entry.id}: ${message}`, entry.file, entry.section, entry.id);
+  }
+  for (const check of rules.mechanicChecks ?? []) for (const entry of clan.entries.filter(e => e.section === check.section && matchesMechanic(e.data, check.match))) {
+    if (!matchesMechanic(entry.data,check.requiredMechanic)) add('error','mechanic-incompatible',`${entry.id}: ${check.help}`,entry.file,entry.section,entry.id);
+    for (const field of check.fields) {
+      const value=atField(entry.data,field.path);if(value===undefined && field.optional)continue;
+      const valid=field.type==='boolean' ? typeof value==='boolean' : typeof value==='number' && Number.isSafeInteger(value) && (field.min===undefined || value>=field.min) && (field.max===undefined || value<=field.max);
+      if(!valid)add('error','mechanic-parameter',`${entry.id}: ${field.path} no es válido. ${check.help}`,entry.file,entry.section,entry.id);
+    }
+  }
+  const countedRules = await poolReferenceRules();
+  for (const rule of countedRules.fields) for (const entry of clan.entries.filter(e => e.section === rule.section)) {
+    for (const field of fieldLocations(entry.data, rule.path)) {
+      const values = atField(entry.data, field);
+      if (Array.isArray(values)) values.forEach((value, index) => {
+        if (invalidCountedPoolReference(value, countedRules)) add('error', 'pool-count', `${entry.id}: ${field}[${index}] necesita una referencia item válida y count entero >= ${countedRules.minimumCount}.`, entry.file, entry.section, entry.id);
+      });
+    }
   }
   const classEntry = clan.entries.find(entry => entry.section === 'classes');
   const champions = array(classEntry?.data.champions);
@@ -73,6 +100,6 @@ export async function validateClan(clan: ClanSnapshot): Promise<Issue[]> {
     if (card.data.card_type === 'monster' && typeof card.data.effects !== 'object') add('info', 'monster-effect', 'Carta de unidad sin efectos declarados.', card.file, 'cards', card.id);
   }
   const assets = await inventoryAssets(clan);
-  for (const asset of assets) if (asset.status !== 'ok') add(asset.status === 'case-mismatch' ? 'warning' : 'error', 'asset-' + asset.status, `${asset.id}: ${asset.image || 'sin ruta'} (${asset.status}).`, asset.file, asset.section, asset.id);
+  for (const asset of assets) if (asset.status !== 'ok') add(asset.status === 'external' ? 'info' : asset.status === 'case-mismatch' ? 'warning' : 'error', 'asset-' + asset.status, `${asset.id}: ${asset.image || 'sin ruta'} (${asset.status}).`, asset.file, asset.section, asset.id);
   return issues;
 }

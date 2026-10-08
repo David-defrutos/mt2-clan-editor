@@ -1,21 +1,20 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { configRoot } from './paths.js';
+import { poolReferenceRules, poolListIds, type PoolReferenceRules } from './pool-references.js';
 import { filesUnder, sectionEntries } from './scan.js';
 import type { ClanSnapshot, Entry, JsonRecord } from './types.js';
 
-interface Rules { draftPools: string[]; starterPool: string; bannerPool: string; rarities: string[]; types: string[]; progressionMaxLevel: number; technicalUnlockLevels: number[]; metrics: { id: string; label: string }[] }
+interface Rules { references: PoolReferenceRules; draftPools: string[]; starterPool: string; bannerPool: string; rarities: string[]; types: string[]; progressionMaxLevel: number; technicalUnlockLevels: number[]; metrics: { id: string; label: string }[] }
 
 export async function loadStatsRules(): Promise<Rules> {
-  return JSON.parse(await fs.readFile(path.join(configRoot, 'stats.json'), 'utf8')) as Rules;
+  return { ...JSON.parse(await fs.readFile(path.join(configRoot, 'stats.json'), 'utf8')), references: await poolReferenceRules() };
 }
-
-function strings(value: unknown): string[] { return Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string') : []; }
 
 function isAbility(card: Entry): boolean { return card.data.is_an_ability === true; }
 
 export function isDraft(card: Entry, rules: Rules): boolean {
-  return !isAbility(card) && card.data.rarity !== 'champion' && !rules.technicalUnlockLevels.includes(Number(card.data.unlock_level ?? 0)) && strings(card.data.pools).some(pool => rules.draftPools.includes(pool));
+  return !isAbility(card) && card.data.rarity !== 'champion' && !rules.technicalUnlockLevels.includes(Number(card.data.unlock_level ?? 0)) && poolListIds(card.data.pools, rules.references).some(pool => rules.draftPools.includes(pool));
 }
 
 export async function summarizeClan(snapshot: ClanSnapshot) {
@@ -52,8 +51,8 @@ export async function summarizeClan(snapshot: ClanSnapshot) {
     files: snapshot.files.length, cards: cards.length, draft: draft.length,
     champions, paths, characters: characters.length, relics: relics.length,
     abilities: cards.filter(isAbility).length,
-    starter: cards.filter(card => strings(card.data.pools).includes(rules.starterPool)).length,
-    banner: cards.filter(card => strings(card.data.pools).includes(rules.bannerPool)).length,
+    starter: cards.filter(card => poolListIds(card.data.pools, rules.references).includes(rules.starterPool)).length,
+    banner: cards.filter(card => poolListIds(card.data.pools, rules.references).includes(rules.bannerPool)).length,
     rarity, types, unlocks, costs,
     attack: measure(numbers('attack_damage')), health: measure(numbers('health')),
     sprites: snapshot.sections.sprites ?? 0, textureFiles: snapshot.textureCount,
@@ -78,7 +77,7 @@ export async function statsDetails(snapshot: ClanSnapshot, metric: string) {
   if (sections[metric]) items = snapshot.entries.filter(entry => sections[metric].includes(entry.section)).map(asItem);
   else if (metric === 'draft') items = draft.map(asItem);
   else if (metric === 'abilities') items = cards.filter(isAbility).map(asItem);
-  else if (metric === 'starter' || metric === 'banner') items = cards.filter(card => strings(card.data.pools).includes(metric === 'starter' ? rules.starterPool : rules.bannerPool)).map(asItem);
+  else if (metric === 'starter' || metric === 'banner') items = cards.filter(card => poolListIds(card.data.pools, rules.references).includes(metric === 'starter' ? rules.starterPool : rules.bannerPool)).map(asItem);
   else if (metric === 'files') items = snapshot.files.map(file => ({ name: file, file }));
   else if (metric === 'textureFiles') items = (await filesUnder(path.join(snapshot.root, 'textures'), '.png')).map(file => ({ name: path.basename(file), file: path.relative(snapshot.root, file).replaceAll('\\', '/') }));
   else if (metric === 'errors') items = snapshot.issues.filter(issue => issue.severity === 'error').map(issue => ({ name: issue.message, file: issue.file ?? '', section: issue.section, id: issue.id }));

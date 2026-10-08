@@ -1,8 +1,63 @@
 {
   "assignments": [
-    { "section": "cards", "path": "effects", "label": "Efecto", "sourceSection": "effects", "mode": "append-id" },
-    { "section": "cards", "path": "triggers", "label": "Trigger de carta", "sourceSection": "card_triggers", "mode": "append-id" },
-    { "section": "characters", "path": "triggers", "label": "Trigger de unidad", "sourceSection": "character_triggers", "mode": "append-id" },
-    { "section": "characters", "path": "ability", "label": "Habilidad", "sourceSection": "cards", "filter": "is_an_ability", "mode": "set-reference" }
+    {
+      "section": "cards",
+      "path": "effects",
+      "label": "Efecto",
+      "sourceSection": "effects",
+      "mode": "append-id"
+    },
+    {
+      "section": "cards",
+      "path": "triggers",
+      "label": "Trigger de carta",
+      "sourceSection": "card_triggers",
+      "mode": "append-id"
+    },
+    {
+      "section": "characters",
+      "path": "triggers",
+      "label": "Trigger de unidad",
+      "sourceSection": "character_triggers",
+      "mode": "append-id"
+    },
+    {
+      "section": "characters",
+      "path": "ability",
+      "label": "Habilidad",
+      "sourceSection": "cards",
+      "filter": "is_an_ability",
+      "mode": "set-reference"
+    }
+  ],
+  "tabs": [
+    {
+      "id": "effects",
+      "label": "Efectos"
+    },
+    {
+      "id": "relic_effects",
+      "label": "Efectos de reliquia"
+    },
+    {
+      "id": "character_triggers",
+      "label": "Triggers de unidad"
+    },
+    {
+      "id": "card_triggers",
+      "label": "Triggers de carta"
+    },
+    {
+      "id": "traits",
+      "label": "Traits"
+    },
+    {
+      "id": "room_modifiers",
+      "label": "Modificadores de sala"
+    },
+    {
+      "id": "abilities",
+      "label": "Habilidades"
+    }
   ]
 }

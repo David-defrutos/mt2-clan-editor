@@ -75,3 +75,31 @@ test('edición avanzada modifica solo el objeto elegido y bloquea ID y JSON inv�
     await assert.rejects(() => saveObjectEdit(request), /cambió en disco/);
   } finally { await fs.rm(root, { recursive: true, force: true }); }
 });
+
+test('edición avanzada bloquea duplicados en otros archivos y cambios durante el guardado', async () => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'mt2-object-conflict-'));
+  const writeFile = fs.writeFile;
+  try {
+    await fs.mkdir(path.join(root, 'json'));
+    const file = path.join(root, 'json/content.json');
+    const original = '{"classes":[{"id":"ClassTest"}],"cards":[{"id":"Card","cost":1}]}';
+    await fs.writeFile(file, original);
+    const entry = (await scanClan(root)).entries.find(e => e.id === 'Card')!;
+    const request = {root, section: 'cards', id: 'Card', file: entry.file, expectedHash: entry.hash, json: '{"id":"Card","cost":2}'};
+    const duplicate = path.join(root, 'json/duplicate.json');
+    await fs.writeFile(duplicate, '{"cards":[{"id":"Card","cost":3}]}');
+    await assert.rejects(() => prepareObjectEdit(request), /duplicado/);
+    await fs.rm(duplicate);
+    const concurrent = original.replace('"cost":1', '"cost":9');
+    fs.writeFile = async (...args: Parameters<typeof fs.writeFile>) => {
+      await writeFile(...args);
+      if (String(args[0]).endsWith('.tmp')) await writeFile(file, concurrent);
+    };
+    await assert.rejects(() => saveObjectEdit(request), /durante el guardado/);
+    assert.equal(await fs.readFile(file, 'utf8'), concurrent);
+    assert.ok(!(await fs.readdir(path.dirname(file))).some(name => name.endsWith('.tmp')));
+  } finally {
+    fs.writeFile = writeFile;
+    await fs.rm(root, {recursive:true, force:true});
+  }
+});

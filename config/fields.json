@@ -1,29 +1,3725 @@
 {
   "cards": [
-    { "path": "names.english", "label": "Nombre", "type": "text" },
-    { "path": "card_art", "label": "Referencia de arte de carta", "type": "text" },
-    { "path": "descriptions.english", "label": "Descripción", "type": "textarea" },
-    { "path": "cost", "label": "Ember", "type": "number" },
-    { "path": "rarity", "label": "Rareza", "type": "select", "options": ["common", "uncommon", "rare", "champion"] },
-    { "path": "card_type", "label": "Tipo", "type": "select", "options": ["monster", "spell", "room", "equipment", "blight", "junk"] },
-    { "path": "unlock_level", "label": "Nivel de desbloqueo", "type": "number", "optional": true },
-    { "path": "pools", "label": "Pools", "type": "string-list" }
+    {
+      "path": "names.english",
+      "label": "Nombre",
+      "type": "text"
+    },
+    {
+      "path": "card_art",
+      "label": "Referencia de arte de carta",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "descriptions.english",
+      "label": "Descripción",
+      "type": "textarea"
+    },
+    {
+      "path": "cost",
+      "label": "Ember",
+      "type": "number"
+    },
+    {
+      "path": "rarity",
+      "label": "Rareza",
+      "type": "select",
+      "options": [
+        "common",
+        "uncommon",
+        "rare",
+        "champion"
+      ]
+    },
+    {
+      "path": "card_type",
+      "label": "Tipo",
+      "type": "select",
+      "options": [
+        "monster",
+        "spell",
+        "room",
+        "equipment",
+        "blight",
+        "junk"
+      ]
+    },
+    {
+      "path": "unlock_level",
+      "label": "Nivel de desbloqueo",
+      "type": "number",
+      "optional": true
+    },
+    {
+      "path": "pools",
+      "label": "Pools",
+      "type": "string-list"
+    },
+    {
+      "path": "effects",
+      "label": "Efectos de la carta",
+      "type": "reference-list",
+      "reference": true,
+      "special": true
+    },
+    {
+      "path": "triggers",
+      "label": "Triggers de carta",
+      "type": "reference-list",
+      "reference": true,
+      "special": true
+    }
   ],
   "characters": [
-    { "path": "names.english", "label": "Nombre", "type": "text" },
-    { "path": "character_art", "label": "Referencia de arte de personaje", "type": "text" },
-    { "path": "attack_damage", "label": "Ataque", "type": "number" },
-    { "path": "health", "label": "Salud", "type": "number" },
-    { "path": "size", "label": "Tamaño", "type": "number" }
+    {
+      "path": "names.english",
+      "label": "Nombre",
+      "type": "text"
+    },
+    {
+      "path": "character_art",
+      "label": "Referencia de arte de personaje",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "attack_damage",
+      "label": "Ataque",
+      "type": "number"
+    },
+    {
+      "path": "health",
+      "label": "Salud",
+      "type": "number"
+    },
+    {
+      "path": "size",
+      "label": "Tamaño",
+      "type": "number"
+    },
+    {
+      "path": "triggers",
+      "label": "Triggers de unidad",
+      "type": "reference-list",
+      "reference": true,
+      "special": true
+    },
+    {
+      "path": "ability",
+      "label": "Habilidad de unidad",
+      "type": "text",
+      "reference": true,
+      "special": true
+    },
+    {
+      "path": "starting_status_effects",
+      "label": "Estados iniciales",
+      "type": "status-list",
+      "options": [
+        "ambush",
+        "armor",
+        "armorattack",
+        "avarice",
+        "buff",
+        "burst",
+        "captured_soul",
+        "cardless",
+        "conduit",
+        "cooldown",
+        "corrupt_poison",
+        "corruption",
+        "damage shield",
+        "dazed",
+        "debuff",
+        "decay",
+        "doom",
+        "dormant",
+        "duality",
+        "eatmany",
+        "endless",
+        "ephemeral",
+        "equalizer",
+        "fixedattack",
+        "fragile",
+        "fullmoon",
+        "haste",
+        "hatch",
+        "heal immunity",
+        "hivemind",
+        "hivemindkiller",
+        "horde",
+        "immobile",
+        "immune",
+        "inert",
+        "lifelink",
+        "lifesteal",
+        "mageblade",
+        "malaise",
+        "maniac",
+        "mass",
+        "melee weakness",
+        "multistrike",
+        "multistrike_on_missing_health",
+        "muted",
+        "newmoon",
+        "piercing",
+        "poison",
+        "powerup",
+        "purify",
+        "pyrebane",
+        "pyrebound",
+        "pyregel",
+        "pyrestain",
+        "redcrown",
+        "regen",
+        "relentless",
+        "restricted",
+        "rooted",
+        "scorch",
+        "showtime",
+        "silenced",
+        "sniper",
+        "spark",
+        "spell shield",
+        "spell weakness",
+        "spikes",
+        "stealth",
+        "stygian_blessing",
+        "sweep",
+        "timebomb",
+        "titanite",
+        "titanskin",
+        "trample",
+        "undying",
+        "unit_ability",
+        "unit_ability_available",
+        "unit_grafted_equipment",
+        "unstable",
+        "untouchable",
+        "valor",
+        "witherbloom",
+        null
+      ],
+      "optional": true,
+      "help": "Estados y acumulaciones con los que empieza la unidad.",
+      "statusPresets": [
+        {
+          "label": "Conductor · Pierce",
+          "status": {
+            "id": "@pierce",
+            "mod_reference": "Conductor"
+          },
+          "help": "Pierce 1 alcanza la primera unidad y una adicional; Pierce N alcanza hasta N+1 objetivos válidos. Requiere Conductor 0.5.14 o posterior instalado y declarado como dependencia. No equivale a Perforante ni atraviesa escudos; el editor no simula el combate."
+        }
+      ]
+    }
   ],
   "upgrades": [
-    { "path": "titles.english", "label": "Nombre de mejora", "type": "text" },
-    { "path": "descriptions.english", "label": "Descripción", "type": "textarea" },
-    { "path": "bonus_damage", "label": "Bonificación de ataque", "type": "number", "optional": true },
-    { "path": "bonus_hp", "label": "Bonificación de salud", "type": "number", "optional": true },
-    { "path": "bonus_size", "label": "Bonificación de tamaño", "type": "number", "optional": true }
+    {
+      "path": "titles.english",
+      "label": "Nombre de mejora",
+      "type": "text"
+    },
+    {
+      "path": "descriptions.english",
+      "label": "Descripción",
+      "type": "textarea"
+    },
+    {
+      "path": "bonus_damage",
+      "label": "Bonificación de ataque",
+      "type": "number",
+      "optional": true
+    },
+    {
+      "path": "bonus_hp",
+      "label": "Bonificación de salud",
+      "type": "number",
+      "optional": true
+    },
+    {
+      "path": "bonus_size",
+      "label": "Bonificación de tamaño",
+      "type": "number",
+      "optional": true
+    },
+    {
+      "path": "icon",
+      "label": "Icono de mejora, equipo o sala",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "room_modifier_upgrades",
+      "label": "Modificadores de sala",
+      "type": "reference-list",
+      "reference": true,
+      "special": true
+    }
   ],
   "relics": [
-    { "path": "names.english", "label": "Nombre", "type": "text" }
+    {
+      "path": "names.english",
+      "label": "Nombre",
+      "type": "text"
+    },
+    {
+      "path": "icon",
+      "label": "Icono principal de reliquia",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "icon_small",
+      "label": "Icono HUD de reliquia",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "relic_effects",
+      "label": "Efectos de reliquia",
+      "type": "reference-list",
+      "reference": true,
+      "special": true
+    },
+    {
+      "path": "descriptions.english",
+      "label": "Descripción",
+      "type": "textarea"
+    },
+    {
+      "path": "unlock_level",
+      "label": "Nivel de desbloqueo de reliquia",
+      "type": "number",
+      "integer": true,
+      "min": 0,
+      "optional": true
+    }
+  ],
+  "classes": [
+    {
+      "path": "descriptions.english",
+      "label": "Descripción del clan",
+      "type": "textarea"
+    },
+    {
+      "path": "titles.english",
+      "label": "Nombre del clan",
+      "type": "text"
+    },
+    {
+      "path": "icons.small",
+      "label": "Logo pequeño",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "icons.medium",
+      "label": "Logo mediano",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "icons.large",
+      "label": "Logo grande",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "icons.silhouette",
+      "label": "Silueta del logo",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "card_draft_icon",
+      "label": "Icono de recompensa de cartas",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "champions[].icon",
+      "label": "Icono de campeón",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "champions[].locked_icon",
+      "label": "Icono bloqueado de campeón",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "champions[].portrait",
+      "label": "Retrato de campeón",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "class_select_character_displays[]",
+      "label": "Personaje de selección",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "card_style",
+      "label": "Estilo de cartas",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "champions[].card_data",
+      "label": "Carta de campeón",
+      "type": "text",
+      "reference": true,
+      "special": true
+    },
+    {
+      "path": "champions[].starter_card",
+      "label": "Carta inicial",
+      "type": "text",
+      "reference": true,
+      "special": true
+    },
+    {
+      "path": "ui_color.r",
+      "label": "ui_color · r",
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "optional": true,
+      "help": "Componente de color entre 0 y 1."
+    },
+    {
+      "path": "ui_color.g",
+      "label": "ui_color · g",
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "optional": true,
+      "help": "Componente de color entre 0 y 1."
+    },
+    {
+      "path": "ui_color.b",
+      "label": "ui_color · b",
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "optional": true,
+      "help": "Componente de color entre 0 y 1."
+    },
+    {
+      "path": "ui_color_dark.r",
+      "label": "ui_color_dark · r",
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "optional": true,
+      "help": "Componente de color entre 0 y 1."
+    },
+    {
+      "path": "ui_color_dark.g",
+      "label": "ui_color_dark · g",
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "optional": true,
+      "help": "Componente de color entre 0 y 1."
+    },
+    {
+      "path": "ui_color_dark.b",
+      "label": "ui_color_dark · b",
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "optional": true,
+      "help": "Componente de color entre 0 y 1."
+    }
+  ],
+  "class_card_styles": [
+    {
+      "path": "unit_card_frame_sprite",
+      "label": "Marco de unidad",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "spell_card_frame_sprite",
+      "label": "Marco de hechizo",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "equipment_card_frame_sprite",
+      "label": "Marco de equipo",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "room_card_frame_sprite",
+      "label": "Marco de sala",
+      "type": "text",
+      "reference": true
+    }
+  ],
+  "game_objects": [
+    {
+      "path": "extensions.map_node_icon.enabled_sprite",
+      "label": "Estandarte disponible",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "extensions.map_node_icon.disabled_sprite",
+      "label": "Estandarte desactivado",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "extensions.map_node_icon.frozen_sprite",
+      "label": "Estandarte congelado",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "extensions.map_node_icon.visited_sprite_disabled",
+      "label": "Visitado desactivado",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "extensions.map_node_icon.visited_sprite_enabled",
+      "label": "Visitado activo",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "extensions.character_art.sprite",
+      "label": "Sprite de personaje",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "extensions.card_art.sprite",
+      "label": "Sprite de carta",
+      "type": "text",
+      "reference": true
+    }
+  ],
+  "map_nodes": [
+    {
+      "path": "map_icon",
+      "label": "Icono de mapa",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "minimap_icon",
+      "label": "Icono de minimapa",
+      "type": "text",
+      "reference": true
+    },
+    {
+      "path": "extensions[].reward.rewards",
+      "label": "Recompensas del nodo",
+      "type": "reference-list",
+      "reference": true,
+      "special": true
+    },
+    {
+      "path": "prefab",
+      "label": "Estandarte visual del nodo",
+      "type": "text",
+      "reference": true,
+      "special": true
+    },
+    {
+      "path": "titles.english",
+      "label": "Título",
+      "type": "text"
+    },
+    {
+      "path": "descriptions.english",
+      "label": "Descripción",
+      "type": "textarea"
+    },
+    {
+      "path": "pools",
+      "label": "Pools de aparición del mapa",
+      "type": "string-list",
+      "help": "Controla dónde aparece el nodo. Estos pools son distintos de los pools de cartas de la recompensa."
+    },
+    {
+      "path": "is_banner_node",
+      "label": "Es estandarte de clan",
+      "type": "boolean",
+      "optional": true
+    },
+    {
+      "path": "type",
+      "label": "Tipo de nodo",
+      "type": "select",
+      "options": [
+        "reward",
+        "custom_class"
+      ],
+      "help": "custom_class utiliza una clase C# que hereda de MapNodeData. El editor conserva sus parámetros, pero no genera ni ejecuta la clase."
+    },
+    {
+      "path": "custom_class",
+      "label": "Clase C# del nodo",
+      "type": "class-reference",
+      "names": [
+        "custom_class"
+      ],
+      "selector": "type",
+      "help": "Escribe el nombre técnico de la clase, por ejemplo @MyMapNode, o una referencia JSON con id y mod_reference para otro mod. La clase debe existir en su DLL y heredar de MapNodeData. Requiere Trainworks 0.7.32 o posterior."
+    }
+  ],
+  "status_effects": [
+    {
+      "path": "icon",
+      "label": "Icono de estado",
+      "type": "text",
+      "reference": true
+    }
+  ],
+  "character_trigger_types": [
+    {
+      "path": "sprite",
+      "label": "Icono de trigger de unidad",
+      "type": "text",
+      "reference": true
+    }
+  ],
+  "character_triggers": [
+    {
+      "path": "effects",
+      "label": "Efectos del trigger",
+      "type": "reference-list",
+      "reference": true,
+      "special": true
+    },
+    {
+      "path": "trigger",
+      "label": "Momento de activación",
+      "type": "select",
+      "options": [
+        "on_death",
+        "post_combat",
+        "on_spawn",
+        "on_attacking",
+        "on_kill",
+        "on_any_hero_death_on_floor",
+        "on_any_monster_death_on_floor",
+        "on_heal",
+        "on_team_turn_begin",
+        "pre_combat",
+        "post_ascension",
+        "post_combat_healing",
+        "on_hit",
+        "after_spawn_enchant",
+        "post_descension",
+        "on_any_unit_death_on_floor",
+        "card_spell_played",
+        "card_monster_played",
+        "end_turn_pre_hand_discard",
+        "on_feed",
+        "on_eaten",
+        "on_turn_begin",
+        "on_burnout",
+        "on_spawn_not_from_card",
+        "on_unscaled_spawn",
+        "post_attempted_ascension",
+        "post_attempted_descension",
+        "on_hatched",
+        "card_corrupt_played",
+        "corruption_added",
+        "on_armor_added",
+        "on_food_spawn",
+        "card_exhausted",
+        "on_remove_hatch",
+        "on_own_ability_activated",
+        "on_sentry",
+        "regal_count_added",
+        "on_unit_ability_available",
+        "on_unit_ability_unavailable",
+        "on_shift",
+        "on_equipment_added",
+        "on_equipment_removed",
+        "on_deathwish",
+        "on_deathwish_lost",
+        "on_valiant",
+        "on_encounter_complete",
+        "on_pyregel_added",
+        "on_moon_phase_shift",
+        "on_equipment_added_to_ally",
+        "on_equipment_added_to_any",
+        "on_timebomb",
+        "on_reanimated",
+        "on_graft_equipment_added",
+        "on_new_status_effect_added",
+        "on_queued_status_effect_to_add",
+        "on_moon_lit",
+        "on_moon_shade",
+        "on_moonlit_lost",
+        "on_moonshade_lost",
+        "on_troop_added",
+        "on_troop_removed",
+        "on_train_room_loop",
+        "on_status_effect_changed",
+        "on_attacking_before_damage",
+        "on_silence",
+        "on_silence_lost",
+        "on_pre_own_ability_activated"
+      ],
+      "help": "Evento del juego que activa este trigger."
+    },
+    {
+      "path": "allow_additional_tooltips_when_visual_is_hidden",
+      "label": "allow_additional_tooltips_when_visual_is_hidden",
+      "type": "boolean",
+      "optional": true,
+      "help": "Whether additional tooltips should be shown if the trigger type is hidden in the display UI."
+    },
+    {
+      "path": "display_effect_hint_text",
+      "label": "display_effect_hint_text",
+      "type": "boolean",
+      "optional": true,
+      "help": "Whether to display the card effect hint text for this trigger."
+    },
+    {
+      "path": "hide_visual_and_ignore_silence",
+      "label": "hide_visual_and_ignore_silence",
+      "type": "boolean",
+      "optional": true,
+      "help": "Whether to hide the tooltip for this trigger. Not commonly used. If this is a trigger added via RelicEffectAddTrigger the game sets this field to true. Rooms that add triggers also set this to true."
+    },
+    {
+      "path": "only_trigger_if_equipped",
+      "label": "only_trigger_if_equipped",
+      "type": "boolean",
+      "optional": true,
+      "help": "Whether this trigger only activates if the character has equipment."
+    },
+    {
+      "path": "remove_on_relentless_change",
+      "label": "remove_on_relentless_change",
+      "type": "boolean",
+      "optional": true,
+      "help": "Mainly for flying bosses, remove this trigger on relentless"
+    },
+    {
+      "path": "show_additional_text_on_trigger_success_only",
+      "label": "show_additional_text_on_trigger_success_only",
+      "type": "boolean",
+      "optional": true,
+      "help": "Whether to only show text when the trigger successfully activates."
+    },
+    {
+      "path": "suppress_notifications",
+      "label": "suppress_notifications",
+      "type": "boolean",
+      "optional": true,
+      "help": "Whether to suppress the trigger's default notification text when this trigger activates. This also prevents the camera from scrolling to the room when the trigger fires."
+    },
+    {
+      "path": "trigger_at_threshold",
+      "label": "Activar al alcanzar el umbral",
+      "type": "number",
+      "optional": true,
+      "help": "This value tells the trigger to only fire if a parameter is greater than this number. The parameter value is determined by the trigger type. (i.e. for a Revenge trigger the parameter will be the amount of damage taken.)"
+    },
+    {
+      "path": "trigger_once",
+      "label": "trigger_once",
+      "type": "boolean",
+      "optional": true,
+      "help": "Whether this trigger can only activate once."
+    }
+  ],
+  "card_triggers": [
+    {
+      "path": "effects",
+      "label": "Efectos del trigger",
+      "type": "reference-list",
+      "reference": true,
+      "special": true
+    },
+    {
+      "path": "trigger",
+      "label": "Momento de activación",
+      "type": "select",
+      "options": [
+        "on_cast",
+        "on_kill",
+        "on_discard",
+        "on_monster_death",
+        "on_any_monster_death_on_floor",
+        "on_any_hero_death_on_floor",
+        "on_healed",
+        "on_player_damage_taken",
+        "on_any_unit_death_on_floor",
+        "on_treasure",
+        "on_unplayed_negative",
+        "on_feed",
+        "on_exhausted",
+        "on_unplayed_positive",
+        "on_forge"
+      ],
+      "help": "Evento del juego que activa este trigger."
+    }
+  ],
+  "events": [
+    {
+      "path": "possible_rewards",
+      "label": "Recompensas posibles",
+      "type": "reference-list",
+      "special": true
+    }
+  ],
+  "effects": [
+    {
+      "path": "anim_to_play",
+      "label": "Animación al activar",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Animation to play when this effect is triggered. (Trainworks: CardEffectDamage)",
+      "options": [
+        "none",
+        "idle",
+        "attack",
+        "hit_react",
+        "idle_relentless",
+        "spell",
+        "death",
+        "talk",
+        "hover"
+      ]
+    },
+    {
+      "path": "hide_tooltip",
+      "label": "Ocultar explicación",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Whether to hide this card effect's tooltips. (Trainworks: CardEffectDamage)"
+    },
+    {
+      "path": "should_cancel_subsequent_effects_if_test_fails",
+      "label": "Cancelar efectos posteriores si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Whether to cancel all subsequent effects if this effect fails. Example: \"Making it Rain\" cancels effects if you don't have the 5 gold during playing the effects. (Trainworks: CardEffectDamage)"
+    },
+    {
+      "path": "should_fail_to_cast_if_test_fails",
+      "label": "Impedir jugar si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Whether to prevent playing the card (or trigger) entirely if this effects' TestEffect method fails. Example a card with the Sacrifice <subtype> will fail if the target isn't of proper subtype. (Trainworks: CardEffectDamage)"
+    },
+    {
+      "path": "should_test",
+      "label": "Comprobar condiciones antes de activar",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Whether this effect should be tested before applying. (Trainworks: CardEffectDamage)"
+    },
+    {
+      "path": "show_pyre_notification",
+      "label": "Mostrar aviso en la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Whether to show a notification in the Pyre room. (Trainworks: CardEffectDamage)"
+    },
+    {
+      "path": "status_effect_tooltips_suppressed",
+      "label": "Ocultar explicaciones de estados",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Suppress status effect tooltips. (Trainworks: CardEffectDamage)"
+    },
+    {
+      "path": "suppress_pyre_room_focus",
+      "label": "Evitar enfocar la sala de la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Whether to suppress Pyre room focus when applying this effect. (Trainworks: CardEffectDamage)"
+    },
+    {
+      "path": "target_subtype",
+      "label": "Subtipo objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Subtype to target. Will filter out targets from target_mode without the subtype provided. (Trainworks: CardEffectDamage)",
+      "options": [
+        "SubtypesData_Acolyte_c65a2ea6-2d2a-4d00-82bf-904702a30607",
+        "SubtypesData_Angel",
+        "SubtypesData_Animus_c0f95969-ae86-4477-9458-57bb235d965b",
+        "SubtypesData_Assistant",
+        "SubtypesData_AttackerEnemy_b7a79da2-ded9-4e26-8702-555817499f07",
+        "SubtypesData_AttackerT2",
+        "SubtypesData_AttackerT3",
+        "SubtypesData_Automaton",
+        "SubtypesData_Automaton2",
+        "SubtypesData_BannerUnit",
+        "SubtypesData_BigBoss2_e3e6f1a2-34a7-4493-b9d7-a123e182241e",
+        "SubtypesData_BigBossT1_50952308-e0f3-4acb-b0cc-e0d662b868b8",
+        "SubtypesData_BigBossT3_f7449215-5071-4671-909c-a02e2cceb821",
+        "SubtypesData_Boss",
+        "SubtypesData_BossAll",
+        "SubtypesData_BossDominion",
+        "SubtypesData_BossEntropy",
+        "SubtypesData_BossSavagery",
+        "SubtypesData_BossT1_8850292e-bda8-428e-8d71-c375c29838f8",
+        "SubtypesData_BossT2_935b30b5-bb94-4fd4-b3be-2ed0eb73ccf6",
+        "SubtypesData_BossT3_ef0103da-a050-4ebb-af3a-b3e285db5e0c",
+        "SubtypesData_Box",
+        "SubtypesData_Champion_83f21cbe-9d9b-4566-a2c3-ca559ab8ff34",
+        "SubtypesData_ChosenSpikes",
+        "SubtypesData_Cultist",
+        "SubtypesData_Cultist_8a3bb2b5-8c56-4c86-bb08-85b95c488f23",
+        "SubtypesData_Dante",
+        "SubtypesData_Defunct",
+        "SubtypesData_Demon_fcebd195-f262-4d7a-ac9f-01ffa2007a12",
+        "SubtypesData_Dog",
+        "SubtypesData_Dragon",
+        "SubtypesData_Egg",
+        "SubtypesData_EntropicAngel",
+        "SubtypesData_ExplodingBarrel",
+        "SubtypesData_Fae",
+        "SubtypesData_FinalBoss",
+        "SubtypesData_Forager",
+        "SubtypesData_FunGuy",
+        "SubtypesData_Golem_2d79cb56-4041-4d63-b7bf-8d2185923eda",
+        "SubtypesData_HeavyT1",
+        "SubtypesData_HeavyT2",
+        "SubtypesData_HeavyT3",
+        "SubtypesData_Heph",
+        "SubtypesData_Horde",
+        "SubtypesData_HordeT1",
+        "SubtypesData_Host",
+        "SubtypesData_Hymnist",
+        "SubtypesData_Imp_0f9b989f-15b5-4b16-8378-5d8ed8691e7c",
+        "SubtypesData_Machine",
+        "SubtypesData_Mage",
+        "SubtypesData_Monstrosity",
+        "SubtypesData_None",
+        "SubtypesData_Pyre",
+        "SubtypesData_ReplicatorEvent",
+        "SubtypesData_SavageAngel",
+        "SubtypesData_Selene",
+        "SubtypesData_ShieldGuardT1",
+        "SubtypesData_ShieldGuardT2",
+        "SubtypesData_ShieldGuardT3",
+        "SubtypesData_Shroom",
+        "SubtypesData_Silent",
+        "SubtypesData_Siren_727cf19f-3b27-4ad2-92ab-3552449e52da",
+        "SubtypesData_Snack",
+        "SubtypesData_SoulSavior_Attacker_Enemy",
+        "SubtypesData_SoulSavior_Heavy_Enemy",
+        "SubtypesData_SoulSavior_Horde_Enemy",
+        "SubtypesData_SoulSavior_LifeMother",
+        "SubtypesData_SoulSavior_Mage_Enemy",
+        "SubtypesData_SoulSavior_Region1_Enemy1",
+        "SubtypesData_SoulSavior_Region1_Enemy2",
+        "SubtypesData_SoulSavior_Region1_FlyingBoss",
+        "SubtypesData_SoulSavior_Region2_Enemy1",
+        "SubtypesData_SoulSavior_Region2_Enemy2",
+        "SubtypesData_SoulSavior_Region2_FlyingBoss",
+        "SubtypesData_SoulSavior_Region3_Enemy1",
+        "SubtypesData_SoulSavior_Region3_Enemy2",
+        "SubtypesData_SoulSavior_Region3_FlyingBoss",
+        "SubtypesData_SoulSavior_Region4_Enemy1",
+        "SubtypesData_SoulSavior_Region4_Enemy2",
+        "SubtypesData_SoulSavior_Region4_FlyingBoss",
+        "SubtypesData_SoulSavior_Support_Enemy",
+        "SubtypesData_Spell_7927038f-8beb-40bb-9eff-8b6081c3aeb9",
+        "SubtypesData_Statue",
+        "SubtypesData_Tomb",
+        "SubtypesData_Topsider",
+        "SubtypesData_Totem_7c4e7151-d042-49e2-9700-29e7c760b691",
+        "SubtypesData_TrainMachines",
+        "SubtypesData_TrainSteward",
+        "SubtypesData_TreasureCollector",
+        "SubtypesData_TreasureCollectorT1",
+        "SubtypesData_TreasureCollectorT2",
+        "SubtypesData_TreasureCollectorT3",
+        "SubtypesData_Warden_191c4528-6efd-47b0-bdf8-9838047532cc",
+        "SubtypesData_Waxer_3446e5ee-216e-4cc2-b027-d77dee269c15",
+        "SubtypesData_Whelp",
+        "SubtypesData_Wickless_517faf2f-8836-42d3-b84d-75a99b7dc735",
+        "SubtypesData_Witch_eadb3cce-94b3-42ed-9385-c1d20172e861",
+        "SubtypesData_Wurm"
+      ]
+    },
+    {
+      "path": "target_ignore_bosses",
+      "label": "Ignorar jefes",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Whether to ignore boss characters when targeting. (Trainworks: CardEffectDamage)"
+    },
+    {
+      "path": "target_mode",
+      "label": "Selección de objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Mode for selecting targets. This property combined with target_team will get you the base characters targetted for the effect. (Trainworks: CardEffectDamage)",
+      "options": [
+        "room",
+        "random_in_room",
+        "front_in_room",
+        "room_heal_targets",
+        "self",
+        "last_attacked_character",
+        "front_with_status",
+        "tower",
+        "back_in_room",
+        "drop_target_character",
+        "draw_pile",
+        "discard",
+        "dying_character",
+        "exhaust",
+        "eaten",
+        "weakest",
+        "last_attacker_character",
+        "hand",
+        "last_drawn_card",
+        "last_feeder_character",
+        "pyre",
+        "random_from_any_room",
+        "last_targeted_characters",
+        "last_damaged_characters",
+        "last_spawned_morsel",
+        "front_in_all_rooms",
+        "front_in_room_and_room_above",
+        "weakest_all_rooms",
+        "strongest_all_rooms",
+        "last_equipped_character",
+        "last_sacrificed_character",
+        "last_spawned_character",
+        "strongest_last_targeted_characters",
+        "strongest_last_targeted_characters_room"
+      ]
+    },
+    {
+      "path": "target_mode_health_filter",
+      "label": "Filtro de salud",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Filter for target health when selecting targets. (Trainworks: CardEffectDamage)",
+      "options": [
+        "both",
+        "undamaged",
+        "damaged"
+      ]
+    },
+    {
+      "path": "target_team",
+      "label": "Equipo objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Team to target. \"monsters\" for friendly units or \"heroes\" for enemy units. (Trainworks: CardEffectDamage)",
+      "options": [
+        "none",
+        "both",
+        "heroes",
+        "monsters"
+      ]
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Damage Amount (Trainworks: CardEffectDamage)",
+      "integer": true
+    },
+    {
+      "path": "use_int_range",
+      "label": "Usar intervalo de cantidades",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Use Range For Damage Amount (Trainworks: CardEffectDamage)"
+    },
+    {
+      "path": "param_min_int",
+      "label": "Cantidad mínima",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Min Damage Amount (Trainworks: CardEffectDamage)",
+      "integer": true
+    },
+    {
+      "path": "param_max_int",
+      "label": "Cantidad máxima",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Max Damage Amount (Trainworks: CardEffectDamage)",
+      "integer": true
+    },
+    {
+      "path": "param_multiplier",
+      "label": "Multiplicador de cantidad",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Range Multiplier (Trainworks: CardEffectDamage)"
+    },
+    {
+      "path": "use_status_effect_multiplier",
+      "label": "Multiplicar según estado",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Use Status Effect Stack Multiplier^ Enable status effect stack multiplier. (Trainworks: CardEffectDamage)"
+    },
+    {
+      "path": "status_effect_multiplier",
+      "label": "Estado del multiplicador",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectDamage"
+      ],
+      "help": "Status Effect Stack Multiplier^ Multiply the damage amount by the number of this type of status effect the target has. (Trainworks: CardEffectDamage)",
+      "options": [
+        "ambush",
+        "armor",
+        "armorattack",
+        "avarice",
+        "buff",
+        "burst",
+        "captured_soul",
+        "cardless",
+        "conduit",
+        "cooldown",
+        "corrupt_poison",
+        "corruption",
+        "damage shield",
+        "dazed",
+        "debuff",
+        "decay",
+        "doom",
+        "dormant",
+        "duality",
+        "eatmany",
+        "endless",
+        "ephemeral",
+        "equalizer",
+        "fixedattack",
+        "fragile",
+        "fullmoon",
+        "haste",
+        "hatch",
+        "heal immunity",
+        "hivemind",
+        "hivemindkiller",
+        "horde",
+        "immobile",
+        "immune",
+        "inert",
+        "lifelink",
+        "lifesteal",
+        "mageblade",
+        "malaise",
+        "maniac",
+        "mass",
+        "melee weakness",
+        "multistrike",
+        "multistrike_on_missing_health",
+        "muted",
+        "newmoon",
+        "piercing",
+        "poison",
+        "powerup",
+        "purify",
+        "pyrebane",
+        "pyrebound",
+        "pyregel",
+        "pyrestain",
+        "redcrown",
+        "regen",
+        "relentless",
+        "restricted",
+        "rooted",
+        "scorch",
+        "showtime",
+        "silenced",
+        "sniper",
+        "spark",
+        "spell shield",
+        "spell weakness",
+        "spikes",
+        "stealth",
+        "stygian_blessing",
+        "sweep",
+        "timebomb",
+        "titanite",
+        "titanskin",
+        "trample",
+        "undying",
+        "unit_ability",
+        "unit_ability_available",
+        "unit_grafted_equipment",
+        "unstable",
+        "untouchable",
+        "valor",
+        "witherbloom",
+        null
+      ]
+    },
+    {
+      "path": "anim_to_play",
+      "label": "Animación al activar",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Animation to play when this effect is triggered. (Trainworks: CardEffectHeal)",
+      "options": [
+        "none",
+        "idle",
+        "attack",
+        "hit_react",
+        "idle_relentless",
+        "spell",
+        "death",
+        "talk",
+        "hover"
+      ]
+    },
+    {
+      "path": "hide_tooltip",
+      "label": "Ocultar explicación",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Whether to hide this card effect's tooltips. (Trainworks: CardEffectHeal)"
+    },
+    {
+      "path": "should_cancel_subsequent_effects_if_test_fails",
+      "label": "Cancelar efectos posteriores si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Whether to cancel all subsequent effects if this effect fails. Example: \"Making it Rain\" cancels effects if you don't have the 5 gold during playing the effects. (Trainworks: CardEffectHeal)"
+    },
+    {
+      "path": "should_fail_to_cast_if_test_fails",
+      "label": "Impedir jugar si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Whether to prevent playing the card (or trigger) entirely if this effects' TestEffect method fails. Example a card with the Sacrifice <subtype> will fail if the target isn't of proper subtype. (Trainworks: CardEffectHeal)"
+    },
+    {
+      "path": "should_test",
+      "label": "Comprobar condiciones antes de activar",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Whether this effect should be tested before applying. (Trainworks: CardEffectHeal)"
+    },
+    {
+      "path": "show_pyre_notification",
+      "label": "Mostrar aviso en la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Whether to show a notification in the Pyre room. (Trainworks: CardEffectHeal)"
+    },
+    {
+      "path": "status_effect_tooltips_suppressed",
+      "label": "Ocultar explicaciones de estados",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Suppress status effect tooltips. (Trainworks: CardEffectHeal)"
+    },
+    {
+      "path": "suppress_pyre_room_focus",
+      "label": "Evitar enfocar la sala de la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Whether to suppress Pyre room focus when applying this effect. (Trainworks: CardEffectHeal)"
+    },
+    {
+      "path": "target_subtype",
+      "label": "Subtipo objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Subtype to target. Will filter out targets from target_mode without the subtype provided. (Trainworks: CardEffectHeal)",
+      "options": [
+        "SubtypesData_Acolyte_c65a2ea6-2d2a-4d00-82bf-904702a30607",
+        "SubtypesData_Angel",
+        "SubtypesData_Animus_c0f95969-ae86-4477-9458-57bb235d965b",
+        "SubtypesData_Assistant",
+        "SubtypesData_AttackerEnemy_b7a79da2-ded9-4e26-8702-555817499f07",
+        "SubtypesData_AttackerT2",
+        "SubtypesData_AttackerT3",
+        "SubtypesData_Automaton",
+        "SubtypesData_Automaton2",
+        "SubtypesData_BannerUnit",
+        "SubtypesData_BigBoss2_e3e6f1a2-34a7-4493-b9d7-a123e182241e",
+        "SubtypesData_BigBossT1_50952308-e0f3-4acb-b0cc-e0d662b868b8",
+        "SubtypesData_BigBossT3_f7449215-5071-4671-909c-a02e2cceb821",
+        "SubtypesData_Boss",
+        "SubtypesData_BossAll",
+        "SubtypesData_BossDominion",
+        "SubtypesData_BossEntropy",
+        "SubtypesData_BossSavagery",
+        "SubtypesData_BossT1_8850292e-bda8-428e-8d71-c375c29838f8",
+        "SubtypesData_BossT2_935b30b5-bb94-4fd4-b3be-2ed0eb73ccf6",
+        "SubtypesData_BossT3_ef0103da-a050-4ebb-af3a-b3e285db5e0c",
+        "SubtypesData_Box",
+        "SubtypesData_Champion_83f21cbe-9d9b-4566-a2c3-ca559ab8ff34",
+        "SubtypesData_ChosenSpikes",
+        "SubtypesData_Cultist",
+        "SubtypesData_Cultist_8a3bb2b5-8c56-4c86-bb08-85b95c488f23",
+        "SubtypesData_Dante",
+        "SubtypesData_Defunct",
+        "SubtypesData_Demon_fcebd195-f262-4d7a-ac9f-01ffa2007a12",
+        "SubtypesData_Dog",
+        "SubtypesData_Dragon",
+        "SubtypesData_Egg",
+        "SubtypesData_EntropicAngel",
+        "SubtypesData_ExplodingBarrel",
+        "SubtypesData_Fae",
+        "SubtypesData_FinalBoss",
+        "SubtypesData_Forager",
+        "SubtypesData_FunGuy",
+        "SubtypesData_Golem_2d79cb56-4041-4d63-b7bf-8d2185923eda",
+        "SubtypesData_HeavyT1",
+        "SubtypesData_HeavyT2",
+        "SubtypesData_HeavyT3",
+        "SubtypesData_Heph",
+        "SubtypesData_Horde",
+        "SubtypesData_HordeT1",
+        "SubtypesData_Host",
+        "SubtypesData_Hymnist",
+        "SubtypesData_Imp_0f9b989f-15b5-4b16-8378-5d8ed8691e7c",
+        "SubtypesData_Machine",
+        "SubtypesData_Mage",
+        "SubtypesData_Monstrosity",
+        "SubtypesData_None",
+        "SubtypesData_Pyre",
+        "SubtypesData_ReplicatorEvent",
+        "SubtypesData_SavageAngel",
+        "SubtypesData_Selene",
+        "SubtypesData_ShieldGuardT1",
+        "SubtypesData_ShieldGuardT2",
+        "SubtypesData_ShieldGuardT3",
+        "SubtypesData_Shroom",
+        "SubtypesData_Silent",
+        "SubtypesData_Siren_727cf19f-3b27-4ad2-92ab-3552449e52da",
+        "SubtypesData_Snack",
+        "SubtypesData_SoulSavior_Attacker_Enemy",
+        "SubtypesData_SoulSavior_Heavy_Enemy",
+        "SubtypesData_SoulSavior_Horde_Enemy",
+        "SubtypesData_SoulSavior_LifeMother",
+        "SubtypesData_SoulSavior_Mage_Enemy",
+        "SubtypesData_SoulSavior_Region1_Enemy1",
+        "SubtypesData_SoulSavior_Region1_Enemy2",
+        "SubtypesData_SoulSavior_Region1_FlyingBoss",
+        "SubtypesData_SoulSavior_Region2_Enemy1",
+        "SubtypesData_SoulSavior_Region2_Enemy2",
+        "SubtypesData_SoulSavior_Region2_FlyingBoss",
+        "SubtypesData_SoulSavior_Region3_Enemy1",
+        "SubtypesData_SoulSavior_Region3_Enemy2",
+        "SubtypesData_SoulSavior_Region3_FlyingBoss",
+        "SubtypesData_SoulSavior_Region4_Enemy1",
+        "SubtypesData_SoulSavior_Region4_Enemy2",
+        "SubtypesData_SoulSavior_Region4_FlyingBoss",
+        "SubtypesData_SoulSavior_Support_Enemy",
+        "SubtypesData_Spell_7927038f-8beb-40bb-9eff-8b6081c3aeb9",
+        "SubtypesData_Statue",
+        "SubtypesData_Tomb",
+        "SubtypesData_Topsider",
+        "SubtypesData_Totem_7c4e7151-d042-49e2-9700-29e7c760b691",
+        "SubtypesData_TrainMachines",
+        "SubtypesData_TrainSteward",
+        "SubtypesData_TreasureCollector",
+        "SubtypesData_TreasureCollectorT1",
+        "SubtypesData_TreasureCollectorT2",
+        "SubtypesData_TreasureCollectorT3",
+        "SubtypesData_Warden_191c4528-6efd-47b0-bdf8-9838047532cc",
+        "SubtypesData_Waxer_3446e5ee-216e-4cc2-b027-d77dee269c15",
+        "SubtypesData_Whelp",
+        "SubtypesData_Wickless_517faf2f-8836-42d3-b84d-75a99b7dc735",
+        "SubtypesData_Witch_eadb3cce-94b3-42ed-9385-c1d20172e861",
+        "SubtypesData_Wurm"
+      ]
+    },
+    {
+      "path": "target_ignore_bosses",
+      "label": "Ignorar jefes",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Whether to ignore boss characters when targeting. (Trainworks: CardEffectHeal)"
+    },
+    {
+      "path": "target_mode",
+      "label": "Selección de objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Mode for selecting targets. This property combined with target_team will get you the base characters targetted for the effect. (Trainworks: CardEffectHeal)",
+      "options": [
+        "room",
+        "random_in_room",
+        "front_in_room",
+        "room_heal_targets",
+        "self",
+        "last_attacked_character",
+        "front_with_status",
+        "tower",
+        "back_in_room",
+        "drop_target_character",
+        "draw_pile",
+        "discard",
+        "dying_character",
+        "exhaust",
+        "eaten",
+        "weakest",
+        "last_attacker_character",
+        "hand",
+        "last_drawn_card",
+        "last_feeder_character",
+        "pyre",
+        "random_from_any_room",
+        "last_targeted_characters",
+        "last_damaged_characters",
+        "last_spawned_morsel",
+        "front_in_all_rooms",
+        "front_in_room_and_room_above",
+        "weakest_all_rooms",
+        "strongest_all_rooms",
+        "last_equipped_character",
+        "last_sacrificed_character",
+        "last_spawned_character",
+        "strongest_last_targeted_characters",
+        "strongest_last_targeted_characters_room"
+      ]
+    },
+    {
+      "path": "target_mode_health_filter",
+      "label": "Filtro de salud",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Filter for target health when selecting targets. (Trainworks: CardEffectHeal)",
+      "options": [
+        "both",
+        "undamaged",
+        "damaged"
+      ]
+    },
+    {
+      "path": "target_team",
+      "label": "Equipo objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Team to target. \"monsters\" for friendly units or \"heroes\" for enemy units. (Trainworks: CardEffectHeal)",
+      "options": [
+        "none",
+        "both",
+        "heroes",
+        "monsters"
+      ]
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Heal Amount (Trainworks: CardEffectHeal)",
+      "integer": true
+    },
+    {
+      "path": "use_int_range",
+      "label": "Usar intervalo de cantidades",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Use Range For Heal Amount (Trainworks: CardEffectHeal)"
+    },
+    {
+      "path": "param_min_int",
+      "label": "Cantidad mínima",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Min Heal Amount (Trainworks: CardEffectHeal)",
+      "integer": true
+    },
+    {
+      "path": "param_max_int",
+      "label": "Cantidad máxima",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Max Heal Amount (Trainworks: CardEffectHeal)",
+      "integer": true
+    },
+    {
+      "path": "param_multiplier",
+      "label": "Multiplicador de cantidad",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectHeal"
+      ],
+      "help": "Range Multiplier (Trainworks: CardEffectHeal)"
+    },
+    {
+      "path": "anim_to_play",
+      "label": "Animación al activar",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Animation to play when this effect is triggered. (Trainworks: CardEffectDraw)",
+      "options": [
+        "none",
+        "idle",
+        "attack",
+        "hit_react",
+        "idle_relentless",
+        "spell",
+        "death",
+        "talk",
+        "hover"
+      ]
+    },
+    {
+      "path": "hide_tooltip",
+      "label": "Ocultar explicación",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Whether to hide this card effect's tooltips. (Trainworks: CardEffectDraw)"
+    },
+    {
+      "path": "should_cancel_subsequent_effects_if_test_fails",
+      "label": "Cancelar efectos posteriores si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Whether to cancel all subsequent effects if this effect fails. Example: \"Making it Rain\" cancels effects if you don't have the 5 gold during playing the effects. (Trainworks: CardEffectDraw)"
+    },
+    {
+      "path": "should_fail_to_cast_if_test_fails",
+      "label": "Impedir jugar si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Whether to prevent playing the card (or trigger) entirely if this effects' TestEffect method fails. Example a card with the Sacrifice <subtype> will fail if the target isn't of proper subtype. (Trainworks: CardEffectDraw)"
+    },
+    {
+      "path": "should_test",
+      "label": "Comprobar condiciones antes de activar",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Whether this effect should be tested before applying. (Trainworks: CardEffectDraw)"
+    },
+    {
+      "path": "show_pyre_notification",
+      "label": "Mostrar aviso en la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Whether to show a notification in the Pyre room. (Trainworks: CardEffectDraw)"
+    },
+    {
+      "path": "status_effect_tooltips_suppressed",
+      "label": "Ocultar explicaciones de estados",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Suppress status effect tooltips. (Trainworks: CardEffectDraw)"
+    },
+    {
+      "path": "suppress_pyre_room_focus",
+      "label": "Evitar enfocar la sala de la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Whether to suppress Pyre room focus when applying this effect. (Trainworks: CardEffectDraw)"
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Num Cards^ If -1, draw to max starting hand (Trainworks: CardEffectDraw)",
+      "integer": true
+    },
+    {
+      "path": "use_int_range",
+      "label": "Usar intervalo de cantidades",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Use Range For Num Cards (Trainworks: CardEffectDraw)"
+    },
+    {
+      "path": "param_min_int",
+      "label": "Cantidad mínima",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Min Num Cards (Trainworks: CardEffectDraw)",
+      "integer": true
+    },
+    {
+      "path": "param_max_int",
+      "label": "Cantidad máxima",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Max Num Cards (Trainworks: CardEffectDraw)",
+      "integer": true
+    },
+    {
+      "path": "param_multiplier",
+      "label": "Multiplicador de cantidad",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectDraw"
+      ],
+      "help": "Range Multiplier (Trainworks: CardEffectDraw)"
+    },
+    {
+      "path": "anim_to_play",
+      "label": "Animación al activar",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Animation to play when this effect is triggered. (Trainworks: CardEffectAdjustEnergy)",
+      "options": [
+        "none",
+        "idle",
+        "attack",
+        "hit_react",
+        "idle_relentless",
+        "spell",
+        "death",
+        "talk",
+        "hover"
+      ]
+    },
+    {
+      "path": "hide_tooltip",
+      "label": "Ocultar explicación",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Whether to hide this card effect's tooltips. (Trainworks: CardEffectAdjustEnergy)"
+    },
+    {
+      "path": "should_cancel_subsequent_effects_if_test_fails",
+      "label": "Cancelar efectos posteriores si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Whether to cancel all subsequent effects if this effect fails. Example: \"Making it Rain\" cancels effects if you don't have the 5 gold during playing the effects. (Trainworks: CardEffectAdjustEnergy)"
+    },
+    {
+      "path": "should_fail_to_cast_if_test_fails",
+      "label": "Impedir jugar si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Whether to prevent playing the card (or trigger) entirely if this effects' TestEffect method fails. Example a card with the Sacrifice <subtype> will fail if the target isn't of proper subtype. (Trainworks: CardEffectAdjustEnergy)"
+    },
+    {
+      "path": "should_test",
+      "label": "Comprobar condiciones antes de activar",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Whether this effect should be tested before applying. (Trainworks: CardEffectAdjustEnergy)"
+    },
+    {
+      "path": "show_pyre_notification",
+      "label": "Mostrar aviso en la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Whether to show a notification in the Pyre room. (Trainworks: CardEffectAdjustEnergy)"
+    },
+    {
+      "path": "status_effect_tooltips_suppressed",
+      "label": "Ocultar explicaciones de estados",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Suppress status effect tooltips. (Trainworks: CardEffectAdjustEnergy)"
+    },
+    {
+      "path": "suppress_pyre_room_focus",
+      "label": "Evitar enfocar la sala de la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Whether to suppress Pyre room focus when applying this effect. (Trainworks: CardEffectAdjustEnergy)"
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Energy Amount^ Can be negative (Trainworks: CardEffectAdjustEnergy)",
+      "integer": true
+    },
+    {
+      "path": "use_int_range",
+      "label": "Usar intervalo de cantidades",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Use Range For Energy Amount (Trainworks: CardEffectAdjustEnergy)"
+    },
+    {
+      "path": "param_min_int",
+      "label": "Cantidad mínima",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Min Energy Amount^ Can be negative (Trainworks: CardEffectAdjustEnergy)",
+      "integer": true
+    },
+    {
+      "path": "param_max_int",
+      "label": "Cantidad máxima",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Max Energy Amount^ Can be negative (Trainworks: CardEffectAdjustEnergy)",
+      "integer": true
+    },
+    {
+      "path": "param_multiplier",
+      "label": "Multiplicador de cantidad",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustEnergy"
+      ],
+      "help": "Range Multiplier (Trainworks: CardEffectAdjustEnergy)"
+    },
+    {
+      "path": "anim_to_play",
+      "label": "Animación al activar",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Animation to play when this effect is triggered. (Trainworks: CardEffectAddStatusEffect)",
+      "options": [
+        "none",
+        "idle",
+        "attack",
+        "hit_react",
+        "idle_relentless",
+        "spell",
+        "death",
+        "talk",
+        "hover"
+      ]
+    },
+    {
+      "path": "hide_tooltip",
+      "label": "Ocultar explicación",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Whether to hide this card effect's tooltips. (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "should_cancel_subsequent_effects_if_test_fails",
+      "label": "Cancelar efectos posteriores si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Whether to cancel all subsequent effects if this effect fails. Example: \"Making it Rain\" cancels effects if you don't have the 5 gold during playing the effects. (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "should_fail_to_cast_if_test_fails",
+      "label": "Impedir jugar si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Whether to prevent playing the card (or trigger) entirely if this effects' TestEffect method fails. Example a card with the Sacrifice <subtype> will fail if the target isn't of proper subtype. (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "should_test",
+      "label": "Comprobar condiciones antes de activar",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Whether this effect should be tested before applying. (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "show_pyre_notification",
+      "label": "Mostrar aviso en la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Whether to show a notification in the Pyre room. (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "status_effect_tooltips_suppressed",
+      "label": "Ocultar explicaciones de estados",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Suppress status effect tooltips. (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "suppress_pyre_room_focus",
+      "label": "Evitar enfocar la sala de la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Whether to suppress Pyre room focus when applying this effect. (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "target_subtype",
+      "label": "Subtipo objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Subtype to target. Will filter out targets from target_mode without the subtype provided. (Trainworks: CardEffectAddStatusEffect)",
+      "options": [
+        "SubtypesData_Acolyte_c65a2ea6-2d2a-4d00-82bf-904702a30607",
+        "SubtypesData_Angel",
+        "SubtypesData_Animus_c0f95969-ae86-4477-9458-57bb235d965b",
+        "SubtypesData_Assistant",
+        "SubtypesData_AttackerEnemy_b7a79da2-ded9-4e26-8702-555817499f07",
+        "SubtypesData_AttackerT2",
+        "SubtypesData_AttackerT3",
+        "SubtypesData_Automaton",
+        "SubtypesData_Automaton2",
+        "SubtypesData_BannerUnit",
+        "SubtypesData_BigBoss2_e3e6f1a2-34a7-4493-b9d7-a123e182241e",
+        "SubtypesData_BigBossT1_50952308-e0f3-4acb-b0cc-e0d662b868b8",
+        "SubtypesData_BigBossT3_f7449215-5071-4671-909c-a02e2cceb821",
+        "SubtypesData_Boss",
+        "SubtypesData_BossAll",
+        "SubtypesData_BossDominion",
+        "SubtypesData_BossEntropy",
+        "SubtypesData_BossSavagery",
+        "SubtypesData_BossT1_8850292e-bda8-428e-8d71-c375c29838f8",
+        "SubtypesData_BossT2_935b30b5-bb94-4fd4-b3be-2ed0eb73ccf6",
+        "SubtypesData_BossT3_ef0103da-a050-4ebb-af3a-b3e285db5e0c",
+        "SubtypesData_Box",
+        "SubtypesData_Champion_83f21cbe-9d9b-4566-a2c3-ca559ab8ff34",
+        "SubtypesData_ChosenSpikes",
+        "SubtypesData_Cultist",
+        "SubtypesData_Cultist_8a3bb2b5-8c56-4c86-bb08-85b95c488f23",
+        "SubtypesData_Dante",
+        "SubtypesData_Defunct",
+        "SubtypesData_Demon_fcebd195-f262-4d7a-ac9f-01ffa2007a12",
+        "SubtypesData_Dog",
+        "SubtypesData_Dragon",
+        "SubtypesData_Egg",
+        "SubtypesData_EntropicAngel",
+        "SubtypesData_ExplodingBarrel",
+        "SubtypesData_Fae",
+        "SubtypesData_FinalBoss",
+        "SubtypesData_Forager",
+        "SubtypesData_FunGuy",
+        "SubtypesData_Golem_2d79cb56-4041-4d63-b7bf-8d2185923eda",
+        "SubtypesData_HeavyT1",
+        "SubtypesData_HeavyT2",
+        "SubtypesData_HeavyT3",
+        "SubtypesData_Heph",
+        "SubtypesData_Horde",
+        "SubtypesData_HordeT1",
+        "SubtypesData_Host",
+        "SubtypesData_Hymnist",
+        "SubtypesData_Imp_0f9b989f-15b5-4b16-8378-5d8ed8691e7c",
+        "SubtypesData_Machine",
+        "SubtypesData_Mage",
+        "SubtypesData_Monstrosity",
+        "SubtypesData_None",
+        "SubtypesData_Pyre",
+        "SubtypesData_ReplicatorEvent",
+        "SubtypesData_SavageAngel",
+        "SubtypesData_Selene",
+        "SubtypesData_ShieldGuardT1",
+        "SubtypesData_ShieldGuardT2",
+        "SubtypesData_ShieldGuardT3",
+        "SubtypesData_Shroom",
+        "SubtypesData_Silent",
+        "SubtypesData_Siren_727cf19f-3b27-4ad2-92ab-3552449e52da",
+        "SubtypesData_Snack",
+        "SubtypesData_SoulSavior_Attacker_Enemy",
+        "SubtypesData_SoulSavior_Heavy_Enemy",
+        "SubtypesData_SoulSavior_Horde_Enemy",
+        "SubtypesData_SoulSavior_LifeMother",
+        "SubtypesData_SoulSavior_Mage_Enemy",
+        "SubtypesData_SoulSavior_Region1_Enemy1",
+        "SubtypesData_SoulSavior_Region1_Enemy2",
+        "SubtypesData_SoulSavior_Region1_FlyingBoss",
+        "SubtypesData_SoulSavior_Region2_Enemy1",
+        "SubtypesData_SoulSavior_Region2_Enemy2",
+        "SubtypesData_SoulSavior_Region2_FlyingBoss",
+        "SubtypesData_SoulSavior_Region3_Enemy1",
+        "SubtypesData_SoulSavior_Region3_Enemy2",
+        "SubtypesData_SoulSavior_Region3_FlyingBoss",
+        "SubtypesData_SoulSavior_Region4_Enemy1",
+        "SubtypesData_SoulSavior_Region4_Enemy2",
+        "SubtypesData_SoulSavior_Region4_FlyingBoss",
+        "SubtypesData_SoulSavior_Support_Enemy",
+        "SubtypesData_Spell_7927038f-8beb-40bb-9eff-8b6081c3aeb9",
+        "SubtypesData_Statue",
+        "SubtypesData_Tomb",
+        "SubtypesData_Topsider",
+        "SubtypesData_Totem_7c4e7151-d042-49e2-9700-29e7c760b691",
+        "SubtypesData_TrainMachines",
+        "SubtypesData_TrainSteward",
+        "SubtypesData_TreasureCollector",
+        "SubtypesData_TreasureCollectorT1",
+        "SubtypesData_TreasureCollectorT2",
+        "SubtypesData_TreasureCollectorT3",
+        "SubtypesData_Warden_191c4528-6efd-47b0-bdf8-9838047532cc",
+        "SubtypesData_Waxer_3446e5ee-216e-4cc2-b027-d77dee269c15",
+        "SubtypesData_Whelp",
+        "SubtypesData_Wickless_517faf2f-8836-42d3-b84d-75a99b7dc735",
+        "SubtypesData_Witch_eadb3cce-94b3-42ed-9385-c1d20172e861",
+        "SubtypesData_Wurm"
+      ]
+    },
+    {
+      "path": "target_ignore_bosses",
+      "label": "Ignorar jefes",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Whether to ignore boss characters when targeting. (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "target_mode",
+      "label": "Selección de objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Mode for selecting targets. This property combined with target_team will get you the base characters targetted for the effect. (Trainworks: CardEffectAddStatusEffect)",
+      "options": [
+        "room",
+        "random_in_room",
+        "front_in_room",
+        "room_heal_targets",
+        "self",
+        "last_attacked_character",
+        "front_with_status",
+        "tower",
+        "back_in_room",
+        "drop_target_character",
+        "draw_pile",
+        "discard",
+        "dying_character",
+        "exhaust",
+        "eaten",
+        "weakest",
+        "last_attacker_character",
+        "hand",
+        "last_drawn_card",
+        "last_feeder_character",
+        "pyre",
+        "random_from_any_room",
+        "last_targeted_characters",
+        "last_damaged_characters",
+        "last_spawned_morsel",
+        "front_in_all_rooms",
+        "front_in_room_and_room_above",
+        "weakest_all_rooms",
+        "strongest_all_rooms",
+        "last_equipped_character",
+        "last_sacrificed_character",
+        "last_spawned_character",
+        "strongest_last_targeted_characters",
+        "strongest_last_targeted_characters_room"
+      ]
+    },
+    {
+      "path": "target_mode_health_filter",
+      "label": "Filtro de salud",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Filter for target health when selecting targets. (Trainworks: CardEffectAddStatusEffect)",
+      "options": [
+        "both",
+        "undamaged",
+        "damaged"
+      ]
+    },
+    {
+      "path": "target_team",
+      "label": "Equipo objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Team to target. \"monsters\" for friendly units or \"heroes\" for enemy units. (Trainworks: CardEffectAddStatusEffect)",
+      "options": [
+        "none",
+        "both",
+        "heroes",
+        "monsters"
+      ]
+    },
+    {
+      "path": "param_bool",
+      "label": "Opción principal",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Strict Target Checking^ TRUE - Always Fail Test if Zero Targets\nFALSE - Zero Targets allowed unless Target Mode is 'Drop Target' (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "use_status_effect_multiplier",
+      "label": "Multiplicar según estado",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Use Status Effect Stack Multiplier^ Multiply the number of stacks added by the number of this type of status effect the target already has. (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "use_health_missing_multiplier",
+      "label": "use_health_missing_multiplier",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Use Health Missing Stack Multiplier^ Multiply the number of stacks added by the number of hp the target is missing. (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "use_magic_power_multiplier",
+      "label": "use_magic_power_multiplier",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Use Magic Power Multiplier^ Multiply the number of stacks added by the amount of magic power in the room. (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Chance To Apply Effect^ If 1-99, the chance to apply. If 0 or >= 100, always will apply (Trainworks: CardEffectAddStatusEffect)",
+      "integer": true
+    },
+    {
+      "path": "use_int_range",
+      "label": "Usar intervalo de cantidades",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Use Range For Chance (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "param_min_int",
+      "label": "Cantidad mínima",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Min Chance To Apply Effect^ If 1-99, the chance to apply. If 0 or >= 100, always will apply (Trainworks: CardEffectAddStatusEffect)",
+      "integer": true
+    },
+    {
+      "path": "param_max_int",
+      "label": "Cantidad máxima",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Max Chance To Apply Effect^ If 1-99, the chance to apply. If 0 or >= 100, always will apply (Trainworks: CardEffectAddStatusEffect)",
+      "integer": true
+    },
+    {
+      "path": "param_multiplier",
+      "label": "Multiplicador de cantidad",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Range Multiplier (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "param_subtype",
+      "label": "Subtipo del efecto",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Target Subtype (Trainworks: CardEffectAddStatusEffect)",
+      "options": [
+        "SubtypesData_Acolyte_c65a2ea6-2d2a-4d00-82bf-904702a30607",
+        "SubtypesData_Angel",
+        "SubtypesData_Animus_c0f95969-ae86-4477-9458-57bb235d965b",
+        "SubtypesData_Assistant",
+        "SubtypesData_AttackerEnemy_b7a79da2-ded9-4e26-8702-555817499f07",
+        "SubtypesData_AttackerT2",
+        "SubtypesData_AttackerT3",
+        "SubtypesData_Automaton",
+        "SubtypesData_Automaton2",
+        "SubtypesData_BannerUnit",
+        "SubtypesData_BigBoss2_e3e6f1a2-34a7-4493-b9d7-a123e182241e",
+        "SubtypesData_BigBossT1_50952308-e0f3-4acb-b0cc-e0d662b868b8",
+        "SubtypesData_BigBossT3_f7449215-5071-4671-909c-a02e2cceb821",
+        "SubtypesData_Boss",
+        "SubtypesData_BossAll",
+        "SubtypesData_BossDominion",
+        "SubtypesData_BossEntropy",
+        "SubtypesData_BossSavagery",
+        "SubtypesData_BossT1_8850292e-bda8-428e-8d71-c375c29838f8",
+        "SubtypesData_BossT2_935b30b5-bb94-4fd4-b3be-2ed0eb73ccf6",
+        "SubtypesData_BossT3_ef0103da-a050-4ebb-af3a-b3e285db5e0c",
+        "SubtypesData_Box",
+        "SubtypesData_Champion_83f21cbe-9d9b-4566-a2c3-ca559ab8ff34",
+        "SubtypesData_ChosenSpikes",
+        "SubtypesData_Cultist",
+        "SubtypesData_Cultist_8a3bb2b5-8c56-4c86-bb08-85b95c488f23",
+        "SubtypesData_Dante",
+        "SubtypesData_Defunct",
+        "SubtypesData_Demon_fcebd195-f262-4d7a-ac9f-01ffa2007a12",
+        "SubtypesData_Dog",
+        "SubtypesData_Dragon",
+        "SubtypesData_Egg",
+        "SubtypesData_EntropicAngel",
+        "SubtypesData_ExplodingBarrel",
+        "SubtypesData_Fae",
+        "SubtypesData_FinalBoss",
+        "SubtypesData_Forager",
+        "SubtypesData_FunGuy",
+        "SubtypesData_Golem_2d79cb56-4041-4d63-b7bf-8d2185923eda",
+        "SubtypesData_HeavyT1",
+        "SubtypesData_HeavyT2",
+        "SubtypesData_HeavyT3",
+        "SubtypesData_Heph",
+        "SubtypesData_Horde",
+        "SubtypesData_HordeT1",
+        "SubtypesData_Host",
+        "SubtypesData_Hymnist",
+        "SubtypesData_Imp_0f9b989f-15b5-4b16-8378-5d8ed8691e7c",
+        "SubtypesData_Machine",
+        "SubtypesData_Mage",
+        "SubtypesData_Monstrosity",
+        "SubtypesData_None",
+        "SubtypesData_Pyre",
+        "SubtypesData_ReplicatorEvent",
+        "SubtypesData_SavageAngel",
+        "SubtypesData_Selene",
+        "SubtypesData_ShieldGuardT1",
+        "SubtypesData_ShieldGuardT2",
+        "SubtypesData_ShieldGuardT3",
+        "SubtypesData_Shroom",
+        "SubtypesData_Silent",
+        "SubtypesData_Siren_727cf19f-3b27-4ad2-92ab-3552449e52da",
+        "SubtypesData_Snack",
+        "SubtypesData_SoulSavior_Attacker_Enemy",
+        "SubtypesData_SoulSavior_Heavy_Enemy",
+        "SubtypesData_SoulSavior_Horde_Enemy",
+        "SubtypesData_SoulSavior_LifeMother",
+        "SubtypesData_SoulSavior_Mage_Enemy",
+        "SubtypesData_SoulSavior_Region1_Enemy1",
+        "SubtypesData_SoulSavior_Region1_Enemy2",
+        "SubtypesData_SoulSavior_Region1_FlyingBoss",
+        "SubtypesData_SoulSavior_Region2_Enemy1",
+        "SubtypesData_SoulSavior_Region2_Enemy2",
+        "SubtypesData_SoulSavior_Region2_FlyingBoss",
+        "SubtypesData_SoulSavior_Region3_Enemy1",
+        "SubtypesData_SoulSavior_Region3_Enemy2",
+        "SubtypesData_SoulSavior_Region3_FlyingBoss",
+        "SubtypesData_SoulSavior_Region4_Enemy1",
+        "SubtypesData_SoulSavior_Region4_Enemy2",
+        "SubtypesData_SoulSavior_Region4_FlyingBoss",
+        "SubtypesData_SoulSavior_Support_Enemy",
+        "SubtypesData_Spell_7927038f-8beb-40bb-9eff-8b6081c3aeb9",
+        "SubtypesData_Statue",
+        "SubtypesData_Tomb",
+        "SubtypesData_Topsider",
+        "SubtypesData_Totem_7c4e7151-d042-49e2-9700-29e7c760b691",
+        "SubtypesData_TrainMachines",
+        "SubtypesData_TrainSteward",
+        "SubtypesData_TreasureCollector",
+        "SubtypesData_TreasureCollectorT1",
+        "SubtypesData_TreasureCollectorT2",
+        "SubtypesData_TreasureCollectorT3",
+        "SubtypesData_Warden_191c4528-6efd-47b0-bdf8-9838047532cc",
+        "SubtypesData_Waxer_3446e5ee-216e-4cc2-b027-d77dee269c15",
+        "SubtypesData_Whelp",
+        "SubtypesData_Wickless_517faf2f-8836-42d3-b84d-75a99b7dc735",
+        "SubtypesData_Witch_eadb3cce-94b3-42ed-9385-c1d20172e861",
+        "SubtypesData_Wurm"
+      ]
+    },
+    {
+      "path": "param_bool_2",
+      "label": "Opción secundaria",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Ignore Dualism (Trainworks: CardEffectAddStatusEffect)"
+    },
+    {
+      "path": "anim_to_play",
+      "label": "Animación al activar",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Animation to play when this effect is triggered. (Trainworks: CardEffectAddCardUpgradeToUnits)",
+      "options": [
+        "none",
+        "idle",
+        "attack",
+        "hit_react",
+        "idle_relentless",
+        "spell",
+        "death",
+        "talk",
+        "hover"
+      ]
+    },
+    {
+      "path": "hide_tooltip",
+      "label": "Ocultar explicación",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Whether to hide this card effect's tooltips. (Trainworks: CardEffectAddCardUpgradeToUnits)"
+    },
+    {
+      "path": "should_cancel_subsequent_effects_if_test_fails",
+      "label": "Cancelar efectos posteriores si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Whether to cancel all subsequent effects if this effect fails. Example: \"Making it Rain\" cancels effects if you don't have the 5 gold during playing the effects. (Trainworks: CardEffectAddCardUpgradeToUnits)"
+    },
+    {
+      "path": "should_fail_to_cast_if_test_fails",
+      "label": "Impedir jugar si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Whether to prevent playing the card (or trigger) entirely if this effects' TestEffect method fails. Example a card with the Sacrifice <subtype> will fail if the target isn't of proper subtype. (Trainworks: CardEffectAddCardUpgradeToUnits)"
+    },
+    {
+      "path": "should_test",
+      "label": "Comprobar condiciones antes de activar",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Whether this effect should be tested before applying. (Trainworks: CardEffectAddCardUpgradeToUnits)"
+    },
+    {
+      "path": "show_pyre_notification",
+      "label": "Mostrar aviso en la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Whether to show a notification in the Pyre room. (Trainworks: CardEffectAddCardUpgradeToUnits)"
+    },
+    {
+      "path": "status_effect_tooltips_suppressed",
+      "label": "Ocultar explicaciones de estados",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Suppress status effect tooltips. (Trainworks: CardEffectAddCardUpgradeToUnits)"
+    },
+    {
+      "path": "suppress_pyre_room_focus",
+      "label": "Evitar enfocar la sala de la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Whether to suppress Pyre room focus when applying this effect. (Trainworks: CardEffectAddCardUpgradeToUnits)"
+    },
+    {
+      "path": "target_subtype",
+      "label": "Subtipo objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Subtype to target. Will filter out targets from target_mode without the subtype provided. (Trainworks: CardEffectAddCardUpgradeToUnits)",
+      "options": [
+        "SubtypesData_Acolyte_c65a2ea6-2d2a-4d00-82bf-904702a30607",
+        "SubtypesData_Angel",
+        "SubtypesData_Animus_c0f95969-ae86-4477-9458-57bb235d965b",
+        "SubtypesData_Assistant",
+        "SubtypesData_AttackerEnemy_b7a79da2-ded9-4e26-8702-555817499f07",
+        "SubtypesData_AttackerT2",
+        "SubtypesData_AttackerT3",
+        "SubtypesData_Automaton",
+        "SubtypesData_Automaton2",
+        "SubtypesData_BannerUnit",
+        "SubtypesData_BigBoss2_e3e6f1a2-34a7-4493-b9d7-a123e182241e",
+        "SubtypesData_BigBossT1_50952308-e0f3-4acb-b0cc-e0d662b868b8",
+        "SubtypesData_BigBossT3_f7449215-5071-4671-909c-a02e2cceb821",
+        "SubtypesData_Boss",
+        "SubtypesData_BossAll",
+        "SubtypesData_BossDominion",
+        "SubtypesData_BossEntropy",
+        "SubtypesData_BossSavagery",
+        "SubtypesData_BossT1_8850292e-bda8-428e-8d71-c375c29838f8",
+        "SubtypesData_BossT2_935b30b5-bb94-4fd4-b3be-2ed0eb73ccf6",
+        "SubtypesData_BossT3_ef0103da-a050-4ebb-af3a-b3e285db5e0c",
+        "SubtypesData_Box",
+        "SubtypesData_Champion_83f21cbe-9d9b-4566-a2c3-ca559ab8ff34",
+        "SubtypesData_ChosenSpikes",
+        "SubtypesData_Cultist",
+        "SubtypesData_Cultist_8a3bb2b5-8c56-4c86-bb08-85b95c488f23",
+        "SubtypesData_Dante",
+        "SubtypesData_Defunct",
+        "SubtypesData_Demon_fcebd195-f262-4d7a-ac9f-01ffa2007a12",
+        "SubtypesData_Dog",
+        "SubtypesData_Dragon",
+        "SubtypesData_Egg",
+        "SubtypesData_EntropicAngel",
+        "SubtypesData_ExplodingBarrel",
+        "SubtypesData_Fae",
+        "SubtypesData_FinalBoss",
+        "SubtypesData_Forager",
+        "SubtypesData_FunGuy",
+        "SubtypesData_Golem_2d79cb56-4041-4d63-b7bf-8d2185923eda",
+        "SubtypesData_HeavyT1",
+        "SubtypesData_HeavyT2",
+        "SubtypesData_HeavyT3",
+        "SubtypesData_Heph",
+        "SubtypesData_Horde",
+        "SubtypesData_HordeT1",
+        "SubtypesData_Host",
+        "SubtypesData_Hymnist",
+        "SubtypesData_Imp_0f9b989f-15b5-4b16-8378-5d8ed8691e7c",
+        "SubtypesData_Machine",
+        "SubtypesData_Mage",
+        "SubtypesData_Monstrosity",
+        "SubtypesData_None",
+        "SubtypesData_Pyre",
+        "SubtypesData_ReplicatorEvent",
+        "SubtypesData_SavageAngel",
+        "SubtypesData_Selene",
+        "SubtypesData_ShieldGuardT1",
+        "SubtypesData_ShieldGuardT2",
+        "SubtypesData_ShieldGuardT3",
+        "SubtypesData_Shroom",
+        "SubtypesData_Silent",
+        "SubtypesData_Siren_727cf19f-3b27-4ad2-92ab-3552449e52da",
+        "SubtypesData_Snack",
+        "SubtypesData_SoulSavior_Attacker_Enemy",
+        "SubtypesData_SoulSavior_Heavy_Enemy",
+        "SubtypesData_SoulSavior_Horde_Enemy",
+        "SubtypesData_SoulSavior_LifeMother",
+        "SubtypesData_SoulSavior_Mage_Enemy",
+        "SubtypesData_SoulSavior_Region1_Enemy1",
+        "SubtypesData_SoulSavior_Region1_Enemy2",
+        "SubtypesData_SoulSavior_Region1_FlyingBoss",
+        "SubtypesData_SoulSavior_Region2_Enemy1",
+        "SubtypesData_SoulSavior_Region2_Enemy2",
+        "SubtypesData_SoulSavior_Region2_FlyingBoss",
+        "SubtypesData_SoulSavior_Region3_Enemy1",
+        "SubtypesData_SoulSavior_Region3_Enemy2",
+        "SubtypesData_SoulSavior_Region3_FlyingBoss",
+        "SubtypesData_SoulSavior_Region4_Enemy1",
+        "SubtypesData_SoulSavior_Region4_Enemy2",
+        "SubtypesData_SoulSavior_Region4_FlyingBoss",
+        "SubtypesData_SoulSavior_Support_Enemy",
+        "SubtypesData_Spell_7927038f-8beb-40bb-9eff-8b6081c3aeb9",
+        "SubtypesData_Statue",
+        "SubtypesData_Tomb",
+        "SubtypesData_Topsider",
+        "SubtypesData_Totem_7c4e7151-d042-49e2-9700-29e7c760b691",
+        "SubtypesData_TrainMachines",
+        "SubtypesData_TrainSteward",
+        "SubtypesData_TreasureCollector",
+        "SubtypesData_TreasureCollectorT1",
+        "SubtypesData_TreasureCollectorT2",
+        "SubtypesData_TreasureCollectorT3",
+        "SubtypesData_Warden_191c4528-6efd-47b0-bdf8-9838047532cc",
+        "SubtypesData_Waxer_3446e5ee-216e-4cc2-b027-d77dee269c15",
+        "SubtypesData_Whelp",
+        "SubtypesData_Wickless_517faf2f-8836-42d3-b84d-75a99b7dc735",
+        "SubtypesData_Witch_eadb3cce-94b3-42ed-9385-c1d20172e861",
+        "SubtypesData_Wurm"
+      ]
+    },
+    {
+      "path": "target_ignore_bosses",
+      "label": "Ignorar jefes",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Whether to ignore boss characters when targeting. (Trainworks: CardEffectAddCardUpgradeToUnits)"
+    },
+    {
+      "path": "target_mode",
+      "label": "Selección de objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Mode for selecting targets. This property combined with target_team will get you the base characters targetted for the effect. (Trainworks: CardEffectAddCardUpgradeToUnits)",
+      "options": [
+        "room",
+        "random_in_room",
+        "front_in_room",
+        "room_heal_targets",
+        "self",
+        "last_attacked_character",
+        "front_with_status",
+        "tower",
+        "back_in_room",
+        "drop_target_character",
+        "draw_pile",
+        "discard",
+        "dying_character",
+        "exhaust",
+        "eaten",
+        "weakest",
+        "last_attacker_character",
+        "hand",
+        "last_drawn_card",
+        "last_feeder_character",
+        "pyre",
+        "random_from_any_room",
+        "last_targeted_characters",
+        "last_damaged_characters",
+        "last_spawned_morsel",
+        "front_in_all_rooms",
+        "front_in_room_and_room_above",
+        "weakest_all_rooms",
+        "strongest_all_rooms",
+        "last_equipped_character",
+        "last_sacrificed_character",
+        "last_spawned_character",
+        "strongest_last_targeted_characters",
+        "strongest_last_targeted_characters_room"
+      ]
+    },
+    {
+      "path": "target_mode_health_filter",
+      "label": "Filtro de salud",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Filter for target health when selecting targets. (Trainworks: CardEffectAddCardUpgradeToUnits)",
+      "options": [
+        "both",
+        "undamaged",
+        "damaged"
+      ]
+    },
+    {
+      "path": "target_team",
+      "label": "Equipo objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Team to target. \"monsters\" for friendly units or \"heroes\" for enemy units. (Trainworks: CardEffectAddCardUpgradeToUnits)",
+      "options": [
+        "none",
+        "both",
+        "heroes",
+        "monsters"
+      ]
+    },
+    {
+      "path": "param_int_3",
+      "label": "Duración de la mejora",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Upgrade Lifetime (Trainworks: CardEffectAddCardUpgradeToUnits)",
+      "integer": true,
+      "min": 0,
+      "max": 2
+    },
+    {
+      "path": "param_bool",
+      "label": "Opción principal",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ],
+      "help": "Scale Upgrade^ When applied a second time, scale upgrade instead of applying a new one (Trainworks: CardEffectAddCardUpgradeToUnits)"
+    },
+    {
+      "path": "anim_to_play",
+      "label": "Animación al activar",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ],
+      "help": "Animation to play when this effect is triggered. (Trainworks: CardEffectSpawnMonster)",
+      "options": [
+        "none",
+        "idle",
+        "attack",
+        "hit_react",
+        "idle_relentless",
+        "spell",
+        "death",
+        "talk",
+        "hover"
+      ]
+    },
+    {
+      "path": "hide_tooltip",
+      "label": "Ocultar explicación",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ],
+      "help": "Whether to hide this card effect's tooltips. (Trainworks: CardEffectSpawnMonster)"
+    },
+    {
+      "path": "should_cancel_subsequent_effects_if_test_fails",
+      "label": "Cancelar efectos posteriores si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ],
+      "help": "Whether to cancel all subsequent effects if this effect fails. Example: \"Making it Rain\" cancels effects if you don't have the 5 gold during playing the effects. (Trainworks: CardEffectSpawnMonster)"
+    },
+    {
+      "path": "should_fail_to_cast_if_test_fails",
+      "label": "Impedir jugar si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ],
+      "help": "Whether to prevent playing the card (or trigger) entirely if this effects' TestEffect method fails. Example a card with the Sacrifice <subtype> will fail if the target isn't of proper subtype. (Trainworks: CardEffectSpawnMonster)"
+    },
+    {
+      "path": "should_test",
+      "label": "Comprobar condiciones antes de activar",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ],
+      "help": "Whether this effect should be tested before applying. (Trainworks: CardEffectSpawnMonster)"
+    },
+    {
+      "path": "show_pyre_notification",
+      "label": "Mostrar aviso en la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ],
+      "help": "Whether to show a notification in the Pyre room. (Trainworks: CardEffectSpawnMonster)"
+    },
+    {
+      "path": "status_effect_tooltips_suppressed",
+      "label": "Ocultar explicaciones de estados",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ],
+      "help": "Suppress status effect tooltips. (Trainworks: CardEffectSpawnMonster)"
+    },
+    {
+      "path": "suppress_pyre_room_focus",
+      "label": "Evitar enfocar la sala de la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ],
+      "help": "Whether to suppress Pyre room focus when applying this effect. (Trainworks: CardEffectSpawnMonster)"
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ],
+      "help": "Num Additional Monsters To Spawn (Trainworks: CardEffectSpawnMonster)",
+      "integer": true
+    },
+    {
+      "path": "param_bool",
+      "label": "Opción principal",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ],
+      "help": "Don't Copy Upgrades From Played Card^ In some cases, we don't want to copy upgrades from the played card (sometimes the unit that is creating this unit). (Trainworks: CardEffectSpawnMonster)"
+    },
+    {
+      "path": "anim_to_play",
+      "label": "Animación al activar",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustRoomCapacity"
+      ],
+      "help": "Animation to play when this effect is triggered. (Trainworks: CardEffectAdjustRoomCapacity)",
+      "options": [
+        "none",
+        "idle",
+        "attack",
+        "hit_react",
+        "idle_relentless",
+        "spell",
+        "death",
+        "talk",
+        "hover"
+      ]
+    },
+    {
+      "path": "hide_tooltip",
+      "label": "Ocultar explicación",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustRoomCapacity"
+      ],
+      "help": "Whether to hide this card effect's tooltips. (Trainworks: CardEffectAdjustRoomCapacity)"
+    },
+    {
+      "path": "should_cancel_subsequent_effects_if_test_fails",
+      "label": "Cancelar efectos posteriores si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustRoomCapacity"
+      ],
+      "help": "Whether to cancel all subsequent effects if this effect fails. Example: \"Making it Rain\" cancels effects if you don't have the 5 gold during playing the effects. (Trainworks: CardEffectAdjustRoomCapacity)"
+    },
+    {
+      "path": "should_fail_to_cast_if_test_fails",
+      "label": "Impedir jugar si falla",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustRoomCapacity"
+      ],
+      "help": "Whether to prevent playing the card (or trigger) entirely if this effects' TestEffect method fails. Example a card with the Sacrifice <subtype> will fail if the target isn't of proper subtype. (Trainworks: CardEffectAdjustRoomCapacity)"
+    },
+    {
+      "path": "should_test",
+      "label": "Comprobar condiciones antes de activar",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustRoomCapacity"
+      ],
+      "help": "Whether this effect should be tested before applying. (Trainworks: CardEffectAdjustRoomCapacity)"
+    },
+    {
+      "path": "show_pyre_notification",
+      "label": "Mostrar aviso en la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustRoomCapacity"
+      ],
+      "help": "Whether to show a notification in the Pyre room. (Trainworks: CardEffectAdjustRoomCapacity)"
+    },
+    {
+      "path": "status_effect_tooltips_suppressed",
+      "label": "Ocultar explicaciones de estados",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustRoomCapacity"
+      ],
+      "help": "Suppress status effect tooltips. (Trainworks: CardEffectAdjustRoomCapacity)"
+    },
+    {
+      "path": "suppress_pyre_room_focus",
+      "label": "Evitar enfocar la sala de la Pyre",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustRoomCapacity"
+      ],
+      "help": "Whether to suppress Pyre room focus when applying this effect. (Trainworks: CardEffectAdjustRoomCapacity)"
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustRoomCapacity"
+      ],
+      "help": "Capacity Amount (Trainworks: CardEffectAdjustRoomCapacity)",
+      "integer": true
+    },
+    {
+      "path": "param_bool",
+      "label": "Opción principal",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "CardEffectAdjustRoomCapacity"
+      ],
+      "help": "Only Trigger If No Enemies^ If enabled, this effect will only occur if there are no hero units in the room. (Trainworks: CardEffectAdjustRoomCapacity)"
+    },
+    {
+      "path": "param_status_effects",
+      "label": "Estados y acumulaciones",
+      "type": "status-list",
+      "options": [
+        "ambush",
+        "armor",
+        "armorattack",
+        "avarice",
+        "buff",
+        "burst",
+        "captured_soul",
+        "cardless",
+        "conduit",
+        "cooldown",
+        "corrupt_poison",
+        "corruption",
+        "damage shield",
+        "dazed",
+        "debuff",
+        "decay",
+        "doom",
+        "dormant",
+        "duality",
+        "eatmany",
+        "endless",
+        "ephemeral",
+        "equalizer",
+        "fixedattack",
+        "fragile",
+        "fullmoon",
+        "haste",
+        "hatch",
+        "heal immunity",
+        "hivemind",
+        "hivemindkiller",
+        "horde",
+        "immobile",
+        "immune",
+        "inert",
+        "lifelink",
+        "lifesteal",
+        "mageblade",
+        "malaise",
+        "maniac",
+        "mass",
+        "melee weakness",
+        "multistrike",
+        "multistrike_on_missing_health",
+        "muted",
+        "newmoon",
+        "piercing",
+        "poison",
+        "powerup",
+        "purify",
+        "pyrebane",
+        "pyrebound",
+        "pyregel",
+        "pyrestain",
+        "redcrown",
+        "regen",
+        "relentless",
+        "restricted",
+        "rooted",
+        "scorch",
+        "showtime",
+        "silenced",
+        "sniper",
+        "spark",
+        "spell shield",
+        "spell weakness",
+        "spikes",
+        "stealth",
+        "stygian_blessing",
+        "sweep",
+        "timebomb",
+        "titanite",
+        "titanskin",
+        "trample",
+        "undying",
+        "unit_ability",
+        "unit_ability_available",
+        "unit_grafted_equipment",
+        "unstable",
+        "untouchable",
+        "valor",
+        "witherbloom",
+        null
+      ],
+      "optional": true,
+      "names": [
+        "CardEffectAddStatusEffect"
+      ],
+      "help": "Status Effect To Add^ If more than one provided, chooses one at random",
+      "statusPresets": [
+        {
+          "label": "Conductor · Pierce",
+          "status": {
+            "id": "@pierce",
+            "mod_reference": "Conductor"
+          },
+          "help": "Pierce 1 alcanza la primera unidad y una adicional; Pierce N alcanza hasta N+1 objetivos válidos. Requiere Conductor 0.5.14 o posterior instalado y declarado como dependencia. No equivale a Perforante ni atraviesa escudos; el editor no simula el combate."
+        }
+      ]
+    },
+    {
+      "path": "param_upgrade",
+      "label": "Mejora del efecto",
+      "type": "text",
+      "reference": true,
+      "special": true,
+      "names": [
+        "CardEffectAddCardUpgradeToUnits"
+      ]
+    },
+    {
+      "path": "param_upgrade",
+      "label": "Mejora del efecto",
+      "type": "text",
+      "reference": true,
+      "special": true,
+      "names": [
+        "CardEffectSpawnMonster"
+      ]
+    },
+    {
+      "path": "anim_to_play",
+      "label": "Animación al jugar la carta",
+      "type": "select",
+      "options": [
+        "none",
+        "idle",
+        "attack",
+        "hit_react",
+        "idle_relentless",
+        "spell",
+        "death"
+      ],
+      "help": "Reproduce una animación existente en las unidades objetivo al jugar una carta. No usar en triggers de unidad: ya admiten anim_to_play. Hover y Talk se cancelan al jugar la carta; no se ofrecen aquí. No crea animaciones a partir de una imagen.",
+      "names": [
+        "CardEffectPlayCharacterAnimation",
+        "@CardEffectPlayCharacterAnimation"
+      ],
+      "modReferences": [
+        "Conductor"
+      ]
+    },
+    {
+      "path": "param_int",
+      "label": "Índice de variante animada",
+      "type": "number",
+      "min": 0,
+      "max": 2147483647,
+      "integer": true,
+      "help": "Índice de la variante animada, empezando por 0. Debe existir en el personaje y tener su conjunto de animaciones preparado. Solo afecta a unidades incluidas en la lista compatible; no cambia ataque ni salud. El editor no valida el índice contra el modelo ni reproduce la animación.",
+      "names": [
+        "CardEffectSwitchCharacterAnimationModel",
+        "@CardEffectSwitchCharacterAnimationModel"
+      ],
+      "modReferences": [
+        "Conductor"
+      ]
+    },
+    {
+      "path": "param_character_pool",
+      "label": "Unidades compatibles con la variante",
+      "type": "reference-list",
+      "special": true,
+      "help": "Unidades que permiten cambiar de variante animada. Añade solo personajes con esa variante preparada; no es un pool de invocación. Se conservan referencias externas y el orden. Requiere Conductor 0.5.14 o posterior.",
+      "names": [
+        "CardEffectSwitchCharacterAnimationModel",
+        "@CardEffectSwitchCharacterAnimationModel"
+      ],
+      "modReferences": [
+        "Conductor"
+      ]
+    },
+    {
+      "path": "target_mode",
+      "label": "Selección de objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectPlayCharacterAnimation",
+        "@CardEffectPlayCharacterAnimation"
+      ],
+      "help": "Selecciona las unidades que recibirán el efecto visual. monsters son aliados y heroes son enemigos. Requiere Conductor 0.5.14 o posterior; no se ejecuta en la vista previa del editor.",
+      "options": [
+        "room",
+        "random_in_room",
+        "front_in_room",
+        "room_heal_targets",
+        "self",
+        "last_attacked_character",
+        "front_with_status",
+        "tower",
+        "back_in_room",
+        "drop_target_character",
+        "draw_pile",
+        "discard",
+        "dying_character",
+        "exhaust",
+        "eaten",
+        "weakest",
+        "last_attacker_character",
+        "hand",
+        "last_drawn_card",
+        "last_feeder_character",
+        "pyre",
+        "random_from_any_room",
+        "last_targeted_characters",
+        "last_damaged_characters",
+        "last_spawned_morsel",
+        "front_in_all_rooms",
+        "front_in_room_and_room_above",
+        "weakest_all_rooms",
+        "strongest_all_rooms",
+        "last_equipped_character",
+        "last_sacrificed_character",
+        "last_spawned_character",
+        "strongest_last_targeted_characters",
+        "strongest_last_targeted_characters_room"
+      ],
+      "modReferences": [
+        "Conductor"
+      ]
+    },
+    {
+      "path": "target_team",
+      "label": "Equipo objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectPlayCharacterAnimation",
+        "@CardEffectPlayCharacterAnimation"
+      ],
+      "help": "Selecciona las unidades que recibirán el efecto visual. monsters son aliados y heroes son enemigos. Requiere Conductor 0.5.14 o posterior; no se ejecuta en la vista previa del editor.",
+      "options": [
+        "none",
+        "both",
+        "heroes",
+        "monsters"
+      ],
+      "modReferences": [
+        "Conductor"
+      ]
+    },
+    {
+      "path": "target_mode",
+      "label": "Selección de objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectSwitchCharacterAnimationModel",
+        "@CardEffectSwitchCharacterAnimationModel"
+      ],
+      "help": "Selecciona las unidades que recibirán el efecto visual. monsters son aliados y heroes son enemigos. Requiere Conductor 0.5.14 o posterior; no se ejecuta en la vista previa del editor.",
+      "options": [
+        "room",
+        "random_in_room",
+        "front_in_room",
+        "room_heal_targets",
+        "self",
+        "last_attacked_character",
+        "front_with_status",
+        "tower",
+        "back_in_room",
+        "drop_target_character",
+        "draw_pile",
+        "discard",
+        "dying_character",
+        "exhaust",
+        "eaten",
+        "weakest",
+        "last_attacker_character",
+        "hand",
+        "last_drawn_card",
+        "last_feeder_character",
+        "pyre",
+        "random_from_any_room",
+        "last_targeted_characters",
+        "last_damaged_characters",
+        "last_spawned_morsel",
+        "front_in_all_rooms",
+        "front_in_room_and_room_above",
+        "weakest_all_rooms",
+        "strongest_all_rooms",
+        "last_equipped_character",
+        "last_sacrificed_character",
+        "last_spawned_character",
+        "strongest_last_targeted_characters",
+        "strongest_last_targeted_characters_room"
+      ],
+      "modReferences": [
+        "Conductor"
+      ]
+    },
+    {
+      "path": "target_team",
+      "label": "Equipo objetivo",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "CardEffectSwitchCharacterAnimationModel",
+        "@CardEffectSwitchCharacterAnimationModel"
+      ],
+      "help": "Selecciona las unidades que recibirán el efecto visual. monsters son aliados y heroes son enemigos. Requiere Conductor 0.5.14 o posterior; no se ejecuta en la vista previa del editor.",
+      "options": [
+        "none",
+        "both",
+        "heroes",
+        "monsters"
+      ],
+      "modReferences": [
+        "Conductor"
+      ]
+    },
+    {
+      "path": "param_int",
+      "label": "Número total de unidades objetivo",
+      "type": "number",
+      "min": 1,
+      "max": 2147483647,
+      "integer": true,
+      "help": "Selecciona N unidades en total. Usa este selector en CardEffectNULL con target_mode de Conductor n-units. El efecto siguiente debe usar last_targeted_characters y conservar el orden de efectos. Requiere Conductor 0.5.14 o posterior.",
+      "names": [
+        "CardEffectNULL"
+      ],
+      "requires": [
+        {
+          "selector": "target_mode",
+          "names": [
+            "n-units",
+            "@n-units"
+          ],
+          "modReferences": [
+            "Conductor"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "param_bool3",
+      "label": "Seleccionar desde el final",
+      "type": "boolean",
+      "optional": true,
+      "help": "Desactivado: primeras N unidades. Activado: últimas N unidades. No es el número de unidades adicionales de Pierce.",
+      "names": [
+        "CardEffectNULL"
+      ],
+      "requires": [
+        {
+          "selector": "target_mode",
+          "names": [
+            "n-units",
+            "@n-units"
+          ],
+          "modReferences": [
+            "Conductor"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "target_team",
+      "label": "Equipo objetivo",
+      "type": "select",
+      "options": [
+        "none",
+        "both",
+        "heroes",
+        "monsters"
+      ],
+      "help": "Selecciona N unidades en total. Usa este selector en CardEffectNULL con target_mode de Conductor n-units. El efecto siguiente debe usar last_targeted_characters y conservar el orden de efectos. Requiere Conductor 0.5.14 o posterior.",
+      "names": [
+        "CardEffectNULL"
+      ],
+      "requires": [
+        {
+          "selector": "target_mode",
+          "names": [
+            "n-units",
+            "@n-units"
+          ],
+          "modReferences": [
+            "Conductor"
+          ]
+        }
+      ]
+    }
+  ],
+  "relic_effects": [
+    {
+      "path": "notification_suppressed",
+      "label": "notification_suppressed",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectModifyGoldEndOfBattle"
+      ],
+      "help": "Whether to suppress notifications (Trainworks: RelicEffectModifyGoldEndOfBattle)"
+    },
+    {
+      "path": "trigger_tooltips_suppressed",
+      "label": "trigger_tooltips_suppressed",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectModifyGoldEndOfBattle"
+      ],
+      "help": "Whether to suppress trigger tooltips (Trainworks: RelicEffectModifyGoldEndOfBattle)"
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "RelicEffectModifyGoldEndOfBattle"
+      ],
+      "help": "Gold Amount (Trainworks: RelicEffectModifyGoldEndOfBattle)",
+      "integer": true
+    },
+    {
+      "path": "param_bool",
+      "label": "Opción principal",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectModifyGoldEndOfBattle"
+      ],
+      "help": "Require No Pyre Damage? (Trainworks: RelicEffectModifyGoldEndOfBattle)"
+    },
+    {
+      "path": "notification_suppressed",
+      "label": "notification_suppressed",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectAddStatusEffectOnSpawn"
+      ],
+      "help": "Whether to suppress notifications (Trainworks: RelicEffectAddStatusEffectOnSpawn)"
+    },
+    {
+      "path": "trigger_tooltips_suppressed",
+      "label": "trigger_tooltips_suppressed",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectAddStatusEffectOnSpawn"
+      ],
+      "help": "Whether to suppress trigger tooltips (Trainworks: RelicEffectAddStatusEffectOnSpawn)"
+    },
+    {
+      "path": "source_team",
+      "label": "source_team",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "RelicEffectAddStatusEffectOnSpawn"
+      ],
+      "help": "Target Team (Trainworks: RelicEffectAddStatusEffectOnSpawn)",
+      "options": [
+        "none",
+        "both",
+        "heroes",
+        "monsters"
+      ]
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "RelicEffectAddStatusEffectOnSpawn"
+      ],
+      "help": "Restrict to Room Index (Trainworks: RelicEffectAddStatusEffectOnSpawn)",
+      "integer": true
+    },
+    {
+      "path": "param_int_2",
+      "label": "Cantidad secundaria",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "RelicEffectAddStatusEffectOnSpawn"
+      ],
+      "help": "Max HP % as Stacks^ Percentage of max health used as the number of stacks to add of the given status effect (overrides the Count on the status effect).\n\nFor example, if this is set to 50, an enemy with max health of 120 will have 60 stacks of the status effect added. (Trainworks: RelicEffectAddStatusEffectOnSpawn)",
+      "integer": true
+    },
+    {
+      "path": "param_bool",
+      "label": "Opción principal",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectAddStatusEffectOnSpawn"
+      ],
+      "help": "Restrict to Room? (Trainworks: RelicEffectAddStatusEffectOnSpawn)"
+    },
+    {
+      "path": "param_string",
+      "label": "param_string",
+      "type": "text",
+      "optional": true,
+      "names": [
+        "RelicEffectAddStatusEffectOnSpawn"
+      ],
+      "help": "NoCard / OnlyFromCard^ NoCard = The status effect is only added to characters that aren't summoned from a card. OnlyFromCard = The status effect is only added to characters that are summoned from a card. (Trainworks: RelicEffectAddStatusEffectOnSpawn)"
+    },
+    {
+      "path": "param_subtype",
+      "label": "Subtipo del efecto",
+      "type": "select",
+      "optional": true,
+      "names": [
+        "RelicEffectAddStatusEffectOnSpawn"
+      ],
+      "help": "Required Subtype (Trainworks: RelicEffectAddStatusEffectOnSpawn)",
+      "options": [
+        "SubtypesData_Acolyte_c65a2ea6-2d2a-4d00-82bf-904702a30607",
+        "SubtypesData_Angel",
+        "SubtypesData_Animus_c0f95969-ae86-4477-9458-57bb235d965b",
+        "SubtypesData_Assistant",
+        "SubtypesData_AttackerEnemy_b7a79da2-ded9-4e26-8702-555817499f07",
+        "SubtypesData_AttackerT2",
+        "SubtypesData_AttackerT3",
+        "SubtypesData_Automaton",
+        "SubtypesData_Automaton2",
+        "SubtypesData_BannerUnit",
+        "SubtypesData_BigBoss2_e3e6f1a2-34a7-4493-b9d7-a123e182241e",
+        "SubtypesData_BigBossT1_50952308-e0f3-4acb-b0cc-e0d662b868b8",
+        "SubtypesData_BigBossT3_f7449215-5071-4671-909c-a02e2cceb821",
+        "SubtypesData_Boss",
+        "SubtypesData_BossAll",
+        "SubtypesData_BossDominion",
+        "SubtypesData_BossEntropy",
+        "SubtypesData_BossSavagery",
+        "SubtypesData_BossT1_8850292e-bda8-428e-8d71-c375c29838f8",
+        "SubtypesData_BossT2_935b30b5-bb94-4fd4-b3be-2ed0eb73ccf6",
+        "SubtypesData_BossT3_ef0103da-a050-4ebb-af3a-b3e285db5e0c",
+        "SubtypesData_Box",
+        "SubtypesData_Champion_83f21cbe-9d9b-4566-a2c3-ca559ab8ff34",
+        "SubtypesData_ChosenSpikes",
+        "SubtypesData_Cultist",
+        "SubtypesData_Cultist_8a3bb2b5-8c56-4c86-bb08-85b95c488f23",
+        "SubtypesData_Dante",
+        "SubtypesData_Defunct",
+        "SubtypesData_Demon_fcebd195-f262-4d7a-ac9f-01ffa2007a12",
+        "SubtypesData_Dog",
+        "SubtypesData_Dragon",
+        "SubtypesData_Egg",
+        "SubtypesData_EntropicAngel",
+        "SubtypesData_ExplodingBarrel",
+        "SubtypesData_Fae",
+        "SubtypesData_FinalBoss",
+        "SubtypesData_Forager",
+        "SubtypesData_FunGuy",
+        "SubtypesData_Golem_2d79cb56-4041-4d63-b7bf-8d2185923eda",
+        "SubtypesData_HeavyT1",
+        "SubtypesData_HeavyT2",
+        "SubtypesData_HeavyT3",
+        "SubtypesData_Heph",
+        "SubtypesData_Horde",
+        "SubtypesData_HordeT1",
+        "SubtypesData_Host",
+        "SubtypesData_Hymnist",
+        "SubtypesData_Imp_0f9b989f-15b5-4b16-8378-5d8ed8691e7c",
+        "SubtypesData_Machine",
+        "SubtypesData_Mage",
+        "SubtypesData_Monstrosity",
+        "SubtypesData_None",
+        "SubtypesData_Pyre",
+        "SubtypesData_ReplicatorEvent",
+        "SubtypesData_SavageAngel",
+        "SubtypesData_Selene",
+        "SubtypesData_ShieldGuardT1",
+        "SubtypesData_ShieldGuardT2",
+        "SubtypesData_ShieldGuardT3",
+        "SubtypesData_Shroom",
+        "SubtypesData_Silent",
+        "SubtypesData_Siren_727cf19f-3b27-4ad2-92ab-3552449e52da",
+        "SubtypesData_Snack",
+        "SubtypesData_SoulSavior_Attacker_Enemy",
+        "SubtypesData_SoulSavior_Heavy_Enemy",
+        "SubtypesData_SoulSavior_Horde_Enemy",
+        "SubtypesData_SoulSavior_LifeMother",
+        "SubtypesData_SoulSavior_Mage_Enemy",
+        "SubtypesData_SoulSavior_Region1_Enemy1",
+        "SubtypesData_SoulSavior_Region1_Enemy2",
+        "SubtypesData_SoulSavior_Region1_FlyingBoss",
+        "SubtypesData_SoulSavior_Region2_Enemy1",
+        "SubtypesData_SoulSavior_Region2_Enemy2",
+        "SubtypesData_SoulSavior_Region2_FlyingBoss",
+        "SubtypesData_SoulSavior_Region3_Enemy1",
+        "SubtypesData_SoulSavior_Region3_Enemy2",
+        "SubtypesData_SoulSavior_Region3_FlyingBoss",
+        "SubtypesData_SoulSavior_Region4_Enemy1",
+        "SubtypesData_SoulSavior_Region4_Enemy2",
+        "SubtypesData_SoulSavior_Region4_FlyingBoss",
+        "SubtypesData_SoulSavior_Support_Enemy",
+        "SubtypesData_Spell_7927038f-8beb-40bb-9eff-8b6081c3aeb9",
+        "SubtypesData_Statue",
+        "SubtypesData_Tomb",
+        "SubtypesData_Topsider",
+        "SubtypesData_Totem_7c4e7151-d042-49e2-9700-29e7c760b691",
+        "SubtypesData_TrainMachines",
+        "SubtypesData_TrainSteward",
+        "SubtypesData_TreasureCollector",
+        "SubtypesData_TreasureCollectorT1",
+        "SubtypesData_TreasureCollectorT2",
+        "SubtypesData_TreasureCollectorT3",
+        "SubtypesData_Warden_191c4528-6efd-47b0-bdf8-9838047532cc",
+        "SubtypesData_Waxer_3446e5ee-216e-4cc2-b027-d77dee269c15",
+        "SubtypesData_Whelp",
+        "SubtypesData_Wickless_517faf2f-8836-42d3-b84d-75a99b7dc735",
+        "SubtypesData_Witch_eadb3cce-94b3-42ed-9385-c1d20172e861",
+        "SubtypesData_Wurm"
+      ]
+    },
+    {
+      "path": "param_bool_2",
+      "label": "Opción secundaria",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectAddStatusEffectOnSpawn"
+      ],
+      "help": "Require Graft (Trainworks: RelicEffectAddStatusEffectOnSpawn)"
+    },
+    {
+      "path": "notification_suppressed",
+      "label": "notification_suppressed",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectAddGoldOnExhaust"
+      ],
+      "help": "Whether to suppress notifications (Trainworks: RelicEffectAddGoldOnExhaust)"
+    },
+    {
+      "path": "trigger_tooltips_suppressed",
+      "label": "trigger_tooltips_suppressed",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectAddGoldOnExhaust"
+      ],
+      "help": "Whether to suppress trigger tooltips (Trainworks: RelicEffectAddGoldOnExhaust)"
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "RelicEffectAddGoldOnExhaust"
+      ],
+      "help": "Gold Amount (Trainworks: RelicEffectAddGoldOnExhaust)",
+      "integer": true
+    },
+    {
+      "path": "notification_suppressed",
+      "label": "notification_suppressed",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectAdditionalDrawDuringRelentless"
+      ],
+      "help": "Whether to suppress notifications (Trainworks: RelicEffectAdditionalDrawDuringRelentless)"
+    },
+    {
+      "path": "trigger_tooltips_suppressed",
+      "label": "trigger_tooltips_suppressed",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectAdditionalDrawDuringRelentless"
+      ],
+      "help": "Whether to suppress trigger tooltips (Trainworks: RelicEffectAdditionalDrawDuringRelentless)"
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "RelicEffectAdditionalDrawDuringRelentless"
+      ],
+      "help": "Cards to Draw (Trainworks: RelicEffectAdditionalDrawDuringRelentless)",
+      "integer": true
+    },
+    {
+      "path": "notification_suppressed",
+      "label": "notification_suppressed",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectModifyEnergy"
+      ],
+      "help": "Whether to suppress notifications (Trainworks: RelicEffectModifyEnergy)"
+    },
+    {
+      "path": "trigger_tooltips_suppressed",
+      "label": "trigger_tooltips_suppressed",
+      "type": "boolean",
+      "optional": true,
+      "names": [
+        "RelicEffectModifyEnergy"
+      ],
+      "help": "Whether to suppress trigger tooltips (Trainworks: RelicEffectModifyEnergy)"
+    },
+    {
+      "path": "param_int",
+      "label": "Cantidad principal",
+      "type": "number",
+      "optional": true,
+      "names": [
+        "RelicEffectModifyEnergy"
+      ],
+      "help": "Energy (Trainworks: RelicEffectModifyEnergy)",
+      "integer": true
+    },
+    {
+      "path": "param_status_effects",
+      "label": "Estados y acumulaciones",
+      "type": "status-list",
+      "options": [
+        "ambush",
+        "armor",
+        "armorattack",
+        "avarice",
+        "buff",
+        "burst",
+        "captured_soul",
+        "cardless",
+        "conduit",
+        "cooldown",
+        "corrupt_poison",
+        "corruption",
+        "damage shield",
+        "dazed",
+        "debuff",
+        "decay",
+        "doom",
+        "dormant",
+        "duality",
+        "eatmany",
+        "endless",
+        "ephemeral",
+        "equalizer",
+        "fixedattack",
+        "fragile",
+        "fullmoon",
+        "haste",
+        "hatch",
+        "heal immunity",
+        "hivemind",
+        "hivemindkiller",
+        "horde",
+        "immobile",
+        "immune",
+        "inert",
+        "lifelink",
+        "lifesteal",
+        "mageblade",
+        "malaise",
+        "maniac",
+        "mass",
+        "melee weakness",
+        "multistrike",
+        "multistrike_on_missing_health",
+        "muted",
+        "newmoon",
+        "piercing",
+        "poison",
+        "powerup",
+        "purify",
+        "pyrebane",
+        "pyrebound",
+        "pyregel",
+        "pyrestain",
+        "redcrown",
+        "regen",
+        "relentless",
+        "restricted",
+        "rooted",
+        "scorch",
+        "showtime",
+        "silenced",
+        "sniper",
+        "spark",
+        "spell shield",
+        "spell weakness",
+        "spikes",
+        "stealth",
+        "stygian_blessing",
+        "sweep",
+        "timebomb",
+        "titanite",
+        "titanskin",
+        "trample",
+        "undying",
+        "unit_ability",
+        "unit_ability_available",
+        "unit_grafted_equipment",
+        "unstable",
+        "untouchable",
+        "valor",
+        "witherbloom",
+        null
+      ],
+      "optional": true,
+      "names": [
+        "RelicEffectAddStatusEffectOnSpawn"
+      ],
+      "help": "Status Effects",
+      "statusPresets": [
+        {
+          "label": "Conductor · Pierce",
+          "status": {
+            "id": "@pierce",
+            "mod_reference": "Conductor"
+          },
+          "help": "Pierce 1 alcanza la primera unidad y una adicional; Pierce N alcanza hasta N+1 objetivos válidos. Requiere Conductor 0.5.14 o posterior instalado y declarado como dependencia. No equivale a Perforante ni atraviesa escudos; el editor no simula el combate."
+        }
+      ]
+    }
   ]
 }

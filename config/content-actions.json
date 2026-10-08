@@ -1,0 +1,5 @@
+{
+ "deleteSections":["cards","characters","upgrades","card_pools","rewards","map_nodes","effects","relic_effects","character_triggers","card_triggers","relics"],
+ "maxBatchSize":100,
+ "batchSections":[{"id":"cards","label":"Cartas","fields":["cost","rarity"]},{"id":"characters","label":"Unidades","fields":["attack_damage","health","size"]}]
+}
